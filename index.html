@@ -397,18 +397,33 @@
     .formula-box {
       background: var(--sunken);
       border-radius: 10px;
-      padding: 8px 10px;
+      border-left: 3px solid var(--accent);
+      padding: 8px 12px;
       margin: 8px 0;
       font-family: ui-monospace, "SFMono-Regular", "Cascadia Mono", "Segoe UI Mono", "WenQuanYi Micro Hei Mono", monospace;
       font-size: 12px;
+      font-style: normal;
       line-height: 1.6;
       overflow-wrap: anywhere;
     }
-    .freq { display: grid; gap: 8px; margin-top: 8px; }
-    .freq article { background: var(--sunken); border-radius: 10px; padding: 8px 10px; }
-    .freq h4 { margin-top: 0; }
-    .freq p { margin: 2px 0; font-size: 12px; color: var(--muted); }
-    .freq strong { color: var(--text); font-weight: 600; }
+    .modal-body blockquote.formula-box p { margin: 0; }
+    .modal-body blockquote.formula-box p + p { margin-top: 4px; }
+    .modal-body ul { margin: 4px 0 8px; padding-left: 18px; }
+    .modal-body li { margin: 3px 0; }
+    .modal-body h3.appendix {
+      margin-top: 22px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+    }
+    .modal-body .table-wrap { margin-top: 8px; }
+    .modal-body table.glossary-table { min-width: 760px; font-size: 12px; }
+    .modal-body table.glossary-table th {
+      position: sticky;
+      top: 0;
+      background: var(--elev);
+      white-space: nowrap;
+    }
+    .modal-body table.glossary-table td { vertical-align: top; }
     @media (prefers-reduced-motion: reduce) {
       * { scroll-behavior: auto !important; }
     }
@@ -715,120 +730,237 @@
         <button type="button" class="ghost" id="glossary-close">关闭</button>
       </div>
       <div class="modal-body">
-        <p id="glossary-intro">这份说明按页面上的四个环节写：每个指标在算什么、业务上怎么读、数字从哪来、多久更新一次。公式与页脚「方法」相同。除欧元兑美元外，价格、库存、运价和采暖度日都是示意底稿，换 <span class="mono">data.json</span> 即可更新，不必改页面。</p>
+        <p id="glossary-intro">本说明对着看板上的四个环节：上游原料、加工/液化、海运与套利、终端需求。先讲每个数在业务上是什么、在这页上怎么读。除欧元兑美元（EURUSD）外，价格、库存、运价和采暖度日（HDD）都是示意。改任何一个输入，图表和套利会立刻重算。</p>
+        <p>能量单位全篇只使用两种写法：价格和成本用美元/百万英热（MMBtu）或欧元/兆瓦时（MWh）；货量用百万英热（MMBtu）。货量输入框上的「万 MMBtu」与万百万英热（MMBtu）是同一个单位。</p>
 
         <h3>上游原料</h3>
         <h4>Henry Hub</h4>
-        <p>美国路易斯安那州亨利枢纽的天然气现货，单位美元/百万英热，是美湾液化气的原料价格。本页不把 Henry Hub 原价直接当成到岸成本，而是先加上液化厂自己烧掉的那一部分进料气。</p>
-        <p class="formula-box">原料气 = Henry Hub × 1.15</p>
-        <p>1.15 是本页固定的进料气系数：每出口 1 百万英热液化气，按多采购 15% 原料气，用来覆盖厂内燃料和损耗。它不是 EIA 公布的系数，换数据文件也不会改它。</p>
-        <h4>WTI</h4>
-        <p>WTI（西得克萨斯中质原油）是美国轻质低硫原油基准，定价地在俄克拉何马州库欣，单位美元/桶。它描述美国上游原油和内陆炼厂的原油成本：库欣库存松、管道外输受限时，WTI 会相对海上原油走弱。EIA 在每个工作日发布库欣 WTI 现货（通常是前一个工作日的价格）。</p>
-        <p>本页没有 WTI 输入，裂解也不减 WTI。顶部原油栏和下面的柴油裂解用的是布伦特：大西洋水上成品油（纽约港、美湾出口、鹿特丹）习惯对照布伦特，而不是库欣内陆价格。</p>
-        <h4>布伦特</h4>
-        <p>本页原油起点，单位美元/桶。裂解把成品油先换成美元/桶，再减去这一个布伦特价格。EIA 每个工作日发布欧洲布伦特现货。页面上的布伦特是 <span class="mono">data.json</span> 的示意起点，不是 EIA 当日值。</p>
+        <p><strong>Henry Hub</strong> 是美国路易斯安那州的天然气现货枢纽，报价为美元/百万英热（MMBtu）。它是美湾液化天然气的原料价格。</p>
+        <p>不要把看板上的 Henry Hub 直接当成到岸气价。液化厂自己要烧掉一部分气，原料端先放大。</p>
+        <blockquote class="formula-box">
+          <p>进料气（美元/百万英热（MMBtu））= Henry Hub × 1.15</p>
+        </blockquote>
+        <p><strong>1.15</strong> 是本页固定的进料气系数：每出口 1 百万英热（MMBtu）液化气，按多买 15% 原料气，用来覆盖厂内燃料和损耗。这不是 EIA 公布的系数。</p>
 
-        <h3>加工 / 液化</h3>
+        <h4>WTI</h4>
+        <p><strong>WTI</strong>（西得克萨斯中质原油）是美国轻质低硫原油基准，定价地在俄克拉何马州库欣，单位美元/桶。它描述美国上游原油，也是内陆炼厂的原油成本。</p>
+        <p>库欣库存松、外输管道受限时，WTI 会相对海上原油走弱。本页没有 WTI 输入，柴油裂解也不减 WTI。</p>
+
+        <h4>布伦特（Brent）</h4>
+        <p><strong>布伦特（Brent）</strong> 是本页使用的原油价格，单位美元/桶。纽约港、美湾和鹿特丹的成品油对照的是海上原油，不是库欣内陆价格。</p>
+        <p>裂解先把成品换成美元/桶，再减去这一个布伦特（Brent）。看板上的数字是示意起点，不是 EIA 当日现货。</p>
+
+        <h3>加工/液化</h3>
         <h4>美国炼厂开工率</h4>
-        <p>可运行炼油能力里，当周实际进料的百分比。开工高，汽油和馏分油的供给偏松；开工掉下来，成品油更容易抽紧，柴油裂解往往走阔。它解释美国炼厂这一环松不松。</p>
-        <p>本页只把它显示在顶部链路和开工率读数上，不代入套利，也不代入裂解。数字来自示意起点，官方序列在 EIA《周度石油供应报告》，通常美东时间周三 10:30 发布（遇美国假日顺延到周四），覆盖截至上周五的一周。</p>
+        <p><strong>开工率</strong> 是可运行炼油能力里、当周实际进料的百分比。</p>
+        <p>开工高，汽油和馏分油的供给偏松。开工下降，成品油更容易抽紧，柴油裂解往往走阔。这个读数只说明美国炼厂松紧，不进入套利，也不进入裂解。</p>
+
         <h4>液化进料气与液化费</h4>
-        <p>进料气和液化费是两笔不同的钱。进料气是按 Henry Hub 买来的原料（已经乘过 1.15）；液化费是把气冻成液体的加工费，起点 2.50 美元/百万英热，可以改。</p>
-        <p class="formula-box">离岸 = 原料气 + 液化费 = Henry Hub × 1.15 + 液化费</p>
-        <p>美国液化厂实际吃进多少管道气，看 EIA《天然气周报》里的液化出口进料气，通常周四更新。那是实物量。本页的 1.15 只是燃料气放大系数，不要把它读成 EIA 的进料气序列。</p>
+        <p>进料气和液化费是两笔钱。</p>
+        <p><strong>进料气</strong> 是按 Henry Hub 买来的原料，已经乘过 1.15，单位美元/百万英热（MMBtu）。<strong>液化费</strong> 是把气冻成液体的加工费，起点 2.50 美元/百万英热（MMBtu），可以改。</p>
+        <blockquote class="formula-box">
+          <p>离岸（美元/百万英热（MMBtu））= 进料气 + 液化费 = Henry Hub × 1.15 + 液化费</p>
+        </blockquote>
+        <p>EIA《天然气周报》里的液化进料气，是液化厂实际吃进的管道气，是实物量。本页的 1.15 只是燃料气放大系数，不要把它读成那条序列。交付成本在离岸之上再加运费、蒸发气、港口和再气化，见下一节。</p>
 
         <h3>海运与套利</h3>
         <h4>Spark25 日租金</h4>
-        <p>Spark25 是 Spark Commodities 对大西洋盆地液化天然气船日租金的评估名称。现货评估 Spark25S 的提交窗口是格林尼治时间 08:00–10:00，每个评估日发布，Spark 的合约说明写明 Spark25S 于 10:00 GMT 发布。远期曲线 Spark25Fo 每周二发布一次。日租金越高，同样一条船的航次成本越大，美湾到欧洲的窗口越容易关上。</p>
-        <p>本页曲线的左段是 <span class="mono">data.json</span> 里的示意轨迹，右端点改成当前日租金输入，不是 Spark 的正式估价。</p>
-        <p class="formula-box">运费（美元/百万英热）= 日租金 × 往返天数 / 货量<br />货量 = 输入的「万 MMBtu」× 10,000</p>
-        <p>起点是日租金 55,000 美元、往返 24 天、货量 360 万 MMBtu。货量变小或往返变长，单位运费上升。</p>
-        <h4>TTF 对 Henry Hub 的套利</h4>
-        <p>TTF 是荷兰所有权转让设施的天然气价格，本页用欧元/兆瓦时，代表欧洲终端能卖掉的气。ICE 荷兰 TTF 期货在交易日连续成交，每个交易日有结算价。页面上的 TTF 是示意输入，不是 ICE 结算价。</p>
-        <p>比较的是同一单位下的欧洲卖价和美湾货送到欧洲的全成本。交付成本先用美元/百万英热加总，再换成欧元/兆瓦时：</p>
-        <p class="formula-box">蒸发气近似 = 装载天数 × 0.10%/日 × 离岸成本<br />交付成本 = 离岸 + 运费 + 蒸发 + 港口 0.12 + 再气化 0.35<br />欧元/兆瓦时 = 美元/百万英热 × 3.412141633 / EURUSD<br />套利边际 = TTF − 交付成本（欧元/兆瓦时）<br />边际 &gt; 0.50 时，窗口视为开启</p>
-        <p>0.10%/日就是 0.001。装载天数大于往返天数时，蒸发气会被高估，页面会单独提示。港口 0.12 和再气化 0.35 美元/百万英热写死在页面里，不在 <span class="mono">data.json</span> 中。3.412141633 是 1 兆瓦时对应的百万英热。EURUSD 是 1 欧元兑多少美元，与欧洲央行标价一致；USDEUR 是它的倒数。0.50 欧元/兆瓦时是这块看板的示意门槛，不是交易所规则。</p>
-        <p>边际为正，表示欧洲气价盖过了「美国买气、乘上进料气系数、付液化费、跨大西洋船运、加上蒸发、港口和再气化」这一整叠成本，美湾货有往欧洲拉的激励。Henry Hub、液化费或 Spark25 日租金上升，都会抬高交付成本，把边际压小。</p>
-        <h4>汇率</h4>
-        <p>欧元兑美元约每 60 秒向 Frankfurter 取一次欧洲央行参考价，单次 8 秒超时。取到之后，没有被手动锁定的汇率改用参考价，套利和热值立刻重算。失败时保留上次成功值；从未成功则用 <span class="mono">data.json</span> 里的 EURUSD，内置回退是 1.1204。参考价在每个 TARGET 工作日发布，大约欧洲中部时间 16:00。手动改过的汇率会锁定，直到点「采用参考价」。</p>
+        <p><strong>Spark25</strong> 是 Spark Commodities 对大西洋盆地液化天然气船日租金的评估，单位美元/日。日租金越高，同一条船的航次越贵，美湾到欧洲的窗口越容易关上。</p>
+        <p>现货评估 <strong>Spark25S</strong> 每个评估日发布：提交窗口为格林尼治时间 08:00–10:00，10:00 GMT 公布。远期 <strong>Spark25Fo</strong> 每周二发布一次。</p>
+        <p>曲线左段是示意轨迹，右端点跟随当前日租金，不是 Spark 的正式估价。</p>
+        <blockquote class="formula-box">
+          <p>运费（美元/百万英热（MMBtu））= 日租金（美元/日）× 往返天数 / 货量（百万英热（MMBtu））</p>
+          <p>货量（百万英热（MMBtu））= 输入的万百万英热（MMBtu）× 10,000</p>
+        </blockquote>
+        <p>起点是日租金 55,000 美元/日、往返 24 天、货量 360 万百万英热（MMBtu）。货量变小，或往返变长，单位运费上升。</p>
+
+        <h4>交付成本与套利边际</h4>
+        <p><strong>TTF</strong>（荷兰所有权转让设施）是欧洲天然气枢纽价，本页用欧元/兆瓦时（MWh）。它表示这船货在欧洲能卖掉的价格。看板上的 TTF 是示意输入，不是 ICE 当日结算价。</p>
+        <p>比较必须先换成同一个能量单位。交付成本先在美元/百万英热（MMBtu）里加总，再换成欧元/兆瓦时（MWh）。</p>
+        <blockquote class="formula-box">
+          <p>蒸发气（美元/百万英热（MMBtu））= 装载天数 × 0.10%/日 × 离岸</p>
+          <p>交付成本（美元/百万英热（MMBtu））= 离岸 + 运费 + 蒸发气 + 港口 0.12 + 再气化 0.35</p>
+          <p>交付成本（欧元/兆瓦时（MWh））= 交付成本（美元/百万英热（MMBtu））× 3.412141633 / EURUSD</p>
+        </blockquote>
+        <blockquote class="formula-box">
+          <p>套利边际（欧元/兆瓦时（MWh））= TTF − 交付成本（欧元/兆瓦时（MWh））</p>
+          <p>边际高于 0.50 欧元/兆瓦时（MWh）时，窗口视为开启</p>
+        </blockquote>
+        <p><strong>0.10%/日</strong> 就是 0.001。装载天数大于往返天数时，蒸发气会被高估，页面会提示。港口 <strong>0.12</strong> 与再气化 <strong>0.35</strong> 的单位都是美元/百万英热（MMBtu），是本页固定项。</p>
+        <p><strong>3.412141633</strong> 是 1 兆瓦时（MWh）对应的百万英热（MMBtu）。<strong>EURUSD</strong> 是 1 欧元兑多少美元，与欧洲央行标价一致。<strong>USDEUR</strong> 是它的倒数。<strong>0.50</strong> 欧元/兆瓦时（MWh）是这块看板的示意门槛，不是交易所规则。</p>
+        <p>边际为正，表示欧洲气价盖过了整叠成本：买美国气、乘进料气系数、付液化费、跨大西洋船运，再加上蒸发气、港口和再气化。这时美湾货有往欧洲拉的激励。Henry Hub、液化费或 Spark25 日租金上升，都会抬高交付成本，把边际压小。</p>
+
+        <h4>欧元兑美元（EURUSD）</h4>
+        <p><strong>欧元兑美元（EURUSD）</strong> 约每 60 秒向 Frankfurter 取一次欧洲央行参考价，单次等待 8 秒。取到之后，没有被锁定的汇率会立刻重算套利和柴油热值。</p>
+        <p>失败时沿用上次成功值。从未成功则用 1.1204。参考价在每个 TARGET 工作日发布，约欧洲中部时间 16:00。手动改过的汇率会锁定，直到点「采用参考价」。</p>
 
         <h3>终端需求</h3>
-        <h4>欧盟库存，以及 80% 填充目标</h4>
-        <p>库存百分比乘上本页示意的欧盟工作气能力，得到十亿立方米。采暖季会按寒冷程度把库存抽下去，3 月末还剩多少决定宽裕、平衡、紧张或耗尽。</p>
-        <p class="formula-box">工作气量 = 库存% / 100 × 104.5 bcm<br />较五年均值 = 库存% − 93.2 个百分点<br />情景抽取 = 58 bcm ×（1 + 采暖度日偏离）<br />3 月末库存 = 起点工作气量 − 情景抽取<br />宽裕 ≥ 30 bcm，平衡 ≥ 15 bcm，否则紧张；低于零记为耗尽</p>
-        <p>104.5、93.2% 和 58 bcm 都是本页示意口径，不是当天 AGSI 的技术能力和五年曲线。</p>
-        <p>法规里的 80% 是 2022 年的首年填充目标。Regulation (EU) 2022/1032 规定：2022 年 11 月 1 日前地下库存至少达到工作气能力的 80%，2023 年起每年 11 月 1 日前至少 90%。延期后的 Regulation (EU) 2025/1733 仍以 90% 为年度目标，但改成每年 10 月 1 日至 12 月 1 日之间达成，并允许成员国在市场困难或技术约束下偏离。库存水平看 GIE 的 AGSI+，每个天然气日更新，通常发布前一个天然气日的注入量。</p>
-        <p>本页计算不用 80%。仪表上的琥珀色刻度是示意的 11 月 1 日 90% 目标，进度 = 当前库存% / 90%。这与 2023 年以后的法定填充水平同一量级，但刻度两边的数字来自 <span class="mono">data.json</span> 的起点，不是 AGSI 当日读数。</p>
-        <h4>采暖度日</h4>
-        <p>采暖度日（HDD）把「冷多少」收成一个数：日均气温低于基温 15.5°C 的度数累加。越冷，取暖用气越多。本页 10 月到 3 月的「常年」柱是 <span class="mono">data.json</span> 里的示意月值，西北欧综合气候态，不是气象机构或 Eurostat 的正式序列。</p>
-        <p class="formula-box">情景度日 = 常年度日 ×（1 + 采暖度日偏离）</p>
-        <p>偏离滑块同时放大柱状图和上面的 58 bcm 抽取。偏离为正表示比常年更冷，3 月末库存更低。Eurostat 的采暖与制冷度日是月度、年度统计，不是实时行情。</p>
-        <h4>柴油裂解与 PADD 1 东岸库存</h4>
-        <p>裂解是炼厂把原油做成柴油后、相对原油还剩多少美元/桶。本页用布伦特做原油腿。正的裂解越宽，炼厂越有动力多产柴油；裂解收窄甚至为负，柴油相对原油偏便宜。</p>
-        <p class="formula-box">裂解 = 成品美元/桶 − 布伦特<br />加仑报价 × 42 = 美元/桶<br />吨报价 / 7.45 = 美元/桶</p>
-        <p>纽约港和美湾是美元/加仑，鹿特丹是美元/吨。42 加仑/桶、7.45 桶/吨是本页换算，不是交易所结算价。</p>
-        <p>PADD 1 是美国东岸。东岸馏分油库存低，说明消费地缓冲薄，同样的裂解更值得关注：库存紧、裂解宽，是成品油偏紧的组合；库存厚、裂解窄，则是供给松出来了。官方库存和开工率同在 EIA 周报里，通常美东时间周三 10:30。</p>
-        <p>本页把东岸滑块的当前值写进曲线右端点。全美馏分油总库存只随东岸相对起点的增减一比一移动，起点 121.6 百万桶，东岸起点 29.4 百万桶。也就是东岸被当成边际变化，不是 EIA 对五个 PADD 的加总。这两个起点在 <span class="mono">data.json</span> 的 <span class="mono">inventory</span> 里。</p>
-        <p class="formula-box">馏分油总库存 = 121.6 +（当前东岸 − 29.4）<br />柴油欧元/兆瓦时 =（美元/吨 ÷ EURUSD）÷ 11.83<br />11.83 兆瓦时/吨对应低位热值 42.6 MJ/kg</p>
-        <p>气价高于柴油热值时，本页把气转油激励标为出现：用户更愿意烧油、少烧气。平价曲线的 10 月锚在当前输入上，11 月至 3 月另加 <span class="mono">data.json</span> 里的示意季节升水。</p>
+        <h4>欧盟库存：80% 与本页的 90% 刻度</h4>
+        <p><strong>工作气量</strong> 把库存百分比换成十亿立方米（bcm）。采暖季按寒冷程度往下抽。3 月末还剩多少，分成宽裕、平衡、紧张或耗尽。</p>
+        <blockquote class="formula-box">
+          <p>工作气量（十亿立方米（bcm））= 库存% / 100 × 104.5</p>
+          <p>较五年均值 = 库存% − 93.2 个百分点</p>
+          <p>情景抽取（十亿立方米（bcm））= 58 ×（1 + 采暖度日偏离）</p>
+          <p>3 月末库存 = 起点工作气量 − 情景抽取</p>
+          <p>宽裕 ≥ 30 十亿立方米（bcm），平衡 ≥ 15 十亿立方米（bcm），否则紧张；低于零记为耗尽</p>
+        </blockquote>
+        <p><strong>104.5</strong>、<strong>93.2%</strong> 和 <strong>58</strong> 都是本页示意口径，不是当天 AGSI 的技术能力，也不是官方五年曲线。</p>
+        <p>法规里的 <strong>80%</strong> 是 2022 年的首年填充目标。Regulation (EU) 2022/1032 规定：2022 年 11 月 1 日前至少达到工作气能力的 80%，2023 年起每年 11 月 1 日前至少 <strong>90%</strong>。延期后的 Regulation (EU) 2025/1733 仍以 90% 为年度目标，但改成每年 10 月 1 日至 12 月 1 日之间达成，并允许成员国在市场困难或技术约束下偏离。</p>
+        <p>本页计算不用 80%。仪表上的琥珀色刻度是示意的 11 月 1 日 90% 目标，进度 = 当前库存% / 90%。它和 2023 年以后的法定填充水平同一量级，但刻度两边的数字是示意起点，不是 AGSI 当日读数。</p>
+
+        <h4>采暖度日（HDD）</h4>
+        <p><strong>采暖度日（HDD）</strong> 把冷多少收成一个数：日均气温低于基温 15.5°C 的度数累加。越冷，取暖用气越多。</p>
+        <p>10 月到 3 月的「常年」柱是西北欧示意气候态，不是气象机构或 Eurostat 的正式序列。</p>
+        <blockquote class="formula-box">
+          <p>情景采暖度日（HDD）= 常年采暖度日（HDD）×（1 + 采暖度日偏离）</p>
+        </blockquote>
+        <p>偏离滑块同时放大柱状图，以及上面的 58 十亿立方米（bcm）抽取。偏离为正，表示比常年更冷，3 月末库存更低。</p>
+
+        <h4>柴油裂解与 PADD 1</h4>
+        <p><strong>柴油裂解</strong> 是成品油相对原油还剩多少美元/桶。本页的原油腿用布伦特（Brent）。裂解越宽，炼厂越有动力多产柴油。裂解收窄甚至为负，柴油相对原油偏便宜。</p>
+        <blockquote class="formula-box">
+          <p>柴油裂解（美元/桶）= 成品（美元/桶）− 布伦特（Brent）（美元/桶）</p>
+          <p>美元/加仑 × 42 = 美元/桶</p>
+          <p>美元/吨 / 7.45 = 美元/桶</p>
+        </blockquote>
+        <p>纽约港和美湾的报价是美元/加仑，鹿特丹是美元/吨。<strong>42</strong> 加仑/桶、<strong>7.45</strong> 桶/吨是本页换算，不是交易所结算价。</p>
+        <p><strong>PADD 1</strong> 是美国东岸。东岸馏分油库存低，说明消费地缓冲薄。库存紧、裂解宽，是成品油偏紧。库存厚、裂解窄，是供给松出来了。</p>
+        <p>东岸滑块的当前值写在曲线右端点。全美馏分油总库存只随东岸相对起点的增减，一比一移动。</p>
+        <blockquote class="formula-box">
+          <p>馏分油总库存（百万桶）= 121.6 +（当前 PADD 1 − 29.4）</p>
+        </blockquote>
+        <p>东岸在这里被当成边际变化，不是 EIA 对五个 PADD 的加总。起点是全美 121.6 百万桶，PADD 1 为 29.4 百万桶。</p>
+        <p>气和柴油放在同一个能量单位上比较：</p>
+        <blockquote class="formula-box">
+          <p>柴油热值（欧元/兆瓦时（MWh））=（美元/吨 ÷ EURUSD）÷ 11.83</p>
+        </blockquote>
+        <p><strong>11.83</strong> 兆瓦时（MWh）/吨对应柴油低位热值 42.6 MJ/kg。气价高于这个热值时，本页把气转油激励标为出现：用户更愿意烧油、少烧气。平价曲线的 10 月锚在当前输入上，11 月至 3 月另加一组示意季节升水。</p>
 
         <h3>来源与更新频率</h3>
-        <div class="freq">
-          <article>
-            <h4>Henry Hub 现货</h4>
-            <p><strong>来源</strong> <a href="https://www.eia.gov/dnav/ng/hist/rngwhhdD.htm" target="_blank" rel="noopener noreferrer">EIA Henry Hub 日度现货</a></p>
-            <p><strong>频率</strong> 每个工作日，通常发布前一个工作日的价格。本页用的是示意起点。</p>
-          </article>
-          <article>
-            <h4>WTI 库欣现货</h4>
-            <p><strong>来源</strong> <a href="https://www.eia.gov/dnav/pet/hist/rwtcD.htm" target="_blank" rel="noopener noreferrer">EIA 库欣 WTI 日度现货</a></p>
-            <p><strong>频率</strong> 每个工作日。本页不读取 WTI，只在这里说明它的定价角色。</p>
-          </article>
-          <article>
-            <h4>布伦特现货</h4>
-            <p><strong>来源</strong> <a href="https://www.eia.gov/dnav/pet/hist/rbrteD.htm" target="_blank" rel="noopener noreferrer">EIA 欧洲布伦特日度现货</a></p>
-            <p><strong>频率</strong> 每个工作日。裂解表里的布伦特是示意输入。</p>
-          </article>
-          <article>
-            <h4>炼厂开工率、全美与 PADD 1 库存</h4>
-            <p><strong>来源</strong> <a href="https://www.eia.gov/petroleum/supply/weekly/" target="_blank" rel="noopener noreferrer">EIA 周度石油供应报告</a>，<a href="https://www.eia.gov/dnav/pet/pet_pnp_unc_dcu_nus_w.htm" target="_blank" rel="noopener noreferrer">炼厂开工率</a>，<a href="https://www.eia.gov/dnav/pet/pet_stoc_wstk_dcu_nus_w.htm" target="_blank" rel="noopener noreferrer">全美库存</a>，<a href="https://www.eia.gov/dnav/pet/pet_stoc_wstk_dcu_r10_w.htm" target="_blank" rel="noopener noreferrer">PADD 1 库存</a></p>
-            <p><strong>频率</strong> 每周，通常美东时间周三 10:30，覆盖截至上周五的一周。</p>
-          </article>
-          <article>
-            <h4>液化进料气</h4>
-            <p><strong>来源</strong> <a href="https://www.eia.gov/naturalgas/weekly/" target="_blank" rel="noopener noreferrer">EIA 天然气周报</a></p>
-            <p><strong>频率</strong> 周报通常周四。本页 1.15 是固定燃料气系数，不是这条序列。</p>
-          </article>
-          <article>
-            <h4>Spark25 日租金</h4>
-            <p><strong>来源</strong> <a href="https://www.sparkcommodities.com/lng-freight/" target="_blank" rel="noopener noreferrer">Spark LNG Freight</a>，<a href="https://www.sparkcommodities.com/api/lng-freight/contracts.html" target="_blank" rel="noopener noreferrer">Spark25S 发布时刻</a></p>
-            <p><strong>频率</strong> 现货 Spark25S 每个评估日 10:00 GMT；远期 Spark25Fo 每周二。本页轨迹是示意形状。</p>
-          </article>
-          <article>
-            <h4>TTF</h4>
-            <p><strong>来源</strong> <a href="https://www.ice.com/products/27996665/Dutch-TTF-Gas-Futures" target="_blank" rel="noopener noreferrer">ICE 荷兰 TTF 天然气期货</a></p>
-            <p><strong>频率</strong> 交易日连续成交，每个交易日结算。本页 TTF 是示意输入。</p>
-          </article>
-          <article>
-            <h4>欧盟库存与填充目标</h4>
-            <p><strong>来源</strong> <a href="https://agsi.gie.eu/" target="_blank" rel="noopener noreferrer">GIE AGSI+</a>，<a href="https://www.gie.eu/" target="_blank" rel="noopener noreferrer">Gas Infrastructure Europe</a>，<a href="https://energy.ec.europa.eu/topics/energy-security/gas-storage_en" target="_blank" rel="noopener noreferrer">欧盟委员会气体储存</a>，<a href="https://eur-lex.europa.eu/eli/reg/2022/1032/oj" target="_blank" rel="noopener noreferrer">Regulation (EU) 2022/1032</a>（2022 年 80%、其后 90%），<a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32025R1733" target="_blank" rel="noopener noreferrer">Regulation (EU) 2025/1733</a></p>
-            <p><strong>频率</strong> AGSI+ 每个天然气日更新。80% 是 2022 年 11 月 1 日的法定目标；本页刻度用的是示意 90%。</p>
-          </article>
-          <article>
-            <h4>采暖度日</h4>
-            <p><strong>来源</strong> <a href="https://ec.europa.eu/eurostat/cache/metadata/en/nrg_chdd_esms.htm" target="_blank" rel="noopener noreferrer">Eurostat 采暖与制冷度日说明</a></p>
-            <p><strong>频率</strong> Eurostat 为月度、年度统计。本页月值是示意气候态，基温 15.5°C。</p>
-          </article>
-          <article>
-            <h4>欧元兑美元</h4>
-            <p><strong>来源</strong> <a href="https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-usd.en.html" target="_blank" rel="noopener noreferrer">欧洲央行欧元参考汇率</a>，经 <a href="https://frankfurter.dev/" target="_blank" rel="noopener noreferrer">Frankfurter</a> 读取</p>
-            <p><strong>频率</strong> 每个 TARGET 工作日，约欧洲中部时间 16:00。本页约每 60 秒轮询一次。</p>
-          </article>
+        <div class="table-wrap">
+          <table class="glossary-table">
+            <thead>
+              <tr>
+                <th>指标名称</th>
+                <th>官方数据源</th>
+                <th>发布频率</th>
+                <th>本页应用说明</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Henry Hub</td>
+                <td><a href="https://www.eia.gov/dnav/ng/hist/rngwhhdD.htm" target="_blank" rel="noopener noreferrer">EIA Henry Hub 日度现货</a></td>
+                <td>每个工作日，通常为前一工作日</td>
+                <td>原料气价格，单位美元/百万英热（MMBtu）。先乘 1.15，再进入离岸。看板上是示意起点。</td>
+              </tr>
+              <tr>
+                <td>WTI</td>
+                <td><a href="https://www.eia.gov/dnav/pet/hist/rwtcD.htm" target="_blank" rel="noopener noreferrer">EIA 库欣 WTI 日度现货</a></td>
+                <td>每个工作日</td>
+                <td>美国内陆原油基准，单位美元/桶。本页不读取，也不参与裂解。</td>
+              </tr>
+              <tr>
+                <td>布伦特（Brent）</td>
+                <td><a href="https://www.eia.gov/dnav/pet/hist/rbrteD.htm" target="_blank" rel="noopener noreferrer">EIA 欧洲布伦特日度现货</a></td>
+                <td>每个工作日</td>
+                <td>本页原油腿，单位美元/桶。柴油裂解减去这一价格。看板上是示意输入。</td>
+              </tr>
+              <tr>
+                <td>美国炼厂开工率</td>
+                <td><a href="https://www.eia.gov/petroleum/supply/weekly/" target="_blank" rel="noopener noreferrer">EIA 周度石油供应报告</a>，<a href="https://www.eia.gov/dnav/pet/pet_pnp_unc_dcu_nus_w.htm" target="_blank" rel="noopener noreferrer">炼厂开工率</a></td>
+                <td>每周，通常美东时间周三 10:30，覆盖截至上周五的一周</td>
+                <td>只作炼厂松紧的读数。不进入套利，也不进入裂解。</td>
+              </tr>
+              <tr>
+                <td>液化进料气</td>
+                <td><a href="https://www.eia.gov/naturalgas/weekly/" target="_blank" rel="noopener noreferrer">EIA 天然气周报</a></td>
+                <td>通常周四</td>
+                <td>官方序列是液化厂吃进的管道气，是实物量。本页 1.15 是燃料气系数，不是这条序列。</td>
+              </tr>
+              <tr>
+                <td>Spark25</td>
+                <td><a href="https://www.sparkcommodities.com/lng-freight/" target="_blank" rel="noopener noreferrer">Spark LNG Freight</a>，<a href="https://www.sparkcommodities.com/api/lng-freight/contracts.html" target="_blank" rel="noopener noreferrer">Spark25S 发布时刻</a></td>
+                <td>现货 Spark25S 每个评估日 10:00 GMT；远期 Spark25Fo 每周二</td>
+                <td>大西洋盆地船日租金，单位美元/日。曲线左段为示意，右端点跟随输入。</td>
+              </tr>
+              <tr>
+                <td>TTF</td>
+                <td><a href="https://www.ice.com/products/27996665/Dutch-TTF-Gas-Futures" target="_blank" rel="noopener noreferrer">ICE 荷兰 TTF 天然气期货</a></td>
+                <td>交易日连续成交，每个交易日结算</td>
+                <td>欧洲卖价，单位欧元/兆瓦时（MWh）。看板上是示意输入，不是 ICE 结算价。</td>
+              </tr>
+              <tr>
+                <td>欧元兑美元（EURUSD）</td>
+                <td><a href="https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-usd.en.html" target="_blank" rel="noopener noreferrer">欧洲央行欧元参考汇率</a>，经 <a href="https://frankfurter.dev/" target="_blank" rel="noopener noreferrer">Frankfurter</a> 读取</td>
+                <td>每个 TARGET 工作日，约欧洲中部时间 16:00。本页约每 60 秒轮询一次</td>
+                <td>1 欧元兑多少美元。用来把美元/百万英热（MMBtu）换成欧元/兆瓦时（MWh）。</td>
+              </tr>
+              <tr>
+                <td>欧盟库存</td>
+                <td><a href="https://agsi.gie.eu/" target="_blank" rel="noopener noreferrer">GIE AGSI+</a>，<a href="https://energy.ec.europa.eu/topics/energy-security/gas-storage_en" target="_blank" rel="noopener noreferrer">欧盟委员会气体储存</a>，<a href="https://eur-lex.europa.eu/eli/reg/2022/1032/oj" target="_blank" rel="noopener noreferrer">Regulation (EU) 2022/1032</a>，<a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32025R1733" target="_blank" rel="noopener noreferrer">Regulation (EU) 2025/1733</a></td>
+                <td>AGSI+ 每个天然气日更新，通常发布前一个天然气日</td>
+                <td>库存水平看 AGSI+。法定 80% 是 2022 年 11 月 1 日的目标。本页刻度是示意的 90%。</td>
+              </tr>
+              <tr>
+                <td>采暖度日（HDD）</td>
+                <td><a href="https://ec.europa.eu/eurostat/cache/metadata/en/nrg_chdd_esms.htm" target="_blank" rel="noopener noreferrer">Eurostat 采暖与制冷度日</a></td>
+                <td>月度、年度统计</td>
+                <td>本页 10 月至 3 月是示意气候态，基温 15.5°C，不是 Eurostat 序列。</td>
+              </tr>
+              <tr>
+                <td>美国馏分油库存</td>
+                <td><a href="https://www.eia.gov/dnav/pet/pet_stoc_wstk_dcu_nus_w.htm" target="_blank" rel="noopener noreferrer">EIA 全美原油与成品油库存</a></td>
+                <td>每周，通常美东时间周三 10:30</td>
+                <td>本页总量 = 121.6 +（当前 PADD 1 − 29.4）百万桶，只随东岸一比一变动。</td>
+              </tr>
+              <tr>
+                <td>PADD 1 东岸馏分油库存</td>
+                <td><a href="https://www.eia.gov/dnav/pet/pet_stoc_wstk_dcu_r10_w.htm" target="_blank" rel="noopener noreferrer">EIA PADD 1 库存</a></td>
+                <td>每周，通常美东时间周三 10:30</td>
+                <td>东岸缓冲，单位百万桶。滑块当前值写在曲线右端点。起点 29.4 百万桶。</td>
+              </tr>
+              <tr>
+                <td>柴油裂解</td>
+                <td>原油腿为 <a href="https://www.eia.gov/dnav/pet/hist/rbrteD.htm" target="_blank" rel="noopener noreferrer">EIA 欧洲布伦特日度现货</a>。成品油报价在本页为示意</td>
+                <td>布伦特（Brent）每个工作日。裂解随输入即时重算</td>
+                <td>成品美元/桶减去布伦特（Brent）。加仑 × 42，吨 / 7.45。不是交易所结算价。</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
-        <h3>data.json 怎么换</h3>
-        <p>页面加载时请求同目录的 <span class="mono">data.json</span>。页眉「数据快照」写出文件里的 <span class="mono">asOf</span>，以及这次取回文件的时间。请求失败或字段对不上时，改用页内一份小回退，快照会标明「内置回退」，计算不中断。</p>
-        <p>后续脚本替换整个文件即可。需要保留 <span class="mono">asOf</span>（ISO-8601 时间）、<span class="mono">seed</span> 里的全部起点、<span class="mono">series.hddNorm</span>、<span class="mono">series.gasPremiumEurPerMwh</span>、<span class="mono">series.dieselPremiumEurPerMwh</span>（后两者与采暖月一一对应）、<span class="mono">series.spark25UsdPerDay</span>、<span class="mono">series.padd1DistillateMillionBbl</span>，以及 <span class="mono">inventory</span> 里的全美馏分油起点和东岸起点。滑块和价格输入仍在这份底稿上立刻重算图表和套利边际。1.15、港口、再气化、热值、90% 刻度和 0.50 门槛留在页面里，不随文件改变。</p>
+        <h3 class="appendix">附录：开发与数据更新指南</h3>
+        <p>这一节给维护数据的人。看看板不需要读它。</p>
+        <p>页面加载时请求同目录的 <span class="mono">data.json</span>。页眉「数据快照」写出文件里的 <span class="mono">asOf</span>（按 UTC 显示），以及浏览器取得该文件的时间。请求失败、超时，或必填字段对不上时，整份文件丢弃，改用页内回退，快照写成「内置回退」。滑块和价格输入仍在已经载入的底稿上立刻重算。欧元兑美元（EURUSD）的 Frankfurter 轮询不读这个文件。</p>
+        <p>替换整个 <span class="mono">data.json</span> 即可，不必改 HTML。<span class="mono">index.html</span> 与 <span class="mono">transatlantic-energy-dashboard.html</span> 保持相同。解析器不读取 <span class="mono">schema</span>、<span class="mono">kind</span>、<span class="mono">description</span>。现行文件仍写 <span class="mono">schema</span> 为 <span class="mono">energy-dashboard.data.v1</span>，<span class="mono">kind</span> 为 <span class="mono">illustrative</span>。</p>
+        <p>必填字段：</p>
+        <ul>
+          <li><span class="mono">asOf</span>：非空字符串，用 ISO-8601 时间。</li>
+          <li><span class="mono">seed</span>：下面每个键都是有限数字，并且 <span class="mono">eurusd</span> &gt; 0、<span class="mono">cargoWan</span> &gt; 0。
+            <ul>
+              <li><span class="mono">ttf</span>：欧元/兆瓦时（MWh）</li>
+              <li><span class="mono">hh</span>：美元/百万英热（MMBtu）</li>
+              <li><span class="mono">eurusd</span>：1 欧元兑多少美元，只在参考价尚未取到时用作回退</li>
+              <li><span class="mono">freight</span>：美元/日</li>
+              <li><span class="mono">storagePct</span>、<span class="mono">hddDevPct</span>、<span class="mono">utilPct</span>：百分比</li>
+              <li><span class="mono">padd1</span>：百万桶</li>
+              <li><span class="mono">brent</span>：美元/桶</li>
+              <li><span class="mono">nyh</span>、<span class="mono">usgc</span>：美元/加仑</li>
+              <li><span class="mono">ara</span>：美元/吨</li>
+              <li><span class="mono">roundTripDays</span>、<span class="mono">ladenDays</span>：天</li>
+              <li><span class="mono">cargoWan</span>：万百万英热（MMBtu）</li>
+              <li><span class="mono">liq</span>：美元/百万英热（MMBtu）</li>
+            </ul>
+          </li>
+          <li><span class="mono">series.hddNorm</span>：至少 1 个月。每项为 <span class="mono">month</span> 与 <span class="mono">degreeDays</span>，或 <span class="mono">[月份, 度日]</span>。</li>
+          <li><span class="mono">series.gasPremiumEurPerMwh</span> 与 <span class="mono">series.dieselPremiumEurPerMwh</span>：欧元/兆瓦时（MWh），长度与 <span class="mono">series.hddNorm</span> 相同。</li>
+          <li><span class="mono">series.spark25UsdPerDay</span>：美元/日，至少 2 个点。</li>
+          <li><span class="mono">series.padd1DistillateMillionBbl</span>：百万桶，至少 2 个点。</li>
+          <li><span class="mono">inventory.usDistillateBaseMillionBbl</span> 与 <span class="mono">inventory.padd1BaseMillionBbl</span>：百万桶。</li>
+        </ul>
+        <p>曲线右端点会被当前输入盖住。因此 <span class="mono">series.spark25UsdPerDay</span> 的最后一个点应等于 <span class="mono">seed.freight</span>，<span class="mono">series.padd1DistillateMillionBbl</span> 的最后一个点应等于 <span class="mono">seed.padd1</span>。</p>
+        <p>下面这些系数留在页面里，替换 <span class="mono">data.json</span> 不会改它们：进料气 1.15；蒸发气 0.10%/日；港口 0.12 美元/百万英热（MMBtu）；再气化 0.35 美元/百万英热（MMBtu）；3.412141633 百万英热（MMBtu）/兆瓦时（MWh）；窗口门槛 0.50 欧元/兆瓦时（MWh）；工作气能力 104.5 十亿立方米（bcm）；五年均值 93.2%；11 月 1 日刻度 90%；常年抽取 58 十亿立方米（bcm）；42 加仑/桶；7.45 桶/吨；11.83 兆瓦时（MWh）/吨。</p>
       </div>
     </div>
   </div>
