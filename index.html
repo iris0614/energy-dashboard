@@ -1,0 +1,1644 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark light" />
+  <title>跨大西洋冬季能源平衡与套利看板</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230e141b'/%3E%3Cpath d='M6 23a10 10 0 0 1 20 0' fill='none' stroke='%232fbfa8' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E" />
+  <script>
+    try {
+      var savedTheme = localStorage.getItem("desk-theme");
+      if (savedTheme === "light" || savedTheme === "dark") {
+        document.documentElement.setAttribute("data-theme", savedTheme);
+      }
+    } catch (e) {}
+  </script>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0e141b;
+      --elev: #161e28;
+      --sunken: #0b1016;
+      --line: #2a3848;
+      --faint: #4a6074;
+      --text: #e8eef5;
+      --muted: #93a4b8;
+      --accent: #e2a04a;
+      --gas: #2fbfa8;
+      --diesel: #e07a45;
+      --info: #79b6f5;
+      --up: #3dce8e;
+      --down: #f07a84;
+      --warn: #e2b657;
+      --glow: rgba(47, 191, 168, 0.16);
+    }
+    @media (prefers-color-scheme: light) {
+      :root:not([data-theme]) {
+        color-scheme: light;
+        --bg: #f3efe6;
+        --elev: #fffdf8;
+        --sunken: #efeae1;
+        --line: #e0d6c8;
+        --faint: #b7ab9c;
+        --text: #1d1a16;
+        --muted: #6d645b;
+        --accent: #8d4e12;
+        --gas: #0c7564;
+        --diesel: #b85a22;
+        --info: #1d5f99;
+        --up: #0d7a45;
+        --down: #b4333f;
+        --warn: #8a5a10;
+        --glow: rgba(12, 117, 100, 0.1);
+      }
+    }
+    :root[data-theme="light"] {
+      color-scheme: light;
+      --bg: #f3efe6;
+      --elev: #fffdf8;
+      --sunken: #efeae1;
+      --line: #e0d6c8;
+      --faint: #b7ab9c;
+      --text: #1d1a16;
+      --muted: #6d645b;
+      --accent: #8d4e12;
+      --gas: #0c7564;
+      --diesel: #b85a22;
+      --info: #1d5f99;
+      --up: #0d7a45;
+      --down: #b4333f;
+      --warn: #8a5a10;
+      --glow: rgba(12, 117, 100, 0.1);
+    }
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #0e141b;
+      --elev: #161e28;
+      --sunken: #0b1016;
+      --line: #2a3848;
+      --faint: #4a6074;
+      --text: #e8eef5;
+      --muted: #93a4b8;
+      --accent: #e2a04a;
+      --gas: #2fbfa8;
+      --diesel: #e07a45;
+      --info: #79b6f5;
+      --up: #3dce8e;
+      --down: #f07a84;
+      --warn: #e2b657;
+      --glow: rgba(47, 191, 168, 0.16);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body {
+      min-height: 100vh;
+      font-family: "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(900px 420px at 0% -10%, var(--glow), transparent 60%),
+        radial-gradient(680px 360px at 100% 0%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 55%),
+        var(--bg);
+      line-height: 1.5;
+    }
+    body::before {
+      content: "";
+      display: block;
+      height: 3px;
+      background: linear-gradient(90deg, var(--gas), var(--accent) 48%, var(--diesel));
+    }
+    button, input { font: inherit; color: inherit; }
+    button { cursor: pointer; }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    h1, h2, h3, p { margin: 0; }
+    .wrap { max-width: 1440px; margin: 0 auto; padding: 20px 22px 48px; }
+    .mono { font-family: ui-monospace, "SFMono-Regular", "Cascadia Mono", "Segoe UI Mono", "WenQuanYi Micro Hei Mono", monospace; font-variant-numeric: tabular-nums; }
+
+    .top { display: flex; justify-content: space-between; gap: 18px; align-items: flex-end; margin-bottom: 16px; }
+    h1 { font-size: 26px; font-weight: 650; letter-spacing: -0.02em; line-height: 1.25; }
+    .sub { margin-top: 6px; color: var(--muted); font-size: 13px; max-width: 62ch; }
+    .top-side { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+    .stamp { font-size: 12px; color: var(--muted); }
+    .stamp strong { color: var(--text); font-weight: 600; }
+    .tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: flex-end; }
+    .check { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); }
+    button.ghost, button.solid {
+      background: var(--sunken);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 13px;
+    }
+    button.ghost:hover, button.solid:hover { border-color: var(--faint); }
+    button.solid { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+    .chain-scroll { margin-bottom: 16px; max-width: 100%; }
+    .chain-hint { display: none; }
+    .chain-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+      gap: 8px;
+      align-items: stretch;
+    }
+    .node {
+      background: var(--elev);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px 14px;
+      min-width: 0;
+    }
+    .kicker { color: var(--accent); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
+    .node h2 { font-size: 15px; font-weight: 640; margin-top: 2px; }
+    .node dl { margin: 8px 0 0; display: grid; gap: 6px; }
+    .node dt { color: var(--muted); font-size: 12px; }
+    .node dd { margin: 0; font-size: 14px; }
+    .arrow { display: flex; align-items: center; color: var(--accent); font-size: 18px; }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr);
+      gap: 14px;
+    }
+    #refining { grid-column: 1 / -1; }
+    .card {
+      background: var(--elev);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px;
+      min-width: 0;
+    }
+    .card-head { display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; margin-bottom: 12px; }
+    .card h2 { font-size: 17px; font-weight: 650; }
+    .idx { color: var(--accent); font-size: 12px; margin-right: 6px; }
+    .badge {
+      font-size: 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 2px 7px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .badge-live { color: var(--gas); border-color: color-mix(in srgb, var(--gas) 45%, var(--line)); }
+    .note { color: var(--muted); font-size: 12px; line-height: 1.45; margin-top: 6px; }
+    .formula { color: var(--muted); font-size: 12px; line-height: 1.5; margin-top: 8px; }
+
+    .gas-top { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 8px 12px; align-items: center; }
+    svg.gauge { width: min(200px, 100%); height: auto; display: block; margin: 0 auto; }
+    .gauge-track { stroke: var(--line); stroke-width: 10; fill: none; stroke-linecap: round; }
+    .gauge-ok { stroke: var(--gas); stroke-width: 10; fill: none; stroke-linecap: round; }
+    .gauge-warn { stroke: var(--warn); stroke-width: 10; fill: none; stroke-linecap: round; }
+    .gauge-tick { stroke: var(--accent); stroke-width: 2; }
+    .gauge-value { fill: var(--text); font-size: 26px; font-weight: 650; }
+    .chart-svg text { font-family: "Segoe UI", "PingFang SC", "Noto Sans SC", "WenQuanYi Micro Hei", sans-serif; }
+    .chart-svg .muted, .gauge .muted { fill: var(--muted); font-size: 12px; }
+    .chart-svg .num { fill: var(--muted); font-size: 11px; font-family: ui-monospace, "Segoe UI Mono", monospace; }
+    .chart-svg .grid { stroke: var(--line); stroke-width: 1; }
+    .chart-svg .guide { stroke: var(--faint); stroke-width: 1; stroke-dasharray: 3 3; }
+    svg.chart-svg { width: 100%; height: 228px; display: block; }
+    svg.chart-svg.sparkline { height: 132px; }
+
+    .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .stat { background: var(--sunken); border-radius: 10px; padding: 8px 10px; min-width: 0; }
+    .stat.span-2 { grid-column: 1 / -1; }
+    .stat-k { color: var(--muted); font-size: 12px; }
+    .stat-v { margin-top: 2px; font-size: 16px; }
+    .slider-block { margin-top: 12px; }
+    .slider-top { display: flex; justify-content: space-between; gap: 8px; align-items: center; font-size: 13px; }
+    .slider-top label { color: var(--muted); }
+    .slider-edit { display: inline-flex; align-items: center; gap: 6px; }
+    input[type="range"] { width: 100%; accent-color: var(--gas); margin-top: 4px; }
+    input[type="number"] {
+      width: 100%;
+      background: var(--sunken);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 16px;
+    }
+    input[type="number"].tiny { width: 88px; padding: 4px 8px; font-size: 14px; }
+    .lock { color: var(--accent); font-size: 11px; }
+
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+    .form-grid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .field { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+    .field.span-2 { grid-column: span 2; }
+    .field label { font-size: 12px; color: var(--muted); }
+    .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+    .seg button { border: 0; background: transparent; border-radius: 0; padding: 4px 10px; font-size: 12px; }
+    .seg button[aria-pressed="true"] { background: var(--text); color: var(--bg); }
+
+    .result { display: flex; justify-content: space-between; gap: 12px; align-items: flex-end; margin: 12px 0 8px; }
+    .kpi { font-size: 32px; letter-spacing: -0.03em; line-height: 1.1; }
+    .unit { font-family: "Segoe UI", "PingFang SC", sans-serif; font-size: 12px; color: var(--muted); margin-left: 6px; letter-spacing: 0; }
+    .pos { color: var(--up); }
+    .neg { color: var(--down); }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 12px;
+      border: 1px solid var(--line);
+      margin-top: 6px;
+    }
+    .pill.is-open { color: var(--up); border-color: color-mix(in srgb, var(--up) 45%, var(--line)); background: color-mix(in srgb, var(--up) 12%, transparent); }
+    .pill.is-shut { color: var(--down); border-color: color-mix(in srgb, var(--down) 45%, var(--line)); background: color-mix(in srgb, var(--down) 12%, transparent); }
+    .pill.is-ok { color: var(--up); border-color: color-mix(in srgb, var(--up) 45%, var(--line)); }
+    .pill.is-warn { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 45%, var(--line)); }
+    .pill.is-bad { color: var(--down); border-color: color-mix(in srgb, var(--down) 45%, var(--line)); }
+    .banner {
+      border: 1px solid var(--line);
+      background: var(--sunken);
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-size: 12px;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    .banner.is-bad { border-color: color-mix(in srgb, var(--down) 55%, var(--line)); }
+    .banner.is-warn { border-color: color-mix(in srgb, var(--warn) 55%, var(--line)); }
+
+    .cmp { display: grid; gap: 6px; margin: 8px 0; }
+    .cmp-row { display: grid; grid-template-columns: 88px minmax(0, 1fr) 92px; gap: 8px; align-items: center; font-size: 12px; }
+    .cmp-track { height: 10px; background: var(--sunken); border-radius: 99px; overflow: hidden; }
+    .cmp-track i { display: block; height: 100%; }
+    .cmp-track i.des { background: var(--diesel); }
+    .cmp-track i.ttf { background: var(--gas); }
+    .cost-stack { display: flex; height: 12px; border-radius: 99px; overflow: hidden; background: var(--sunken); margin-top: 8px; }
+    .cost-stack i { display: block; height: 100%; }
+    .stack-legend { display: flex; flex-wrap: wrap; gap: 6px 12px; margin-top: 6px; font-size: 11px; color: var(--muted); }
+    .stack-legend span { display: inline-flex; align-items: center; }
+    .stack-legend b { color: var(--text); font-weight: 600; margin-left: 4px; }
+    .swatch { width: 8px; height: 8px; border-radius: 99px; display: inline-block; margin-right: 6px; flex: none; }
+
+    .legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 12px; color: var(--muted); margin: 4px 0; }
+    .legend span { display: inline-flex; align-items: center; }
+
+    .kpi-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-bottom: 12px; }
+    .kpi-box { background: var(--sunken); border-radius: 12px; padding: 10px; min-width: 0; }
+    .kpi-box .stat-v { font-size: 22px; }
+    .meter { height: 8px; background: var(--elev); border-radius: 99px; overflow: hidden; margin-top: 8px; }
+    .meter i { display: block; height: 100%; background: var(--info); width: 0; }
+    .ref-split { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.9fr); gap: 14px; }
+    .ref-split > *, .kpi-row > *, .gas-top > *, .stats > *, .form-grid > * { min-width: 0; }
+    .table-wrap { overflow-x: auto; max-width: 100%; width: 100%; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 520px; }
+    th { text-align: left; color: var(--muted); font-weight: 500; font-size: 12px; padding: 6px; }
+    td { border-top: 1px solid var(--line); padding: 8px 6px; vertical-align: top; }
+    td.num, th.num { text-align: right; }
+    td.name { white-space: nowrap; }
+
+    #tip {
+      position: fixed;
+      z-index: 30;
+      pointer-events: none;
+      background: var(--elev);
+      color: var(--text);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 12px;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+      max-width: 260px;
+    }
+    #tip[hidden] { display: none; }
+    #tip .tip-strong { font-weight: 650; }
+    #fatal { margin-bottom: 12px; }
+
+    footer { margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--line); }
+    footer h2 { font-size: 14px; margin: 14px 0 6px; }
+    footer ul { margin: 0; padding-left: 18px; }
+    footer li { margin: 4px 0; }
+    footer a { color: var(--info); }
+    footer a:hover { color: var(--text); }
+    .src { overflow-wrap: anywhere; }
+
+    @media (max-width: 1100px) {
+      .form-grid.four { grid-template-columns: 1fr 1fr; }
+      .ref-split { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 860px) {
+      main { grid-template-columns: 1fr; }
+      #refining { grid-column: auto; }
+      .chain-hint { display: block; }
+      .chain-scroll { overflow-x: auto; padding-bottom: 6px; }
+      .chain-row { display: flex; width: max-content; max-width: none; }
+      .node { width: 230px; scroll-snap-align: start; }
+      .chain-scroll { scroll-snap-type: x mandatory; }
+      .gas-top { grid-template-columns: 1fr; }
+      .kpi-row { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 720px) {
+      .wrap { padding: 14px 12px 36px; }
+      h1 { font-size: 22px; }
+      .top, .top-side { align-items: flex-start; }
+      .top { flex-direction: column; }
+      .tools { justify-content: flex-start; }
+      .form-grid, .form-grid.four, .field.span-2 { grid-template-columns: 1fr; }
+      .field.span-2 { grid-column: auto; }
+      .result { flex-direction: column; align-items: flex-start; }
+      .kpi { font-size: 28px; }
+      .cmp-row { grid-template-columns: 72px minmax(0, 1fr) 76px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      * { scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div>
+        <h1>跨大西洋冬季能源平衡与套利看板</h1>
+        <p class="sub">2025/26 采暖季量级的示意底稿。欧元兑美元在接口可用时改用欧洲央行参考价，其余价格、库存、运价与采暖度日都标明为示意，改任何一个输入会立刻重算。</p>
+      </div>
+      <div class="top-side">
+        <p class="stamp">数据快照 <strong id="stamp-time">—</strong></p>
+        <div class="tools">
+          <label class="check" title="未锁定的示意价格会轻微向起点回归，用来在没有行情接口时保持看板更新">
+            <input id="sim-toggle" type="checkbox" checked />
+            示意跳动
+          </label>
+          <button type="button" class="ghost" id="btn-reset">恢复示意起点</button>
+          <button type="button" class="solid" id="theme-toggle">切换为浅色</button>
+        </div>
+      </div>
+    </header>
+
+    <p id="fatal" class="banner is-bad" hidden></p>
+    <noscript><p class="banner is-bad">计算、图表和汇率请求需要 JavaScript。页面结构仍可阅读，但数字不会更新。</p></noscript>
+
+    <section class="chain-scroll" aria-label="供应链概览">
+      <p class="note chain-hint">左右滑动查看四个环节。</p>
+      <div class="chain-row">
+        <article class="node">
+          <p class="kicker">01</p>
+          <h2>上游原料定价</h2>
+          <dl>
+            <div><dt>Henry Hub</dt><dd class="mono" id="chain-hh">—</dd></div>
+            <div><dt>布伦特</dt><dd class="mono" id="chain-brent">—</dd></div>
+          </dl>
+        </article>
+        <div class="arrow" aria-hidden="true">→</div>
+        <article class="node">
+          <p class="kicker">02</p>
+          <h2>炼厂/液化加工</h2>
+          <dl>
+            <div><dt>美国炼厂开工率</dt><dd class="mono" id="chain-util">—</dd></div>
+            <div><dt>液化费</dt><dd class="mono" id="chain-liq">—</dd></div>
+          </dl>
+        </article>
+        <div class="arrow" aria-hidden="true">→</div>
+        <article class="node">
+          <p class="kicker">03</p>
+          <h2>跨大西洋航运</h2>
+          <dl>
+            <div><dt>Spark25 日租金</dt><dd class="mono" id="chain-freight">—</dd></div>
+            <div><dt>往返运费</dt><dd class="mono" id="chain-voyage">—</dd></div>
+          </dl>
+        </article>
+        <div class="arrow" aria-hidden="true">→</div>
+        <article class="node">
+          <p class="kicker">04</p>
+          <h2>终端消费与供暖/柴油</h2>
+          <dl>
+            <div><dt>TTF</dt><dd class="mono" id="chain-ttf">—</dd></div>
+            <div><dt>柴油热值</dt><dd class="mono" id="chain-heat">—</dd></div>
+          </dl>
+        </article>
+      </div>
+    </section>
+
+    <main>
+      <section class="card" id="gas" aria-labelledby="gas-title">
+        <div class="card-head">
+          <h2 id="gas-title"><span class="idx mono">01</span>欧洲天然气</h2>
+          <span class="badge">示意</span>
+        </div>
+        <div class="gas-top">
+          <svg id="gauge" class="gauge" viewBox="0 0 220 148" role="img" aria-label="欧洲天然气库存表"></svg>
+          <div>
+            <p class="note" id="gas-progress">—</p>
+            <div class="stats">
+              <div class="stat"><p class="stat-k">工作气量</p><p class="stat-v mono" id="gas-bcm">—</p></div>
+              <div class="stat"><p class="stat-k">较五年均值</p><p class="stat-v mono" id="gas-vs5y">—</p></div>
+              <div class="stat"><p class="stat-k">采暖季抽取</p><p class="stat-v mono" id="gas-draw">—</p></div>
+              <div class="stat span-2">
+                <p class="stat-k">3月末库存情景</p>
+                <p class="stat-v mono" id="gas-end">—</p>
+                <p id="gas-status" class="pill">—</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="slider-block">
+          <div class="slider-top">
+            <label for="storage-range">采暖季起点库存</label>
+            <span class="slider-edit">
+              <input id="storage-num" class="tiny mono" type="number" min="55" max="100" step="0.1" inputmode="decimal" aria-label="采暖季起点库存百分比" />
+              <span>%</span>
+            </span>
+          </div>
+          <input id="storage-range" type="range" min="55" max="100" step="0.1" value="91.5" aria-label="采暖季起点库存百分比" />
+        </div>
+        <div class="slider-block">
+          <div class="slider-top">
+            <label for="hdd-range">采暖度日偏离（基温 15.5°C）</label>
+            <output class="mono" id="hdd-out" for="hdd-range">较常年 0%</output>
+          </div>
+          <input id="hdd-range" type="range" min="-30" max="40" step="1" value="0" aria-label="采暖度日偏离百分比" />
+        </div>
+        <div class="legend" aria-hidden="true">
+          <span><i class="swatch" style="background: var(--faint)"></i>常年</span>
+          <span><i class="swatch" style="background: var(--gas)"></i>情景</span>
+        </div>
+        <svg id="hdd-chart" class="chart-svg" role="img" aria-label="采暖季采暖度日柱状图"></svg>
+        <p class="note" id="hdd-note">西北欧综合采暖度日为示意气候态，不是气象机构的正式序列。</p>
+      </section>
+
+      <section class="card" id="shipping" aria-labelledby="ship-title">
+        <div class="card-head">
+          <h2 id="ship-title"><span class="idx mono">02</span>海运与套利</h2>
+          <span class="badge badge-live" id="arb-badge">汇率待取</span>
+        </div>
+        <p id="fx-banner" class="banner" role="status">正在读取欧洲央行参考价。计算已用回退汇率，界面不会等待。</p>
+        <div class="form-grid">
+          <div class="field">
+            <label for="in-ttf">TTF（欧元/兆瓦时） <span class="lock" id="lock-ttf" hidden>已锁定</span></label>
+            <input id="in-ttf" class="mono" type="number" min="1" max="400" step="0.01" inputmode="decimal" />
+          </div>
+          <div class="field">
+            <label for="in-hh">Henry Hub（美元/百万英热） <span class="lock" id="lock-hh" hidden>已锁定</span></label>
+            <input id="in-hh" class="mono" type="number" min="0.2" max="40" step="0.01" inputmode="decimal" />
+          </div>
+          <div class="field span-2">
+            <label for="in-fx">汇率 <span id="fx-label">EURUSD · 1 欧元兑美元</span> <span class="lock" id="lock-fx" hidden>已锁定</span></label>
+            <input id="in-fx" class="mono" type="number" min="0.3" max="2.5" step="0.0001" inputmode="decimal" />
+            <div class="slider-top">
+              <div class="seg" role="group" aria-label="汇率标价方式">
+                <button type="button" id="fx-eurusd" aria-pressed="true">EURUSD</button>
+                <button type="button" id="fx-usdeur" aria-pressed="false">USDEUR</button>
+              </div>
+              <button type="button" class="ghost" id="btn-use-fx" hidden>采用参考价</button>
+            </div>
+            <p class="note" id="fx-inverse">—</p>
+            <p class="note" id="fx-meta">—</p>
+          </div>
+          <div class="field span-2">
+            <label for="in-freight">Spark25 日租金（美元/日） <span class="lock" id="lock-freight" hidden>已锁定</span></label>
+            <input id="in-freight" class="mono" type="number" min="1000" max="500000" step="500" inputmode="decimal" />
+          </div>
+        </div>
+        <div class="form-grid four" style="margin-top: 10px">
+          <div class="field">
+            <label for="in-days">往返天数</label>
+            <input id="in-days" class="mono" type="number" min="8" max="60" step="1" />
+          </div>
+          <div class="field">
+            <label for="in-laden">装载天数</label>
+            <input id="in-laden" class="mono" type="number" min="4" max="40" step="1" />
+          </div>
+          <div class="field">
+            <label for="in-cargo">货量（万 MMBtu）</label>
+            <input id="in-cargo" class="mono" type="number" min="200" max="450" step="1" />
+          </div>
+          <div class="field">
+            <label for="in-liq">液化费（美元/百万英热）</label>
+            <input id="in-liq" class="mono" type="number" min="0" max="8" step="0.05" />
+          </div>
+        </div>
+        <p class="note" id="voyage-warn" hidden>装载天数大于往返天数，蒸发气近似会被高估。</p>
+
+        <div class="result">
+          <div>
+            <p class="note">套利边际（TTF − 交付成本）</p>
+            <p class="kpi mono" id="arb-margin">—</p>
+            <p class="note mono" id="arb-margin-usd">—</p>
+          </div>
+          <div>
+            <p id="arb-window" class="pill">—</p>
+            <p class="note">交付 <span class="mono" id="arb-des-eur">—</span></p>
+            <p class="note">合 <span class="mono" id="arb-des-usd">—</span></p>
+          </div>
+        </div>
+        <div class="cmp" aria-hidden="true">
+          <div class="cmp-row"><span>交付成本</span><div class="cmp-track"><i id="bar-des" class="des"></i></div><span class="mono" id="cmp-des">—</span></div>
+          <div class="cmp-row"><span>TTF</span><div class="cmp-track"><i id="bar-ttf" class="ttf"></i></div><span class="mono" id="cmp-ttf">—</span></div>
+        </div>
+        <div id="cost-stack" class="cost-stack" aria-hidden="true"></div>
+        <div id="stack-legend" class="stack-legend"></div>
+        <p class="formula" id="arb-formula"></p>
+        <h3 style="margin-top: 14px; font-size: 14px">欧元兑美元</h3>
+        <svg id="fx-chart" class="chart-svg sparkline" role="img" aria-label="欧元兑美元参考价"></svg>
+        <h3 style="margin-top: 12px; font-size: 14px">Spark25 日租金趋势</h3>
+        <svg id="spark-chart" class="chart-svg" role="img" aria-label="Spark25 日租金示意轨迹"></svg>
+        <p class="note">右端点跟随日租金输入。左侧轨迹是示意形状，不是 Spark Commodities 的正式估价。</p>
+      </section>
+
+      <section class="card" id="refining" aria-labelledby="ref-title">
+        <div class="card-head">
+          <h2 id="ref-title"><span class="idx mono">03</span>炼厂与中间馏分油</h2>
+          <span class="badge">示意</span>
+        </div>
+        <div class="kpi-row">
+          <div class="kpi-box">
+            <p class="stat-k">美国炼厂开工率 <span class="lock" id="lock-util" hidden>已锁定</span></p>
+            <p class="stat-v mono" id="util-out">—</p>
+            <div class="meter" aria-hidden="true"><i id="util-bar"></i></div>
+            <input id="in-util" type="range" min="70" max="100" step="0.1" aria-label="美国炼厂开工率" />
+          </div>
+          <div class="kpi-box">
+            <p class="stat-k">馏分油总库存</p>
+            <p class="stat-v mono" id="distillate-out">—</p>
+            <p class="note">随东岸库存同量增减，起点 121.6 百万桶。</p>
+          </div>
+          <div class="kpi-box">
+            <p class="stat-k">PADD 1 东岸库存 <span class="lock" id="lock-padd" hidden>已锁定</span></p>
+            <p class="stat-v mono" id="padd-out">—</p>
+            <input id="in-padd" type="range" min="12" max="55" step="0.1" aria-label="PADD 1 东岸馏分油库存" />
+          </div>
+        </div>
+        <div class="ref-split">
+          <div>
+            <h3 style="font-size: 14px">PADD 1 东岸库存</h3>
+            <svg id="padd-chart" class="chart-svg" role="img" aria-label="PADD 1 东岸馏分油库存示意曲线"></svg>
+            <p class="note">纵轴按区间缩放。右端点跟随滑块。这不是 EIA 周报的逐周抄录。</p>
+          </div>
+          <div>
+            <h3 style="font-size: 14px; margin-bottom: 8px">大西洋柴油与裂解</h3>
+            <div class="form-grid">
+              <div class="field">
+                <label for="in-brent">布伦特（美元/桶） <span class="lock" id="lock-brent" hidden>已锁定</span></label>
+                <input id="in-brent" class="mono" type="number" min="20" max="200" step="0.1" inputmode="decimal" />
+              </div>
+              <div class="field">
+                <label for="in-nyh">纽约港柴油（美元/加仑） <span class="lock" id="lock-nyh" hidden>已锁定</span></label>
+                <input id="in-nyh" class="mono" type="number" min="0.5" max="8" step="0.001" inputmode="decimal" />
+              </div>
+              <div class="field">
+                <label for="in-usgc">美湾柴油（美元/加仑） <span class="lock" id="lock-usgc" hidden>已锁定</span></label>
+                <input id="in-usgc" class="mono" type="number" min="0.5" max="8" step="0.001" inputmode="decimal" />
+              </div>
+              <div class="field">
+                <label for="in-ara">鹿特丹柴油（美元/吨） <span class="lock" id="lock-ara" hidden>已锁定</span></label>
+                <input id="in-ara" class="mono" type="number" min="200" max="2000" step="0.5" inputmode="decimal" />
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>基准</th>
+                    <th class="num">报价</th>
+                    <th class="num">美元/桶</th>
+                    <th class="num">对布伦特裂解</th>
+                  </tr>
+                </thead>
+                <tbody id="price-body"></tbody>
+              </table>
+            </div>
+            <p class="note">裂解 = 成品美元/桶 − 布伦特。加仑按 42 加仑/桶，吨按 7.45 桶/吨。示意口径，不是交易所结算价。</p>
+          </div>
+        </div>
+        <h3 style="font-size: 14px; margin-top: 8px">气与柴油热值平价</h3>
+        <div class="legend" aria-hidden="true">
+          <span><i class="swatch" style="background: var(--gas)"></i>天然气</span>
+          <span><i class="swatch" style="background: var(--diesel)"></i>柴油热值</span>
+        </div>
+        <svg id="parity-chart" class="chart-svg" role="img" aria-label="天然气与柴油热值平价"></svg>
+        <p class="note" id="switch-read">—</p>
+      </section>
+    </main>
+
+    <footer>
+      <h2>方法</h2>
+      <p class="note">库存：欧盟工作气能力按 104.5 bcm（十亿立方米）示意。11 月 1 日注入目标 90%。五年均值按 10 月初 93.2% 示意。常年采暖季抽取 58 bcm，情景抽取再乘以（1 + 采暖度日偏离）。3 月末库存 = 起点库存 − 情景抽取。宽裕 ≥ 30 bcm，平衡 ≥ 15 bcm，否则紧张；低于零记为耗尽。</p>
+      <p class="note">套利：原料气 = Henry Hub × 1.15。离岸 = 原料气 + 液化费。运费 = 日租金 × 往返天数 / 货量。蒸发气近似 = 装载天数 × 0.10%/日 × 离岸成本。港口 0.12、再气化 0.35 美元/百万英热。欧元/兆瓦时 = 美元/百万英热 × 3.412141633 / EURUSD。EURUSD 是 1 欧元兑多少美元，与欧洲央行标价一致；USDEUR 是它的倒数。窗口在边际高于 0.50 欧元/兆瓦时时视为开启。</p>
+      <p class="note">热值：柴油低位热值 42.6 MJ/kg，即 11.83 兆瓦时/吨。柴油欧元/兆瓦时 =（美元/吨 ÷ EURUSD）÷ 11.83。平价曲线的 10 月锚在当前输入上，11 月至 3 月另加一组示意季节升水。采暖度日为基温 15.5°C 的示意月值。</p>
+      <p class="note">数据层：汇率约每 60 秒轮询一次，8 秒超时。失败时保留上次成功值或内置回退 1.1204，计算不中断。未锁定的示意行情约每 5 秒向起点轻微回归；手动改过的字段会锁定。下方脚本里留有未启用的 WebSocket 钩子。</p>
+      <h2>来源</h2>
+      <p class="note">下列链接是公开定义页或数据首页。除欧元兑美元外，本页数字不是这些机构的发布值，请勿把示意序列当成引用。</p>
+      <ul>
+        <li class="src"><a href="https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-usd.en.html" target="_blank" rel="noopener noreferrer">欧洲央行欧元兑美元参考汇率</a></li>
+        <li class="src"><a href="https://frankfurter.dev/" target="_blank" rel="noopener noreferrer">Frankfurter</a>：本页用来读取 ECB 参考价的键免费接口（<a href="https://api.frankfurter.dev/v1/latest?from=EUR&to=USD" target="_blank" rel="noopener noreferrer">latest</a>）</li>
+        <li class="src"><a href="https://www.eia.gov/dnav/ng/hist/rngwhhdD.htm" target="_blank" rel="noopener noreferrer">EIA Henry Hub 天然气现货</a></li>
+        <li class="src"><a href="https://www.eia.gov/petroleum/supply/weekly/" target="_blank" rel="noopener noreferrer">EIA 周度石油供应报告</a></li>
+        <li class="src"><a href="https://www.eia.gov/dnav/pet/pet_stoc_wstk_dcu_nus_w.htm" target="_blank" rel="noopener noreferrer">EIA 美国原油与成品油库存</a></li>
+        <li class="src"><a href="https://www.eia.gov/dnav/pet/pet_stoc_wstk_dcu_r10_w.htm" target="_blank" rel="noopener noreferrer">EIA PADD 1（东岸）库存</a></li>
+        <li class="src"><a href="https://agsi.gie.eu/" target="_blank" rel="noopener noreferrer">AGSI（GIE 欧洲天然气库存）</a></li>
+        <li class="src"><a href="https://www.gie.eu/" target="_blank" rel="noopener noreferrer">Gas Infrastructure Europe</a></li>
+        <li class="src"><a href="https://www.ice.com/products/27996665/Dutch-TTF-Gas-Futures" target="_blank" rel="noopener noreferrer">ICE 荷兰 TTF 天然气期货</a></li>
+        <li class="src"><a href="https://www.sparkcommodities.com/data" target="_blank" rel="noopener noreferrer">Spark Commodities</a>（Spark25 为大西洋盆地液化天然气船日租金评估的商业产品名）</li>
+      </ul>
+    </footer>
+  </div>
+  <div id="tip" role="tooltip" hidden></div>
+
+  <script>
+    var CONFIG = {
+      endpoints: {
+        fx: "https://api.frankfurter.dev/v1/latest?from=EUR&to=USD"
+      },
+      fxPollMs: 60000,
+      simTickMs: 5000,
+      fxTimeoutMs: 8000
+    };
+
+    // WebSocket hook — not started. Uncomment connectStream() inside init()
+    // to consume a tape without blocking the desk if the socket never opens.
+    // Expected message: { "ttf": number, "hh": number, "freight": number }
+    // function connectStream() {
+    //   var ws = new WebSocket("wss://example.invalid/energy-tape");
+    //   ws.onmessage = function (event) {
+    //     var msg = JSON.parse(event.data);
+    //     if (Number.isFinite(msg.ttf) && !state.pinned.ttf) state.ttf = msg.ttf;
+    //     if (Number.isFinite(msg.hh) && !state.pinned.hh) state.hh = msg.hh;
+    //     if (Number.isFinite(msg.freight) && !state.pinned.freight) state.freight = msg.freight;
+    //     state.snapshotAt = new Date();
+    //     syncInputs();
+    //     recompute();
+    //   };
+    // }
+
+    var MMBTU_PER_MWH = 3.412141633;
+    var FEEDGAS = 1.15;
+    var BOG_PER_DAY = 0.001;
+    var PORT_USD = 0.12;
+    var REGAS_USD = 0.35;
+    var ARB_OPEN = 0.5;
+    var CAPACITY_BCM = 104.5;
+    var FIVE_YEAR_PCT = 93.2;
+    var NOV1_TARGET = 90;
+    var NORMAL_DRAW = 58;
+    var DIESEL_MWH_PER_T = 11.83;
+    var BBL_PER_T = 7.45;
+    var GAL_PER_BBL = 42;
+    var BASE_DISTILLATE = 121.6;
+    var BASE_PADD = 29.4;
+
+    var SEED = {
+      ttf: 36.4,
+      hh: 3.95,
+      eurusd: 1.1204,
+      freight: 55000,
+      storagePct: 91.5,
+      hddDevPct: 0,
+      utilPct: 91.4,
+      padd1: 29.4,
+      brent: 78.5,
+      nyh: 2.42,
+      usgc: 2.28,
+      ara: 780,
+      roundTripDays: 24,
+      ladenDays: 13,
+      cargoWan: 360,
+      liq: 2.5
+    };
+
+    var HDD_NORM = [
+      ["10月", 168],
+      ["11月", 312],
+      ["12月", 428],
+      ["1月", 466],
+      ["2月", 398],
+      ["3月", 336]
+    ];
+    var GAS_PREMIUM = [0, 1.2, 3.4, 4.8, 3.6, 1.5];
+    var DIESEL_PREMIUM = [0, 0.8, 2.2, 3.1, 2.4, 1.0];
+    var SPARK_HIST = [42000, 39000, 41000, 45000, 48000, 52000, 61000, 74000, 88000, 96000, 91000, 80000, 69000, 62000, 58000, 55000];
+    var PADD_HIST = [34.2, 34.0, 33.6, 33.1, 32.8, 32.4, 32.0, 31.5, 31.2, 30.8, 30.6, 30.9, 31.4, 31.8, 32.2, 32.6, 32.1, 31.5, 31.0, 30.6, 30.2, 29.9, 29.7, 29.6, 29.5, 29.4];
+
+    var state = {
+      ttf: SEED.ttf,
+      hh: SEED.hh,
+      eurusd: SEED.eurusd,
+      fxMode: "EURUSD",
+      freight: SEED.freight,
+      storagePct: SEED.storagePct,
+      hddDevPct: SEED.hddDevPct,
+      utilPct: SEED.utilPct,
+      padd1: SEED.padd1,
+      brent: SEED.brent,
+      nyh: SEED.nyh,
+      usgc: SEED.usgc,
+      ara: SEED.ara,
+      roundTripDays: SEED.roundTripDays,
+      ladenDays: SEED.ladenDays,
+      cargoWan: SEED.cargoWan,
+      liq: SEED.liq,
+      pinned: {},
+      fx: { status: "pending", date: "", fetchedAt: null, error: "", rate: null, series: [] },
+      snapshotAt: new Date()
+    };
+
+    var pointer = { over: null, x: 0, y: 0 };
+    var lastChartSize = {};
+
+    function byId(id) { return document.getElementById(id); }
+    function clamp(n, a, b) { return Math.min(b, Math.max(a, n)); }
+    function fmt(n, d) {
+      if (!Number.isFinite(n)) return "—";
+      return n.toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
+    }
+    function signed(n, d) {
+      if (!Number.isFinite(n)) return "—";
+      var body = fmt(Math.abs(n), d);
+      if (n > 0) return "+" + body;
+      if (n < 0) return "-" + body;
+      return body;
+    }
+    function stamp(d) {
+      var p = function (n) { return String(n).padStart(2, "0"); };
+      return d.getUTCFullYear() + "-" + p(d.getUTCMonth() + 1) + "-" + p(d.getUTCDate()) + " " +
+        p(d.getUTCHours()) + ":" + p(d.getUTCMinutes()) + ":" + p(d.getUTCSeconds()) + " UTC";
+    }
+    function setText(id, text) {
+      var node = byId(id);
+      if (node) node.textContent = text;
+    }
+    function el(name, attrs) {
+      var node = document.createElementNS("http://www.w3.org/2000/svg", name);
+      if (attrs) Object.keys(attrs).forEach(function (k) { node.setAttribute(k, attrs[k]); });
+      return node;
+    }
+    function clearSvg(svg) {
+      while (svg.firstChild) svg.removeChild(svg.firstChild);
+    }
+    function svgText(parent, x, y, text, className, anchor) {
+      var t = el("text", { x: x, y: y, "class": className || "muted" });
+      if (anchor) t.setAttribute("text-anchor", anchor);
+      t.textContent = text;
+      parent.appendChild(t);
+      return t;
+    }
+
+    function model() {
+      var eurusd = state.eurusd > 0 ? state.eurusd : SEED.eurusd;
+      var cargo = state.cargoWan * 10000;
+      var feed = state.hh * FEEDGAS;
+      var fob = feed + state.liq;
+      var freightUsd = state.freight * state.roundTripDays / cargo;
+      var bog = state.ladenDays * BOG_PER_DAY * fob;
+      var desUsd = fob + freightUsd + bog + PORT_USD + REGAS_USD;
+      var desEur = desUsd * MMBTU_PER_MWH / eurusd;
+      var marginEur = state.ttf - desEur;
+      var marginUsd = marginEur * eurusd / MMBTU_PER_MWH;
+      var bcm = state.storagePct / 100 * CAPACITY_BCM;
+      var draw = NORMAL_DRAW * (1 + state.hddDevPct / 100);
+      var end = bcm - draw;
+      var vs5y = state.storagePct - FIVE_YEAR_PCT;
+      var tone = end < 0 ? "bad" : end < 15 ? "bad" : end < 30 ? "warn" : "ok";
+      var toneLabel = end < 0 ? "耗尽" : end < 15 ? "紧张" : end < 30 ? "平衡" : "宽裕";
+      var araBbl = state.ara / BBL_PER_T;
+      var nyhBbl = state.nyh * GAL_PER_BBL;
+      var usgcBbl = state.usgc * GAL_PER_BBL;
+      var dieselEur = (state.ara / eurusd) / DIESEL_MWH_PER_T;
+      var distillate = BASE_DISTILLATE + (state.padd1 - BASE_PADD);
+      return {
+        eurusd: eurusd,
+        cargo: cargo,
+        feed: feed,
+        fob: fob,
+        freightUsd: freightUsd,
+        bog: bog,
+        desUsd: desUsd,
+        desEur: desEur,
+        marginEur: marginEur,
+        marginUsd: marginUsd,
+        open: marginEur > ARB_OPEN,
+        bcm: bcm,
+        draw: draw,
+        end: end,
+        vs5y: vs5y,
+        vs5yBcm: vs5y / 100 * CAPACITY_BCM,
+        tone: tone,
+        toneLabel: toneLabel,
+        progress: state.storagePct / NOV1_TARGET * 100,
+        araBbl: araBbl,
+        nyhBbl: nyhBbl,
+        usgcBbl: usgcBbl,
+        dieselEur: dieselEur,
+        distillate: distillate,
+        gap: state.ttf - dieselEur
+      };
+    }
+
+    function drawGauge(pct) {
+      var svg = byId("gauge");
+      clearSvg(svg);
+      var cx = 110, cy = 108, r = 74;
+      function ring(className, dash) {
+        var c = el("circle", {
+          cx: cx, cy: cy, r: r, "class": className,
+          pathLength: 100,
+          "stroke-dasharray": dash,
+          transform: "rotate(180 " + cx + " " + cy + ")"
+        });
+        svg.appendChild(c);
+      }
+      ring("gauge-track", "50 50");
+      var shown = clamp(pct, 0, 100) / 100;
+      if (shown > 0.004) ring(pct >= NOV1_TARGET ? "gauge-ok" : "gauge-warn", (shown * 50).toFixed(3) + " 100");
+      var ang = Math.PI * (1 - NOV1_TARGET / 100);
+      svg.appendChild(el("line", {
+        x1: cx + (r - 12) * Math.cos(ang),
+        y1: cy - (r - 12) * Math.sin(ang),
+        x2: cx + (r + 8) * Math.cos(ang),
+        y2: cy - (r + 8) * Math.sin(ang),
+        "class": "gauge-tick"
+      }));
+      svgText(svg, cx, 92, pct.toFixed(1) + "%", "gauge-value mono", "middle");
+      svgText(svg, cx, 112, "库存", "muted", "middle");
+      svg.setAttribute("aria-label", "欧洲天然气库存 " + pct.toFixed(1) + "%，刻度标记 11 月 1 日 90% 目标");
+    }
+
+    function chartSize(svg) {
+      var rect = svg.getBoundingClientRect();
+      var w = Math.max(280, Math.round(rect.width || 640));
+      var h = Math.max(72, Math.round(rect.height || 220));
+      svg.setAttribute("viewBox", "0 0 " + w + " " + h);
+      return { w: w, h: h };
+    }
+
+    function bindChart(svg) {
+      if (svg.dataset.bound) return;
+      svg.dataset.bound = "1";
+      svg.addEventListener("mousemove", onChartMove);
+      svg.addEventListener("mouseleave", function () {
+        if (svg._hit && svg._hit.guide) svg._hit.guide.setAttribute("visibility", "hidden");
+        if (pointer.over === svg.id) pointer.over = null;
+        hideTip();
+      });
+      svg.addEventListener("touchstart", function (ev) {
+        if (!ev.touches || !ev.touches[0]) return;
+        onChartMove({ currentTarget: svg, clientX: ev.touches[0].clientX, clientY: ev.touches[0].clientY });
+      }, { passive: true });
+    }
+
+    function svgPoint(svg, clientX, clientY) {
+      var ctm = svg.getScreenCTM();
+      if (!ctm) return null;
+      var p = svg.createSVGPoint();
+      p.x = clientX;
+      p.y = clientY;
+      return p.matrixTransform(ctm.inverse());
+    }
+
+    function onChartMove(ev) {
+      var svg = ev.currentTarget;
+      var hit = svg._hit;
+      if (!hit) return;
+      pointer.over = svg.id;
+      pointer.x = ev.clientX;
+      pointer.y = ev.clientY;
+      var p = svgPoint(svg, ev.clientX, ev.clientY);
+      if (!p) return;
+      var best = 0;
+      var bestD = Infinity;
+      for (var i = 0; i < hit.xs.length; i++) {
+        var d = Math.abs(p.x - hit.xs[i]);
+        if (d < bestD) { bestD = d; best = i; }
+      }
+      if (hit.guide) {
+        hit.guide.setAttribute("x1", hit.xs[best]);
+        hit.guide.setAttribute("x2", hit.xs[best]);
+        hit.guide.setAttribute("visibility", "visible");
+      }
+      showTip(ev.clientX, ev.clientY, hit.tip(best));
+    }
+
+    function showTip(x, y, lines) {
+      var tip = byId("tip");
+      tip.replaceChildren();
+      lines.forEach(function (line) {
+        var row = document.createElement("div");
+        if (line.swatch) {
+          var mark = document.createElement("i");
+          mark.className = "swatch";
+          mark.style.background = line.swatch;
+          row.appendChild(mark);
+        }
+        var span = document.createElement("span");
+        span.textContent = line.text;
+        if (line.strong) span.className = "tip-strong mono";
+        row.appendChild(span);
+        tip.appendChild(row);
+      });
+      tip.hidden = false;
+      var rect = tip.getBoundingClientRect();
+      var left = x + 14;
+      var top = y + 14;
+      if (left + rect.width > window.innerWidth - 8) left = Math.max(8, x - rect.width - 14);
+      if (top + rect.height > window.innerHeight - 8) top = Math.max(8, y - rect.height - 14);
+      tip.style.left = left + "px";
+      tip.style.top = top + "px";
+    }
+
+    function hideTip() { byId("tip").hidden = true; }
+
+    function drawLine(svg, modelSpec) {
+      bindChart(svg);
+      var box = chartSize(svg);
+      clearSvg(svg);
+      var compact = box.h < 120;
+      var pad = compact ? { l: 8, r: 8, t: 10, b: 8 } : { l: 52, r: 14, t: 16, b: 28 };
+      var innerW = box.w - pad.l - pad.r;
+      var innerH = box.h - pad.t - pad.b;
+      var labels = modelSpec.labels;
+      if (!labels.length || !modelSpec.series.length) {
+        svgText(svg, box.w / 2, box.h / 2, modelSpec.empty || "暂无数据", "muted", "middle");
+        svg._hit = null;
+        return;
+      }
+      var vals = [];
+      modelSpec.series.forEach(function (s) { vals = vals.concat(s.values); });
+      var min = Math.min.apply(null, vals);
+      var max = Math.max.apply(null, vals);
+      if (modelSpec.zero) {
+        min = Math.min(0, min);
+        max = max <= min ? min + 1 : max * 1.08;
+      } else {
+        var span = max - min || 1;
+        min -= span * 0.1;
+        max += span * 0.1;
+      }
+      function xAt(i) {
+        if (labels.length === 1) return pad.l + innerW / 2;
+        return pad.l + (i / (labels.length - 1)) * innerW;
+      }
+      function yAt(v) { return pad.t + (1 - (v - min) / (max - min)) * innerH; }
+      if (!compact) {
+        for (var g = 0; g <= 4; g++) {
+          var v = min + (max - min) * (g / 4);
+          var yy = yAt(v);
+          svg.appendChild(el("line", { x1: pad.l, x2: box.w - pad.r, y1: yy, y2: yy, "class": "grid" }));
+          svgText(svg, pad.l - 8, yy + 4, modelSpec.yFmt(v), "num", "end");
+        }
+        var step = Math.max(1, Math.ceil(labels.length / Math.max(2, Math.floor(innerW / 64))));
+        labels.forEach(function (lb, i) {
+          if (i % step && i !== labels.length - 1) return;
+          svgText(svg, xAt(i), box.h - 8, lb, "muted", "middle");
+        });
+      }
+      modelSpec.series.forEach(function (s) {
+        var d = "";
+        s.values.forEach(function (v, i) {
+          d += (i ? "L" : "M") + xAt(i).toFixed(2) + " " + yAt(v).toFixed(2) + " ";
+        });
+        if (s.fill) {
+          var area = d + "L " + xAt(s.values.length - 1).toFixed(2) + " " + (pad.t + innerH).toFixed(2) +
+            " L " + xAt(0).toFixed(2) + " " + (pad.t + innerH).toFixed(2) + " Z";
+          var ap = el("path", { d: area });
+          ap.style.fill = s.fill;
+          ap.style.stroke = "none";
+          svg.appendChild(ap);
+        }
+        var path = el("path", { d: d });
+        path.style.fill = "none";
+        path.style.stroke = s.color;
+        path.style.strokeWidth = "2";
+        path.style.strokeLinejoin = "round";
+        path.style.strokeLinecap = "round";
+        svg.appendChild(path);
+        var last = s.values.length - 1;
+        var dot = el("circle", { cx: xAt(last), cy: yAt(s.values[last]), r: compact ? 2.5 : 3.5 });
+        dot.style.fill = s.color;
+        svg.appendChild(dot);
+      });
+      var guide = el("line", { y1: pad.t, y2: pad.t + innerH, "class": "guide", visibility: "hidden" });
+      guide.style.pointerEvents = "none";
+      svg.appendChild(guide);
+      svg._hit = {
+        xs: labels.map(function (_, i) { return xAt(i); }),
+        guide: guide,
+        tip: modelSpec.tip
+      };
+    }
+
+    function drawBars(svg, modelSpec) {
+      bindChart(svg);
+      var box = chartSize(svg);
+      clearSvg(svg);
+      var pad = { l: 46, r: 10, t: 12, b: 28 };
+      var innerW = box.w - pad.l - pad.r;
+      var innerH = box.h - pad.t - pad.b;
+      var labels = modelSpec.labels;
+      var vals = [];
+      modelSpec.series.forEach(function (s) { vals = vals.concat(s.values); });
+      if (!labels.length) {
+        svgText(svg, box.w / 2, box.h / 2, "暂无数据", "muted", "middle");
+        svg._hit = null;
+        return;
+      }
+      var max = Math.max.apply(null, vals.concat([1]));
+      max = max * 1.08;
+      function yAt(v) { return pad.t + (1 - v / max) * innerH; }
+      for (var g = 0; g <= 4; g++) {
+        var v = max * (g / 4);
+        var yy = yAt(v);
+        svg.appendChild(el("line", { x1: pad.l, x2: box.w - pad.r, y1: yy, y2: yy, "class": "grid" }));
+        svgText(svg, pad.l - 6, yy + 4, modelSpec.yFmt(v), "num", "end");
+      }
+      var groupW = innerW / labels.length;
+      var barW = Math.max(4, (groupW - 14) / modelSpec.series.length);
+      var xs = [];
+      labels.forEach(function (lb, i) {
+        var gx = pad.l + i * groupW;
+        xs.push(gx + groupW / 2);
+        modelSpec.series.forEach(function (s, si) {
+          var val = s.values[i];
+          var bh = innerH - (yAt(val) - pad.t);
+          var rect = el("rect", {
+            x: gx + 6 + si * barW,
+            y: yAt(val),
+            width: Math.max(2, barW - 2),
+            height: Math.max(0, bh),
+            rx: 2
+          });
+          rect.style.fill = s.color;
+          svg.appendChild(rect);
+        });
+        svgText(svg, gx + groupW / 2, box.h - 8, lb, "muted", "middle");
+      });
+      var guide = el("line", { y1: pad.t, y2: pad.t + innerH, "class": "guide", visibility: "hidden" });
+      guide.style.pointerEvents = "none";
+      svg.appendChild(guide);
+      svg._hit = { xs: xs, guide: guide, tip: modelSpec.tip };
+    }
+
+    function renderHeader() {
+      setText("stamp-time", stamp(state.snapshotAt));
+    }
+
+    function renderChain(m) {
+      setText("chain-hh", fmt(state.hh, 2) + " 美元/百万英热");
+      setText("chain-brent", fmt(state.brent, 2) + " 美元/桶");
+      setText("chain-util", fmt(state.utilPct, 1) + "%");
+      setText("chain-liq", fmt(state.liq, 2) + " 美元/百万英热");
+      setText("chain-freight", fmt(state.freight, 0) + " 美元/日");
+      setText("chain-voyage", fmt(m.freightUsd, 2) + " 美元/百万英热");
+      setText("chain-ttf", fmt(state.ttf, 2) + " 欧元/兆瓦时");
+      setText("chain-heat", fmt(m.dieselEur, 2) + " 欧元/兆瓦时");
+    }
+
+    function renderGas(m) {
+      drawGauge(state.storagePct);
+      setText("gas-progress", state.storagePct >= NOV1_TARGET
+        ? "11月1日 90% 注入目标已达成（进度 " + fmt(m.progress, 0) + "%）。琥珀色刻度是目标。"
+        : "距 11月1日 90% 注入目标还差 " + fmt(NOV1_TARGET - state.storagePct, 1) + " 个百分点。");
+      setText("gas-bcm", fmt(m.bcm, 1) + " bcm");
+      setText("gas-vs5y", signed(m.vs5y, 1) + " 个百分点");
+      setText("gas-draw", fmt(m.draw, 1) + " bcm");
+      var endText = m.end < 0
+        ? "短缺 " + fmt(-m.end, 1) + " bcm"
+        : fmt(m.end, 1) + " bcm（" + fmt(m.end / CAPACITY_BCM * 100, 0) + "%）";
+      setText("gas-end", endText);
+      var pill = byId("gas-status");
+      pill.textContent = m.toneLabel;
+      pill.className = "pill " + (m.tone === "ok" ? "is-ok" : m.tone === "warn" ? "is-warn" : "is-bad");
+      setText("hdd-out", "较常年 " + signed(state.hddDevPct, 0) + "%");
+      var labels = HDD_NORM.map(function (row) { return row[0]; });
+      var base = HDD_NORM.map(function (row) { return row[1]; });
+      var factor = 1 + state.hddDevPct / 100;
+      var scen = base.map(function (v) { return v * factor; });
+      var totalN = base.reduce(function (a, b) { return a + b; }, 0);
+      var totalS = scen.reduce(function (a, b) { return a + b; }, 0);
+      drawBars(byId("hdd-chart"), {
+        labels: labels,
+        series: [
+          { name: "常年", color: "var(--faint)", values: base },
+          { name: "情景", color: "var(--gas)", values: scen }
+        ],
+        yFmt: function (v) { return Math.round(v).toString(); },
+        tip: function (i) {
+          return [
+            { text: labels[i], strong: true },
+            { text: "常年 " + fmt(base[i], 0) + " 度日", swatch: "var(--faint)" },
+            { text: "情景 " + fmt(scen[i], 0) + " 度日", swatch: "var(--gas)" }
+          ];
+        }
+      });
+      setText("hdd-note", "常年合计 " + fmt(totalN, 0) + " 度日，情景合计 " + fmt(totalS, 0) + " 度日。基温 15.5°C，西北欧综合示意气候态。");
+      byId("storage-range").setAttribute("aria-valuetext", fmt(state.storagePct, 1) + "%");
+      byId("hdd-range").setAttribute("aria-valuetext", signed(state.hddDevPct, 0) + "%");
+    }
+
+    function renderFx(m) {
+      var fx = state.fx;
+      var banner = byId("fx-banner");
+      var badge = byId("arb-badge");
+      var meta = "";
+      banner.hidden = false;
+      banner.className = "banner";
+      if (fx.status === "pending") {
+        banner.textContent = "正在读取欧洲央行参考价。计算已用回退汇率 " + fmt(m.eurusd, 4) + "，界面不会等待。";
+        badge.textContent = "汇率待取";
+        badge.className = "badge";
+      } else if (fx.status === "error") {
+        banner.className = "banner is-bad";
+        banner.textContent = "汇率源失败（" + fx.error + "）。已沿用回退 EURUSD " + fmt(SEED.eurusd, 4) + "，套利和热值仍可计算。";
+        badge.textContent = "汇率回退";
+        badge.className = "badge";
+      } else if (fx.status === "stale") {
+        banner.className = "banner is-warn";
+        banner.textContent = "汇率刷新失败（" + fx.error + "）。沿用上次成功值 EURUSD " + fmt(fx.rate, 4) + "（" + fx.date + "）。";
+        badge.textContent = "汇率沿用";
+        badge.className = "badge";
+      } else {
+        banner.hidden = true;
+        badge.textContent = "汇率实时";
+        badge.className = "badge badge-live";
+        meta = "ECB 参考价 " + fx.date + " · EURUSD " + fmt(fx.rate, 4) + " · 取得于 " + stamp(fx.fetchedAt) + " · Frankfurter";
+      }
+      if (state.pinned.eurusd && fx.rate) {
+        meta = (meta ? meta + "。 " : "") + "输入已手动覆盖，计算用 EURUSD " + fmt(state.eurusd, 4) + "。";
+      }
+      setText("fx-meta", meta || "来源：欧洲央行参考价，经 Frankfurter 读取。");
+      var inverse = 1 / m.eurusd;
+      setText("fx-label", state.fxMode === "EURUSD" ? "EURUSD · 1 欧元兑美元" : "USDEUR · 1 美元兑欧元");
+      setText("fx-inverse", state.fxMode === "EURUSD"
+        ? "另一标价 USDEUR（欧元/美元） " + fmt(inverse, 4)
+        : "另一标价 EURUSD（美元/欧元） " + fmt(m.eurusd, 4));
+      byId("fx-eurusd").setAttribute("aria-pressed", state.fxMode === "EURUSD" ? "true" : "false");
+      byId("fx-usdeur").setAttribute("aria-pressed", state.fxMode === "USDEUR" ? "true" : "false");
+      byId("btn-use-fx").hidden = !(state.pinned.eurusd && fx.rate);
+      var series = fx.series;
+      drawLine(byId("fx-chart"), {
+        labels: series.map(function (p) { return p.date.slice(5); }),
+        series: series.length ? [{ name: "EURUSD", color: "var(--info)", values: series.map(function (p) { return p.rate; }), fill: "color-mix(in srgb, var(--info) 22%, transparent)" }] : [],
+        zero: false,
+        empty: fx.status === "error" ? "汇率曲线暂无数据" : "正在读取汇率",
+        yFmt: function (v) { return v.toFixed(3); },
+        tip: function (i) {
+          if (!series[i]) return [{ text: "无数据" }];
+          return [
+            { text: series[i].date, strong: true },
+            { text: "EURUSD " + fmt(series[i].rate, 4), swatch: "var(--info)" },
+            { text: "ECB 参考价 · Frankfurter" }
+          ];
+        }
+      });
+    }
+
+    function renderArb(m) {
+      var margin = byId("arb-margin");
+      margin.textContent = signed(m.marginEur, 2);
+      margin.className = "kpi mono " + (m.marginEur >= 0 ? "pos" : "neg");
+      var unit = document.createElement("span");
+      unit.className = "unit";
+      unit.textContent = "欧元/兆瓦时";
+      margin.appendChild(unit);
+      setText("arb-margin-usd", "合 " + signed(m.marginUsd, 2) + " 美元/百万英热");
+      var win = byId("arb-window");
+      win.textContent = m.open ? "窗口开启" : "窗口关闭";
+      win.className = "pill " + (m.open ? "is-open" : "is-shut");
+      setText("arb-des-eur", fmt(m.desEur, 2) + " 欧元/兆瓦时");
+      setText("arb-des-usd", fmt(m.desUsd, 2) + " 美元/百万英热");
+      var scale = Math.max(m.desEur, state.ttf, 0.01);
+      byId("bar-des").style.width = (m.desEur / scale * 100) + "%";
+      byId("bar-ttf").style.width = (state.ttf / scale * 100) + "%";
+      setText("cmp-des", fmt(m.desEur, 1));
+      setText("cmp-ttf", fmt(state.ttf, 1));
+      var parts = [
+        { name: "原料气", value: m.feed, color: "var(--info)" },
+        { name: "液化", value: state.liq, color: "var(--gas)" },
+        { name: "运费", value: m.freightUsd, color: "var(--accent)" },
+        { name: "蒸发", value: m.bog, color: "var(--diesel)" },
+        { name: "港口", value: PORT_USD, color: "var(--muted)" },
+        { name: "再气化", value: REGAS_USD, color: "var(--faint)" }
+      ];
+      var stack = byId("cost-stack");
+      stack.replaceChildren();
+      var legend = byId("stack-legend");
+      legend.replaceChildren();
+      parts.forEach(function (p) {
+        var slice = document.createElement("i");
+        slice.style.width = (p.value / m.desUsd * 100) + "%";
+        slice.style.background = p.color;
+        stack.appendChild(slice);
+        var item = document.createElement("span");
+        var mark = document.createElement("i");
+        mark.className = "swatch";
+        mark.style.background = p.color;
+        var name = document.createElement("span");
+        name.textContent = p.name;
+        var num = document.createElement("b");
+        num.className = "mono";
+        num.textContent = fmt(p.value, 2);
+        item.append(mark, name, num);
+        legend.appendChild(item);
+      });
+      setText("arb-formula", "交付 " + fmt(m.desUsd, 2) + " 美元/百万英热 = 115%×HH + 液化 + 运费 + 蒸发 + 0.12 + 0.35。货量 " +
+        fmt(m.cargo, 0) + " MMBtu。再 × 3.412141633 / EURUSD " + fmt(m.eurusd, 4) + " = " + fmt(m.desEur, 2) + " 欧元/兆瓦时。阈值 " + fmt(ARB_OPEN, 2) + "。");
+      byId("voyage-warn").hidden = state.ladenDays <= state.roundTripDays;
+      var spark = SPARK_HIST.slice();
+      spark[spark.length - 1] = state.freight;
+      var sparkLabels = spark.map(function (_, i) {
+        var ago = spark.length - 1 - i;
+        return ago === 0 ? "当前" : ago + "周前";
+      });
+      drawLine(byId("spark-chart"), {
+        labels: sparkLabels,
+        series: [{ name: "Spark25", color: "var(--accent)", values: spark, fill: "color-mix(in srgb, var(--accent) 20%, transparent)" }],
+        zero: false,
+        yFmt: function (v) { return (v / 10000).toFixed(1) + "万"; },
+        tip: function (i) {
+          return [
+            { text: sparkLabels[i], strong: true },
+            { text: "日租金 " + fmt(spark[i], 0) + " 美元/日", swatch: "var(--accent)" },
+            { text: i === spark.length - 1 ? "跟随当前输入" : "示意轨迹" }
+          ];
+        }
+      });
+    }
+
+    function renderRefining(m) {
+      setText("util-out", fmt(state.utilPct, 1) + "%");
+      byId("util-bar").style.width = clamp(state.utilPct, 0, 100) + "%";
+      setText("distillate-out", fmt(m.distillate, 1) + " 百万桶");
+      setText("padd-out", fmt(state.padd1, 1) + " 百万桶");
+      var padd = PADD_HIST.slice();
+      padd[padd.length - 1] = state.padd1;
+      var paddLabels = padd.map(function (_, i) {
+        var ago = padd.length - 1 - i;
+        return ago === 0 ? "当前" : ago + "周前";
+      });
+      drawLine(byId("padd-chart"), {
+        labels: paddLabels,
+        series: [{ name: "PADD 1", color: "var(--info)", values: padd, fill: "color-mix(in srgb, var(--info) 18%, transparent)" }],
+        zero: false,
+        yFmt: function (v) { return v.toFixed(0); },
+        tip: function (i) {
+          return [
+            { text: paddLabels[i], strong: true },
+            { text: fmt(padd[i], 1) + " 百万桶", swatch: "var(--info)" },
+            { text: "东岸馏分油 · 示意" }
+          ];
+        }
+      });
+      var rows = [
+        ["布伦特", fmt(state.brent, 2) + " 美元/桶", fmt(state.brent, 2), null],
+        ["纽约港超低硫柴油", fmt(state.nyh, 3) + " 美元/加仑", fmt(m.nyhBbl, 2), m.nyhBbl - state.brent],
+        ["美湾超低硫柴油", fmt(state.usgc, 3) + " 美元/加仑", fmt(m.usgcBbl, 2), m.usgcBbl - state.brent],
+        ["鹿特丹柴油", fmt(state.ara, 1) + " 美元/吨", fmt(m.araBbl, 2), m.araBbl - state.brent]
+      ];
+      var body = byId("price-body");
+      body.replaceChildren();
+      rows.forEach(function (row) {
+        var tr = document.createElement("tr");
+        var name = document.createElement("td");
+        name.className = "name";
+        name.textContent = row[0];
+        var quote = document.createElement("td");
+        quote.className = "num mono";
+        quote.textContent = row[1];
+        var bbl = document.createElement("td");
+        bbl.className = "num mono";
+        bbl.textContent = row[2];
+        var crack = document.createElement("td");
+        crack.className = "num mono";
+        if (row[3] == null) crack.textContent = "—";
+        else {
+          crack.textContent = signed(row[3], 2);
+          crack.className += row[3] >= 0 ? " pos" : " neg";
+        }
+        tr.append(name, quote, bbl, crack);
+        body.appendChild(tr);
+      });
+      var labels = HDD_NORM.map(function (row) { return row[0]; });
+      var gas = GAS_PREMIUM.map(function (p) { return state.ttf + p; });
+      var diesel = DIESEL_PREMIUM.map(function (p) { return m.dieselEur + p; });
+      drawLine(byId("parity-chart"), {
+        labels: labels,
+        zero: true,
+        series: [
+          { name: "天然气", color: "var(--gas)", values: gas },
+          { name: "柴油热值", color: "var(--diesel)", values: diesel }
+        ],
+        yFmt: function (v) { return Math.round(v).toString(); },
+        tip: function (i) {
+          return [
+            { text: labels[i], strong: true },
+            { text: "天然气 " + fmt(gas[i], 2) + " 欧元/兆瓦时", swatch: "var(--gas)" },
+            { text: "柴油热值 " + fmt(diesel[i], 2) + " 欧元/兆瓦时", swatch: "var(--diesel)" },
+            { text: i === 0 ? "锚在当前输入" : "含示意季节升水" }
+          ];
+        }
+      });
+      var switchText = m.gap > 0
+        ? "气价高于柴油热值 " + fmt(m.gap, 2) + " 欧元/兆瓦时，气转油激励出现（示意）。"
+        : "气价低于柴油热值 " + fmt(-m.gap, 2) + " 欧元/兆瓦时，气转油激励未打开。";
+      setText("switch-read", "当前 ARA 热值 " + fmt(m.dieselEur, 2) + " 欧元/兆瓦时。" + switchText + " 11–3 月曲线另加示意季节升水，10 月与输入一致。");
+    }
+
+    function renderLocks() {
+      var map = {
+        "lock-ttf": "ttf",
+        "lock-hh": "hh",
+        "lock-fx": "eurusd",
+        "lock-freight": "freight",
+        "lock-util": "utilPct",
+        "lock-padd": "padd1",
+        "lock-brent": "brent",
+        "lock-nyh": "nyh",
+        "lock-usgc": "usgc",
+        "lock-ara": "ara"
+      };
+      Object.keys(map).forEach(function (id) {
+        byId(id).hidden = !state.pinned[map[id]];
+      });
+    }
+
+    function recompute() {
+      var m = model();
+      renderHeader();
+      renderChain(m);
+      renderGas(m);
+      renderFx(m);
+      renderArb(m);
+      renderRefining(m);
+      renderLocks();
+      if (pointer.over) {
+        var svg = byId(pointer.over);
+        if (svg && svg.matches(":hover") && svg._hit) {
+          onChartMove({ currentTarget: svg, clientX: pointer.x, clientY: pointer.y });
+        }
+      }
+    }
+
+    function writeIfIdle(id, value) {
+      var node = byId(id);
+      if (document.activeElement === node) return;
+      if (node.value !== value) node.value = value;
+    }
+
+    function syncInputs() {
+      writeIfIdle("in-ttf", String(state.ttf));
+      writeIfIdle("in-hh", String(state.hh));
+      writeIfIdle("in-freight", String(state.freight));
+      writeIfIdle("in-days", String(state.roundTripDays));
+      writeIfIdle("in-laden", String(state.ladenDays));
+      writeIfIdle("in-cargo", String(state.cargoWan));
+      writeIfIdle("in-liq", String(state.liq));
+      writeIfIdle("in-brent", String(state.brent));
+      writeIfIdle("in-nyh", String(state.nyh));
+      writeIfIdle("in-usgc", String(state.usgc));
+      writeIfIdle("in-ara", String(state.ara));
+      writeIfIdle("storage-num", state.storagePct.toFixed(1));
+      writeIfIdle("storage-range", String(state.storagePct));
+      writeIfIdle("hdd-range", String(state.hddDevPct));
+      writeIfIdle("in-util", String(state.utilPct));
+      writeIfIdle("in-padd", String(state.padd1));
+      var fxShown = state.fxMode === "EURUSD" ? state.eurusd : 1 / state.eurusd;
+      writeIfIdle("in-fx", fxShown.toFixed(4));
+    }
+
+    function changed() {
+      state.snapshotAt = new Date();
+      recompute();
+    }
+
+    function bindPositive(id, key, min, max) {
+      byId(id).addEventListener("input", function () {
+        var v = Number(this.value);
+        if (!Number.isFinite(v) || v < min || v > max) return;
+        state[key] = v;
+        if (key === "ttf" || key === "hh" || key === "freight" || key === "brent" || key === "nyh" || key === "usgc" || key === "ara") {
+          state.pinned[key] = true;
+        }
+        changed();
+      });
+    }
+
+    function resolvedTheme() {
+      var explicit = document.documentElement.getAttribute("data-theme");
+      if (explicit === "light" || explicit === "dark") return explicit;
+      return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+    }
+
+    function updateThemeButton() {
+      var dark = resolvedTheme() === "dark";
+      var btn = byId("theme-toggle");
+      btn.textContent = dark ? "切换为浅色" : "切换为深色";
+      btn.setAttribute("aria-label", dark ? "切换为浅色主题" : "切换为深色主题");
+    }
+
+    function isoDay(d) { return d.toISOString().slice(0, 10); }
+
+    function fxHistoryUrl() {
+      var end = new Date();
+      var start = new Date(end.getTime() - 70 * 86400000);
+      return "https://api.frankfurter.dev/v1/" + isoDay(start) + ".." + isoDay(end) + "?from=EUR&to=USD";
+    }
+
+    function fetchJson(url) {
+      var ctrl = new AbortController();
+      var timer = setTimeout(function () { ctrl.abort(); }, CONFIG.fxTimeoutMs);
+      return fetch(url, { signal: ctrl.signal, cache: "no-store" }).finally(function () {
+        clearTimeout(timer);
+      }).then(function (res) {
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        return res.json();
+      });
+    }
+
+    function parseSeries(data) {
+      if (!data || !data.rates || typeof data.rates !== "object") return [];
+      return Object.keys(data.rates).sort().map(function (day) {
+        var usd = Number(data.rates[day] && data.rates[day].USD);
+        return { date: day, rate: usd };
+      }).filter(function (p) { return Number.isFinite(p.rate) && p.rate > 0 && /^\d{4}-\d{2}-\d{2}$/.test(p.date); });
+    }
+
+    function applyFx(rate, date, series) {
+      state.fx.status = "live";
+      state.fx.rate = rate;
+      state.fx.date = date;
+      state.fx.fetchedAt = new Date();
+      state.fx.error = "";
+      if (series && series.length) state.fx.series = series;
+      if (!state.pinned.eurusd) state.eurusd = rate;
+      state.snapshotAt = new Date();
+      syncInputs();
+      recompute();
+    }
+
+    function failFx(err) {
+      var msg = err && err.name === "AbortError" ? "超时" : ((err && err.message) || "失败");
+      state.fx.status = state.fx.rate ? "stale" : "error";
+      state.fx.error = msg;
+      recompute();
+    }
+
+    function pollFx() {
+      fetchJson(fxHistoryUrl()).then(function (data) {
+        var series = parseSeries(data);
+        if (!series.length) throw new Error("空序列");
+        var last = series[series.length - 1];
+        applyFx(last.rate, last.date, series);
+      }).catch(function () {
+        return fetchJson(CONFIG.endpoints.fx).then(function (data) {
+          var rate = Number(data && data.rates && data.rates.USD);
+          var date = typeof data.date === "string" ? data.date : "";
+          if (!Number.isFinite(rate) || rate <= 0) throw new Error("无 USD");
+          applyFx(rate, date, state.fx.series);
+        });
+      }).catch(failFx);
+    }
+
+    function nudge(key, seed, sigma, min, max, decimals) {
+      if (state.pinned[key]) return false;
+      var toward = seed + (Math.random() - 0.5) * sigma;
+      var next = state[key] + (toward - state[key]) * 0.35;
+      next = clamp(next, min, max);
+      var rounded = Number(next.toFixed(decimals));
+      if (rounded === state[key]) return false;
+      state[key] = rounded;
+      return true;
+    }
+
+    function tickSim() {
+      if (document.hidden) return;
+      if (!byId("sim-toggle").checked) return;
+      var moved = false;
+      moved = nudge("ttf", SEED.ttf, 0.8, 8, 120, 2) || moved;
+      moved = nudge("hh", SEED.hh, 0.08, 1.5, 12, 2) || moved;
+      moved = nudge("freight", SEED.freight, 3000, 15000, 180000, 0) || moved;
+      moved = nudge("brent", SEED.brent, 0.6, 50, 120, 2) || moved;
+      moved = nudge("nyh", SEED.nyh, 0.02, 1.4, 4.5, 3) || moved;
+      moved = nudge("usgc", SEED.usgc, 0.02, 1.3, 4.2, 3) || moved;
+      moved = nudge("ara", SEED.ara, 6, 500, 1200, 1) || moved;
+      moved = nudge("utilPct", SEED.utilPct, 0.8, 78, 98, 1) || moved;
+      moved = nudge("padd1", SEED.padd1, 0.4, 18, 42, 1) || moved;
+      if (!moved) return;
+      state.snapshotAt = new Date();
+      syncInputs();
+      recompute();
+    }
+
+    function resetAll() {
+      Object.keys(SEED).forEach(function (k) { state[k] = SEED[k]; });
+      state.pinned = {};
+      state.fxMode = "EURUSD";
+      if (state.fx.rate) state.eurusd = state.fx.rate;
+      state.snapshotAt = new Date();
+      syncInputs();
+      recompute();
+    }
+
+    function init() {
+      bindPositive("in-ttf", "ttf", 1, 400);
+      bindPositive("in-hh", "hh", 0.2, 40);
+      bindPositive("in-freight", "freight", 1000, 500000);
+      bindPositive("in-days", "roundTripDays", 8, 60);
+      bindPositive("in-laden", "ladenDays", 4, 40);
+      bindPositive("in-cargo", "cargoWan", 200, 450);
+      bindPositive("in-liq", "liq", 0, 8);
+      bindPositive("in-brent", "brent", 20, 200);
+      bindPositive("in-nyh", "nyh", 0.5, 8);
+      bindPositive("in-usgc", "usgc", 0.5, 8);
+      bindPositive("in-ara", "ara", 200, 2000);
+
+      byId("in-fx").addEventListener("input", function () {
+        var v = Number(this.value);
+        if (!Number.isFinite(v) || v <= 0.3 || v > 2.5) return;
+        state.eurusd = state.fxMode === "EURUSD" ? v : 1 / v;
+        state.pinned.eurusd = true;
+        changed();
+      });
+      byId("fx-eurusd").addEventListener("click", function () {
+        state.fxMode = "EURUSD";
+        syncInputs();
+        recompute();
+      });
+      byId("fx-usdeur").addEventListener("click", function () {
+        state.fxMode = "USDEUR";
+        syncInputs();
+        recompute();
+      });
+      byId("btn-use-fx").addEventListener("click", function () {
+        if (!state.fx.rate) return;
+        delete state.pinned.eurusd;
+        state.eurusd = state.fx.rate;
+        state.snapshotAt = new Date();
+        syncInputs();
+        recompute();
+      });
+
+      function bindStorage(fromRange) {
+        return function () {
+          var v = Number(this.value);
+          if (!Number.isFinite(v)) return;
+          v = clamp(v, 55, 100);
+          state.storagePct = v;
+          if (fromRange) writeIfIdle("storage-num", v.toFixed(1));
+          else writeIfIdle("storage-range", String(v));
+          changed();
+        };
+      }
+      byId("storage-range").addEventListener("input", bindStorage(true));
+      byId("storage-num").addEventListener("input", bindStorage(false));
+      byId("hdd-range").addEventListener("input", function () {
+        var v = Number(this.value);
+        if (!Number.isFinite(v)) return;
+        state.hddDevPct = clamp(v, -30, 40);
+        changed();
+      });
+      byId("in-util").addEventListener("input", function () {
+        var v = Number(this.value);
+        if (!Number.isFinite(v)) return;
+        state.utilPct = clamp(v, 70, 100);
+        state.pinned.utilPct = true;
+        changed();
+      });
+      byId("in-padd").addEventListener("input", function () {
+        var v = Number(this.value);
+        if (!Number.isFinite(v)) return;
+        state.padd1 = clamp(v, 12, 55);
+        state.pinned.padd1 = true;
+        changed();
+      });
+      byId("btn-reset").addEventListener("click", resetAll);
+      byId("theme-toggle").addEventListener("click", function () {
+        var next = resolvedTheme() === "dark" ? "light" : "dark";
+        document.documentElement.setAttribute("data-theme", next);
+        try { localStorage.setItem("desk-theme", next); } catch (e) {}
+        updateThemeButton();
+      });
+      window.matchMedia("(prefers-color-scheme: light)").addEventListener("change", updateThemeButton);
+      window.addEventListener("scroll", hideTip, true);
+      if (window.ResizeObserver) {
+        var observer = new ResizeObserver(function (entries) {
+          var dirty = false;
+          entries.forEach(function (entry) {
+            var id = entry.target.id;
+            var sig = Math.round(entry.contentRect.width) + "x" + Math.round(entry.contentRect.height);
+            if (lastChartSize[id] !== sig) {
+              lastChartSize[id] = sig;
+              dirty = true;
+            }
+          });
+          if (dirty) recompute();
+        });
+        document.querySelectorAll("svg.chart-svg").forEach(function (svg) { observer.observe(svg); });
+      }
+
+      updateThemeButton();
+      syncInputs();
+      recompute();
+      pollFx();
+      setInterval(pollFx, CONFIG.fxPollMs);
+      setInterval(tickSim, CONFIG.simTickMs);
+    }
+
+    try {
+      init();
+    } catch (err) {
+      var fatal = document.getElementById("fatal");
+      fatal.hidden = false;
+      fatal.textContent = "看板脚本未能启动：" + (err && err.message ? err.message : err);
+    }
+  </script>
+</body>
+</html>
