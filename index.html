@@ -74,7 +74,7 @@
     html, body { margin: 0; }
     body {
       min-height: 100vh;
-      font-family: "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
       color: var(--text);
       background: var(--bg);
       line-height: 1.5;
@@ -90,7 +90,11 @@
     :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
     h1, h2, h3, p { margin: 0; }
     .wrap { max-width: 1440px; margin: 0 auto; padding: 20px 22px 48px; }
-    .mono { font-family: ui-monospace, "SFMono-Regular", "Cascadia Mono", "Segoe UI Mono", "WenQuanYi Micro Hei Mono", monospace; font-variant-numeric: tabular-nums; }
+    .mono {
+      font-family: inherit;
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum";
+    }
 
     .top { display: flex; justify-content: space-between; gap: 18px; align-items: flex-end; margin-bottom: 16px; }
     h1 { font-size: 26px; font-weight: 650; letter-spacing: -0.02em; line-height: 1.25; }
@@ -167,7 +171,11 @@
     .gauge-warn { stroke: var(--warn); stroke-width: 10; fill: none; stroke-linecap: round; }
     .gauge-tick { stroke: var(--accent); stroke-width: 2; }
     .gauge-value { fill: var(--text); font-size: 26px; font-weight: 650; }
-    .chart-svg text { font-family: "Segoe UI", "PingFang SC", "Noto Sans SC", "WenQuanYi Micro Hei", sans-serif; }
+    .chart-svg text, svg.fill-bar text {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum";
+    }
     .chart-svg .muted, .gauge .muted { fill: var(--muted); font-size: 12px; }
     .chart-svg .num { fill: var(--muted); font-size: 11px; font-family: ui-monospace, "Segoe UI Mono", monospace; }
     .chart-svg .grid { stroke: var(--line); stroke-width: 1; }
@@ -516,7 +524,7 @@
     :root[data-theme="dark"] .insights li.tone-gas { background: #14332c; color: #e8eef5; }
     :root[data-theme="dark"] .insights li.tone-arb { background: #3a3018; color: #e8eef5; }
     :root[data-theme="dark"] .insights li.tone-pad { background: #3a2418; color: #e8eef5; }
-    :root[data-theme="dark"] .insights li .kicker { color: #e8eef5; }
+    :root[data-theme="dark"] .insights li .kicker { color: var(--label); }
 
     .band.card {
       background: transparent;
@@ -599,6 +607,71 @@
       .big-pct { font-size: 34px; }
       h1 { font-size: 16px; }
       .metric-k, .stat-k, .eu-facts .stat-k { white-space: normal; }
+    }
+
+    :root, :root[data-theme="light"] {
+      --kpi: #0f172a;
+      --label: #475569;
+      --meta: #64748b;
+      --warn: #8a5a12;
+    }
+    :root[data-theme="dark"] {
+      --kpi: #f8fafc;
+      --label: #94a3b8;
+      --meta: #748396;
+      --warn: #e2b657;
+    }
+    h1 { color: var(--kpi); font-weight: 650; }
+    .card h2, .card h3, .metric-k, .quote .lbl, .stat-k, .field label, .slider-top label, th {
+      font-weight: 500;
+      font-size: 13px;
+      color: var(--label);
+    }
+    .card h2, .card h3 { font-size: 14px; }
+    .sub, .stamp, .stamp-note, .note, .formula, .src-line, .badge, .check, footer, footer h2, .quote .u, .unit, .scen-bcm .u, .lock {
+      font-weight: 400;
+      font-size: 12px;
+      color: var(--meta);
+    }
+    .badge, .lock, .quote .u, .unit { font-size: 11px; }
+    footer h2 { font-size: 12px; margin: 0 0 4px; }
+    .stamp strong { color: var(--meta); font-weight: 400; }
+    .numline b, .big-pct, .kpi, .mini .stat-v, .scen-bcm, .stat-v, .eu-facts .stat-v {
+      font-weight: 650;
+      color: var(--kpi);
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum";
+      white-space: nowrap;
+    }
+    .numline b { font-size: 22px; }
+    .big-pct, .scen-bcm { font-size: 28px; }
+    .kpi, .mini .stat-v { font-size: 26px; }
+    .stat-v, .eu-facts .stat-v { font-size: 20px; }
+    .delta, td.num, .chart-svg .num, .chart-svg .barlab, .chart-svg .callout, svg.fill-bar .barlab, input[type="number"] {
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum";
+      white-space: nowrap;
+    }
+    .delta { font-weight: 650; }
+    .delta.flat { color: var(--meta); font-weight: 500; }
+    .kpi.pos, .delta.pos, .pos { color: var(--up); }
+    .kpi.neg, .delta.neg, .neg { color: var(--down); }
+    td.num { color: var(--kpi); font-weight: 600; font-size: 13px; }
+    .chart-svg .muted, .chart-svg .num {
+      fill: var(--label);
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .chart-svg .callout { fill: var(--kpi); font-weight: 650; font-size: 13px; }
+    svg.fill-bar .barlab { fill: var(--warn); font-size: 13px; font-weight: 700; }
+    .insights li { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; color: var(--kpi); overflow: visible; text-overflow: clip; }
+    .insights .kicker, .insights li .kicker { font-size: 13px; font-weight: 500; color: var(--label); }
+    .numline, .quote .u, .stat-v, .big-pct, .kpi, .scen-bcm { min-width: max-content; }
+    .quote { min-width: min-content; }
+    .eu-facts > div { min-width: min-content; }
+    @media (max-width: 640px) {
+      .numline b, .stat-v, .eu-facts .stat-v { font-size: 20px; }
+      .big-pct, .scen-bcm, .kpi, .mini .stat-v { font-size: 24px; }
     }
   </style>
 </head>
