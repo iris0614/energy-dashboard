@@ -132,7 +132,8 @@
     button.ghost:hover, button.solid:hover { border-color: var(--faint); }
     button.solid { background: var(--text); color: var(--bg); border-color: var(--text); }
 
-    .chain-scroll { margin-bottom: 16px; }
+    .chain-scroll { margin-bottom: 16px; max-width: 100%; }
+    .chain-hint { display: none; }
     .chain-row {
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
@@ -194,7 +195,7 @@
     .chart-svg .grid { stroke: var(--line); stroke-width: 1; }
     .chart-svg .guide { stroke: var(--faint); stroke-width: 1; stroke-dasharray: 3 3; }
     svg.chart-svg { width: 100%; height: 228px; display: block; }
-    svg.chart-svg.sparkline { height: 78px; }
+    svg.chart-svg.sparkline { height: 132px; }
 
     .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .stat { background: var(--sunken); border-radius: 10px; padding: 8px 10px; min-width: 0; }
@@ -279,7 +280,8 @@
     .meter { height: 8px; background: var(--elev); border-radius: 99px; overflow: hidden; margin-top: 8px; }
     .meter i { display: block; height: 100%; background: var(--info); width: 0; }
     .ref-split { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.9fr); gap: 14px; }
-    .table-wrap { overflow-x: auto; }
+    .ref-split > *, .kpi-row > *, .gas-top > *, .stats > *, .form-grid > * { min-width: 0; }
+    .table-wrap { overflow-x: auto; max-width: 100%; width: 100%; }
     table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 520px; }
     th { text-align: left; color: var(--muted); font-weight: 500; font-size: 12px; padding: 6px; }
     td { border-top: 1px solid var(--line); padding: 8px 6px; vertical-align: top; }
@@ -318,8 +320,9 @@
     @media (max-width: 860px) {
       main { grid-template-columns: 1fr; }
       #refining { grid-column: auto; }
-      .chain-scroll { overflow-x: auto; padding-bottom: 4px; }
-      .chain-row { display: flex; width: max-content; }
+      .chain-hint { display: block; }
+      .chain-scroll { overflow-x: auto; padding-bottom: 6px; }
+      .chain-row { display: flex; width: max-content; max-width: none; }
       .node { width: 230px; scroll-snap-align: start; }
       .chain-scroll { scroll-snap-type: x mandatory; }
       .gas-top { grid-template-columns: 1fr; }
@@ -366,6 +369,7 @@
     <noscript><p class="banner is-bad">计算、图表和汇率请求需要 JavaScript。页面结构仍可阅读，但数字不会更新。</p></noscript>
 
     <section class="chain-scroll" aria-label="供应链概览">
+      <p class="note chain-hint">左右滑动查看四个环节。</p>
       <div class="chain-row">
         <article class="node">
           <p class="kicker">01</p>
