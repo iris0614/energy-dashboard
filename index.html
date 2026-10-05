@@ -333,6 +333,8 @@
       .wrap { padding: 14px 12px 36px; }
       h1 { font-size: 22px; }
       .top, .top-side { align-items: flex-start; }
+      .stamp-row { justify-content: flex-start; }
+      .stamp-row .stamp { text-align: left; }
       .top { flex-direction: column; }
       .tools { justify-content: flex-start; }
       .form-grid, .form-grid.four, .field.span-2 { grid-template-columns: 1fr; }
@@ -341,6 +343,72 @@
       .kpi { font-size: 28px; }
       .cmp-row { grid-template-columns: 72px minmax(0, 1fr) 76px; }
     }
+
+    .stamp-row { display: flex; flex-wrap: wrap; gap: 8px 10px; align-items: center; justify-content: flex-end; max-width: 100%; }
+    .stamp-row .stamp { text-align: right; }
+    button.glossary-btn {
+      border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
+      color: var(--text);
+      white-space: normal;
+      line-height: 1.35;
+      text-align: left;
+    }
+    body.modal-open { overflow: hidden; }
+    .modal[hidden] { display: none !important; }
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: grid;
+      place-items: center;
+      padding: 20px 14px;
+    }
+    .modal-backdrop { position: absolute; inset: 0; background: rgba(6, 10, 14, 0.64); }
+    .modal-panel {
+      position: relative;
+      width: min(780px, 100%);
+      max-height: min(86vh, 880px);
+      display: flex;
+      flex-direction: column;
+      background: var(--elev);
+      color: var(--text);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.38);
+    }
+    .modal-head {
+      flex: none;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 16px 16px 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    .modal-head h2 { font-size: 18px; font-weight: 650; letter-spacing: -0.02em; margin-top: 2px; }
+    .modal-head button { flex: none; }
+    .modal-body { overflow: auto; min-height: 0; padding: 4px 16px 20px; }
+    .modal-body h3 { font-size: 14px; font-weight: 650; margin: 18px 0 6px; }
+    .modal-body h4 { font-size: 13px; font-weight: 650; margin: 10px 0 4px; }
+    .modal-body p, .modal-body li { font-size: 13px; line-height: 1.55; }
+    .modal-body p { margin: 6px 0; }
+    .modal-body a { color: var(--info); }
+    .modal-body a:hover { color: var(--text); }
+    .formula-box {
+      background: var(--sunken);
+      border-radius: 10px;
+      padding: 8px 10px;
+      margin: 8px 0;
+      font-family: ui-monospace, "SFMono-Regular", "Cascadia Mono", "Segoe UI Mono", "WenQuanYi Micro Hei Mono", monospace;
+      font-size: 12px;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+    .freq { display: grid; gap: 8px; margin-top: 8px; }
+    .freq article { background: var(--sunken); border-radius: 10px; padding: 8px 10px; }
+    .freq h4 { margin-top: 0; }
+    .freq p { margin: 2px 0; font-size: 12px; color: var(--muted); }
+    .freq strong { color: var(--text); font-weight: 600; }
     @media (prefers-reduced-motion: reduce) {
       * { scroll-behavior: auto !important; }
     }
@@ -354,7 +422,10 @@
         <p class="sub">2025/26 采暖季量级的示意底稿。欧元兑美元在接口可用时改用欧洲央行参考价，其余价格、库存、运价与采暖度日都标明为示意，改任何一个输入会立刻重算。</p>
       </div>
       <div class="top-side">
-        <p class="stamp">数据快照 <strong id="stamp-time">—</strong></p>
+        <div class="stamp-row">
+          <p class="stamp">数据快照 <strong id="stamp-time">—</strong></p>
+          <button type="button" class="ghost glossary-btn" id="btn-glossary" aria-haspopup="dialog" aria-controls="glossary" aria-expanded="false">指标说明与更新频率（Glossary）</button>
+        </div>
         <div class="tools">
           <label class="check" title="未锁定的示意价格会轻微向起点回归，用来在没有行情接口时保持看板更新">
             <input id="sim-toggle" type="checkbox" checked />
@@ -551,7 +622,7 @@
           <div class="kpi-box">
             <p class="stat-k">馏分油总库存</p>
             <p class="stat-v mono" id="distillate-out">—</p>
-            <p class="note">随东岸库存同量增减，起点 121.6 百万桶。</p>
+            <p class="note" id="distillate-note">随东岸库存同量增减，起点 121.6 百万桶。</p>
           </div>
           <div class="kpi-box">
             <p class="stat-k">PADD 1 东岸库存 <span class="lock" id="lock-padd" hidden>已锁定</span></p>
@@ -616,7 +687,7 @@
       <p class="note">库存：欧盟工作气能力按 104.5 bcm（十亿立方米）示意。11 月 1 日注入目标 90%。五年均值按 10 月初 93.2% 示意。常年采暖季抽取 58 bcm，情景抽取再乘以（1 + 采暖度日偏离）。3 月末库存 = 起点库存 − 情景抽取。宽裕 ≥ 30 bcm，平衡 ≥ 15 bcm，否则紧张；低于零记为耗尽。</p>
       <p class="note">套利：原料气 = Henry Hub × 1.15。离岸 = 原料气 + 液化费。运费 = 日租金 × 往返天数 / 货量。蒸发气近似 = 装载天数 × 0.10%/日 × 离岸成本。港口 0.12、再气化 0.35 美元/百万英热。欧元/兆瓦时 = 美元/百万英热 × 3.412141633 / EURUSD。EURUSD 是 1 欧元兑多少美元，与欧洲央行标价一致；USDEUR 是它的倒数。窗口在边际高于 0.50 欧元/兆瓦时时视为开启。</p>
       <p class="note">热值：柴油低位热值 42.6 MJ/kg，即 11.83 兆瓦时/吨。柴油欧元/兆瓦时 =（美元/吨 ÷ EURUSD）÷ 11.83。平价曲线的 10 月锚在当前输入上，11 月至 3 月另加一组示意季节升水。采暖度日为基温 15.5°C 的示意月值。</p>
-      <p class="note">数据层：汇率约每 60 秒轮询一次，8 秒超时。失败时保留上次成功值或内置回退 1.1204，计算不中断。未锁定的示意行情约每 5 秒向起点轻微回归；手动改过的字段会锁定。下方脚本里留有未启用的 WebSocket 钩子。</p>
+      <p class="note">数据层：示意序列和起点价格从同目录 data.json 读取（asOf、seed、series、inventory）。页眉「数据快照」写出文件里的 asOf，以及浏览器取得该文件的时间；读取失败时改用页内回退，并标明为内置回退。汇率仍约每 60 秒轮询一次，8 秒超时。失败时保留上次成功值或内置回退 1.1204，计算不中断。未锁定的示意行情约每 5 秒向 data.json 的起点轻微回归；手动改过的字段会锁定。下方脚本里留有未启用的 WebSocket 钩子。</p>
       <h2>来源</h2>
       <p class="note">下列链接是公开定义页或数据首页。除欧元兑美元外，本页数字不是这些机构的发布值，请勿把示意序列当成引用。</p>
       <ul>
@@ -632,6 +703,134 @@
         <li class="src"><a href="https://www.sparkcommodities.com/data" target="_blank" rel="noopener noreferrer">Spark Commodities</a>（Spark25 为大西洋盆地液化天然气船日租金评估的商业产品名）</li>
       </ul>
     </footer>
+  </div>
+  <div id="glossary" class="modal" hidden>
+    <div class="modal-backdrop" id="glossary-backdrop"></div>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="glossary-title" aria-describedby="glossary-intro">
+      <div class="modal-head">
+        <div>
+          <p class="kicker">Glossary</p>
+          <h2 id="glossary-title">指标说明与更新频率</h2>
+        </div>
+        <button type="button" class="ghost" id="glossary-close">关闭</button>
+      </div>
+      <div class="modal-body">
+        <p id="glossary-intro">这份说明按页面上的四个环节写：每个指标在算什么、业务上怎么读、数字从哪来、多久更新一次。公式与页脚「方法」相同。除欧元兑美元外，价格、库存、运价和采暖度日都是示意底稿，换 <span class="mono">data.json</span> 即可更新，不必改页面。</p>
+
+        <h3>上游原料</h3>
+        <h4>Henry Hub</h4>
+        <p>美国路易斯安那州亨利枢纽的天然气现货，单位美元/百万英热，是美湾液化气的原料价格。本页不把 Henry Hub 原价直接当成到岸成本，而是先加上液化厂自己烧掉的那一部分进料气。</p>
+        <p class="formula-box">原料气 = Henry Hub × 1.15</p>
+        <p>1.15 是本页固定的进料气系数：每出口 1 百万英热液化气，按多采购 15% 原料气，用来覆盖厂内燃料和损耗。它不是 EIA 公布的系数，换数据文件也不会改它。</p>
+        <h4>WTI</h4>
+        <p>WTI（西得克萨斯中质原油）是美国轻质低硫原油基准，定价地在俄克拉何马州库欣，单位美元/桶。它描述美国上游原油和内陆炼厂的原油成本：库欣库存松、管道外输受限时，WTI 会相对海上原油走弱。EIA 在每个工作日发布库欣 WTI 现货（通常是前一个工作日的价格）。</p>
+        <p>本页没有 WTI 输入，裂解也不减 WTI。顶部原油栏和下面的柴油裂解用的是布伦特：大西洋水上成品油（纽约港、美湾出口、鹿特丹）习惯对照布伦特，而不是库欣内陆价格。</p>
+        <h4>布伦特</h4>
+        <p>本页原油起点，单位美元/桶。裂解把成品油先换成美元/桶，再减去这一个布伦特价格。EIA 每个工作日发布欧洲布伦特现货。页面上的布伦特是 <span class="mono">data.json</span> 的示意起点，不是 EIA 当日值。</p>
+
+        <h3>加工 / 液化</h3>
+        <h4>美国炼厂开工率</h4>
+        <p>可运行炼油能力里，当周实际进料的百分比。开工高，汽油和馏分油的供给偏松；开工掉下来，成品油更容易抽紧，柴油裂解往往走阔。它解释美国炼厂这一环松不松。</p>
+        <p>本页只把它显示在顶部链路和开工率读数上，不代入套利，也不代入裂解。数字来自示意起点，官方序列在 EIA《周度石油供应报告》，通常美东时间周三 10:30 发布（遇美国假日顺延到周四），覆盖截至上周五的一周。</p>
+        <h4>液化进料气与液化费</h4>
+        <p>进料气和液化费是两笔不同的钱。进料气是按 Henry Hub 买来的原料（已经乘过 1.15）；液化费是把气冻成液体的加工费，起点 2.50 美元/百万英热，可以改。</p>
+        <p class="formula-box">离岸 = 原料气 + 液化费 = Henry Hub × 1.15 + 液化费</p>
+        <p>美国液化厂实际吃进多少管道气，看 EIA《天然气周报》里的液化出口进料气，通常周四更新。那是实物量。本页的 1.15 只是燃料气放大系数，不要把它读成 EIA 的进料气序列。</p>
+
+        <h3>海运与套利</h3>
+        <h4>Spark25 日租金</h4>
+        <p>Spark25 是 Spark Commodities 对大西洋盆地液化天然气船日租金的评估名称。现货评估 Spark25S 的提交窗口是格林尼治时间 08:00–10:00，每个评估日发布，Spark 的合约说明写明 Spark25S 于 10:00 GMT 发布。远期曲线 Spark25Fo 每周二发布一次。日租金越高，同样一条船的航次成本越大，美湾到欧洲的窗口越容易关上。</p>
+        <p>本页曲线的左段是 <span class="mono">data.json</span> 里的示意轨迹，右端点改成当前日租金输入，不是 Spark 的正式估价。</p>
+        <p class="formula-box">运费（美元/百万英热）= 日租金 × 往返天数 / 货量<br />货量 = 输入的「万 MMBtu」× 10,000</p>
+        <p>起点是日租金 55,000 美元、往返 24 天、货量 360 万 MMBtu。货量变小或往返变长，单位运费上升。</p>
+        <h4>TTF 对 Henry Hub 的套利</h4>
+        <p>TTF 是荷兰所有权转让设施的天然气价格，本页用欧元/兆瓦时，代表欧洲终端能卖掉的气。ICE 荷兰 TTF 期货在交易日连续成交，每个交易日有结算价。页面上的 TTF 是示意输入，不是 ICE 结算价。</p>
+        <p>比较的是同一单位下的欧洲卖价和美湾货送到欧洲的全成本。交付成本先用美元/百万英热加总，再换成欧元/兆瓦时：</p>
+        <p class="formula-box">蒸发气近似 = 装载天数 × 0.10%/日 × 离岸成本<br />交付成本 = 离岸 + 运费 + 蒸发 + 港口 0.12 + 再气化 0.35<br />欧元/兆瓦时 = 美元/百万英热 × 3.412141633 / EURUSD<br />套利边际 = TTF − 交付成本（欧元/兆瓦时）<br />边际 &gt; 0.50 时，窗口视为开启</p>
+        <p>0.10%/日就是 0.001。装载天数大于往返天数时，蒸发气会被高估，页面会单独提示。港口 0.12 和再气化 0.35 美元/百万英热写死在页面里，不在 <span class="mono">data.json</span> 中。3.412141633 是 1 兆瓦时对应的百万英热。EURUSD 是 1 欧元兑多少美元，与欧洲央行标价一致；USDEUR 是它的倒数。0.50 欧元/兆瓦时是这块看板的示意门槛，不是交易所规则。</p>
+        <p>边际为正，表示欧洲气价盖过了「美国买气、乘上进料气系数、付液化费、跨大西洋船运、加上蒸发、港口和再气化」这一整叠成本，美湾货有往欧洲拉的激励。Henry Hub、液化费或 Spark25 日租金上升，都会抬高交付成本，把边际压小。</p>
+        <h4>汇率</h4>
+        <p>欧元兑美元约每 60 秒向 Frankfurter 取一次欧洲央行参考价，单次 8 秒超时。取到之后，没有被手动锁定的汇率改用参考价，套利和热值立刻重算。失败时保留上次成功值；从未成功则用 <span class="mono">data.json</span> 里的 EURUSD，内置回退是 1.1204。参考价在每个 TARGET 工作日发布，大约欧洲中部时间 16:00。手动改过的汇率会锁定，直到点「采用参考价」。</p>
+
+        <h3>终端需求</h3>
+        <h4>欧盟库存，以及 80% 填充目标</h4>
+        <p>库存百分比乘上本页示意的欧盟工作气能力，得到十亿立方米。采暖季会按寒冷程度把库存抽下去，3 月末还剩多少决定宽裕、平衡、紧张或耗尽。</p>
+        <p class="formula-box">工作气量 = 库存% / 100 × 104.5 bcm<br />较五年均值 = 库存% − 93.2 个百分点<br />情景抽取 = 58 bcm ×（1 + 采暖度日偏离）<br />3 月末库存 = 起点工作气量 − 情景抽取<br />宽裕 ≥ 30 bcm，平衡 ≥ 15 bcm，否则紧张；低于零记为耗尽</p>
+        <p>104.5、93.2% 和 58 bcm 都是本页示意口径，不是当天 AGSI 的技术能力和五年曲线。</p>
+        <p>法规里的 80% 是 2022 年的首年填充目标。Regulation (EU) 2022/1032 规定：2022 年 11 月 1 日前地下库存至少达到工作气能力的 80%，2023 年起每年 11 月 1 日前至少 90%。延期后的 Regulation (EU) 2025/1733 仍以 90% 为年度目标，但改成每年 10 月 1 日至 12 月 1 日之间达成，并允许成员国在市场困难或技术约束下偏离。库存水平看 GIE 的 AGSI+，每个天然气日更新，通常发布前一个天然气日的注入量。</p>
+        <p>本页计算不用 80%。仪表上的琥珀色刻度是示意的 11 月 1 日 90% 目标，进度 = 当前库存% / 90%。这与 2023 年以后的法定填充水平同一量级，但刻度两边的数字来自 <span class="mono">data.json</span> 的起点，不是 AGSI 当日读数。</p>
+        <h4>采暖度日</h4>
+        <p>采暖度日（HDD）把「冷多少」收成一个数：日均气温低于基温 15.5°C 的度数累加。越冷，取暖用气越多。本页 10 月到 3 月的「常年」柱是 <span class="mono">data.json</span> 里的示意月值，西北欧综合气候态，不是气象机构或 Eurostat 的正式序列。</p>
+        <p class="formula-box">情景度日 = 常年度日 ×（1 + 采暖度日偏离）</p>
+        <p>偏离滑块同时放大柱状图和上面的 58 bcm 抽取。偏离为正表示比常年更冷，3 月末库存更低。Eurostat 的采暖与制冷度日是月度、年度统计，不是实时行情。</p>
+        <h4>柴油裂解与 PADD 1 东岸库存</h4>
+        <p>裂解是炼厂把原油做成柴油后、相对原油还剩多少美元/桶。本页用布伦特做原油腿。正的裂解越宽，炼厂越有动力多产柴油；裂解收窄甚至为负，柴油相对原油偏便宜。</p>
+        <p class="formula-box">裂解 = 成品美元/桶 − 布伦特<br />加仑报价 × 42 = 美元/桶<br />吨报价 / 7.45 = 美元/桶</p>
+        <p>纽约港和美湾是美元/加仑，鹿特丹是美元/吨。42 加仑/桶、7.45 桶/吨是本页换算，不是交易所结算价。</p>
+        <p>PADD 1 是美国东岸。东岸馏分油库存低，说明消费地缓冲薄，同样的裂解更值得关注：库存紧、裂解宽，是成品油偏紧的组合；库存厚、裂解窄，则是供给松出来了。官方库存和开工率同在 EIA 周报里，通常美东时间周三 10:30。</p>
+        <p>本页把东岸滑块的当前值写进曲线右端点。全美馏分油总库存只随东岸相对起点的增减一比一移动，起点 121.6 百万桶，东岸起点 29.4 百万桶。也就是东岸被当成边际变化，不是 EIA 对五个 PADD 的加总。这两个起点在 <span class="mono">data.json</span> 的 <span class="mono">inventory</span> 里。</p>
+        <p class="formula-box">馏分油总库存 = 121.6 +（当前东岸 − 29.4）<br />柴油欧元/兆瓦时 =（美元/吨 ÷ EURUSD）÷ 11.83<br />11.83 兆瓦时/吨对应低位热值 42.6 MJ/kg</p>
+        <p>气价高于柴油热值时，本页把气转油激励标为出现：用户更愿意烧油、少烧气。平价曲线的 10 月锚在当前输入上，11 月至 3 月另加 <span class="mono">data.json</span> 里的示意季节升水。</p>
+
+        <h3>来源与更新频率</h3>
+        <div class="freq">
+          <article>
+            <h4>Henry Hub 现货</h4>
+            <p><strong>来源</strong> <a href="https://www.eia.gov/dnav/ng/hist/rngwhhdD.htm" target="_blank" rel="noopener noreferrer">EIA Henry Hub 日度现货</a></p>
+            <p><strong>频率</strong> 每个工作日，通常发布前一个工作日的价格。本页用的是示意起点。</p>
+          </article>
+          <article>
+            <h4>WTI 库欣现货</h4>
+            <p><strong>来源</strong> <a href="https://www.eia.gov/dnav/pet/hist/rwtcD.htm" target="_blank" rel="noopener noreferrer">EIA 库欣 WTI 日度现货</a></p>
+            <p><strong>频率</strong> 每个工作日。本页不读取 WTI，只在这里说明它的定价角色。</p>
+          </article>
+          <article>
+            <h4>布伦特现货</h4>
+            <p><strong>来源</strong> <a href="https://www.eia.gov/dnav/pet/hist/rbrteD.htm" target="_blank" rel="noopener noreferrer">EIA 欧洲布伦特日度现货</a></p>
+            <p><strong>频率</strong> 每个工作日。裂解表里的布伦特是示意输入。</p>
+          </article>
+          <article>
+            <h4>炼厂开工率、全美与 PADD 1 库存</h4>
+            <p><strong>来源</strong> <a href="https://www.eia.gov/petroleum/supply/weekly/" target="_blank" rel="noopener noreferrer">EIA 周度石油供应报告</a>，<a href="https://www.eia.gov/dnav/pet/pet_pnp_unc_dcu_nus_w.htm" target="_blank" rel="noopener noreferrer">炼厂开工率</a>，<a href="https://www.eia.gov/dnav/pet/pet_stoc_wstk_dcu_nus_w.htm" target="_blank" rel="noopener noreferrer">全美库存</a>，<a href="https://www.eia.gov/dnav/pet/pet_stoc_wstk_dcu_r10_w.htm" target="_blank" rel="noopener noreferrer">PADD 1 库存</a></p>
+            <p><strong>频率</strong> 每周，通常美东时间周三 10:30，覆盖截至上周五的一周。</p>
+          </article>
+          <article>
+            <h4>液化进料气</h4>
+            <p><strong>来源</strong> <a href="https://www.eia.gov/naturalgas/weekly/" target="_blank" rel="noopener noreferrer">EIA 天然气周报</a></p>
+            <p><strong>频率</strong> 周报通常周四。本页 1.15 是固定燃料气系数，不是这条序列。</p>
+          </article>
+          <article>
+            <h4>Spark25 日租金</h4>
+            <p><strong>来源</strong> <a href="https://www.sparkcommodities.com/lng-freight/" target="_blank" rel="noopener noreferrer">Spark LNG Freight</a>，<a href="https://www.sparkcommodities.com/api/lng-freight/contracts.html" target="_blank" rel="noopener noreferrer">Spark25S 发布时刻</a></p>
+            <p><strong>频率</strong> 现货 Spark25S 每个评估日 10:00 GMT；远期 Spark25Fo 每周二。本页轨迹是示意形状。</p>
+          </article>
+          <article>
+            <h4>TTF</h4>
+            <p><strong>来源</strong> <a href="https://www.ice.com/products/27996665/Dutch-TTF-Gas-Futures" target="_blank" rel="noopener noreferrer">ICE 荷兰 TTF 天然气期货</a></p>
+            <p><strong>频率</strong> 交易日连续成交，每个交易日结算。本页 TTF 是示意输入。</p>
+          </article>
+          <article>
+            <h4>欧盟库存与填充目标</h4>
+            <p><strong>来源</strong> <a href="https://agsi.gie.eu/" target="_blank" rel="noopener noreferrer">GIE AGSI+</a>，<a href="https://www.gie.eu/" target="_blank" rel="noopener noreferrer">Gas Infrastructure Europe</a>，<a href="https://energy.ec.europa.eu/topics/energy-security/gas-storage_en" target="_blank" rel="noopener noreferrer">欧盟委员会气体储存</a>，<a href="https://eur-lex.europa.eu/eli/reg/2022/1032/oj" target="_blank" rel="noopener noreferrer">Regulation (EU) 2022/1032</a>（2022 年 80%、其后 90%），<a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32025R1733" target="_blank" rel="noopener noreferrer">Regulation (EU) 2025/1733</a></p>
+            <p><strong>频率</strong> AGSI+ 每个天然气日更新。80% 是 2022 年 11 月 1 日的法定目标；本页刻度用的是示意 90%。</p>
+          </article>
+          <article>
+            <h4>采暖度日</h4>
+            <p><strong>来源</strong> <a href="https://ec.europa.eu/eurostat/cache/metadata/en/nrg_chdd_esms.htm" target="_blank" rel="noopener noreferrer">Eurostat 采暖与制冷度日说明</a></p>
+            <p><strong>频率</strong> Eurostat 为月度、年度统计。本页月值是示意气候态，基温 15.5°C。</p>
+          </article>
+          <article>
+            <h4>欧元兑美元</h4>
+            <p><strong>来源</strong> <a href="https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-usd.en.html" target="_blank" rel="noopener noreferrer">欧洲央行欧元参考汇率</a>，经 <a href="https://frankfurter.dev/" target="_blank" rel="noopener noreferrer">Frankfurter</a> 读取</p>
+            <p><strong>频率</strong> 每个 TARGET 工作日，约欧洲中部时间 16:00。本页约每 60 秒轮询一次。</p>
+          </article>
+        </div>
+
+        <h3>data.json 怎么换</h3>
+        <p>页面加载时请求同目录的 <span class="mono">data.json</span>。页眉「数据快照」写出文件里的 <span class="mono">asOf</span>，以及这次取回文件的时间。请求失败或字段对不上时，改用页内一份小回退，快照会标明「内置回退」，计算不中断。</p>
+        <p>后续脚本替换整个文件即可。需要保留 <span class="mono">asOf</span>（ISO-8601 时间）、<span class="mono">seed</span> 里的全部起点、<span class="mono">series.hddNorm</span>、<span class="mono">series.gasPremiumEurPerMwh</span>、<span class="mono">series.dieselPremiumEurPerMwh</span>（后两者与采暖月一一对应）、<span class="mono">series.spark25UsdPerDay</span>、<span class="mono">series.padd1DistillateMillionBbl</span>，以及 <span class="mono">inventory</span> 里的全美馏分油起点和东岸起点。滑块和价格输入仍在这份底稿上立刻重算图表和套利边际。1.15、港口、再气化、热值、90% 刻度和 0.50 门槛留在页面里，不随文件改变。</p>
+      </div>
+    </div>
   </div>
   <div id="tip" role="tooltip" hidden></div>
 
@@ -677,37 +876,220 @@
     var BASE_DISTILLATE = 121.6;
     var BASE_PADD = 29.4;
 
-    var SEED = {
-      ttf: 36.4,
-      hh: 3.95,
-      eurusd: 1.1204,
-      freight: 55000,
-      storagePct: 91.5,
-      hddDevPct: 0,
-      utilPct: 91.4,
-      padd1: 29.4,
-      brent: 78.5,
-      nyh: 2.42,
-      usgc: 2.28,
-      ara: 780,
-      roundTripDays: 24,
-      ladenDays: 13,
-      cargoWan: 360,
-      liq: 2.5
+    // Illustrative series and starting prices live in data.json.
+    // Used only when that file cannot be fetched or fails validation. The stamp says so.
+    var FALLBACK_PAYLOAD =
+    {
+      "asOf": "inline-fallback",
+      "kind": "inline-fallback",
+      "seed": {
+        "ttf": 36.4,
+        "hh": 3.95,
+        "eurusd": 1.1204,
+        "freight": 55000,
+        "storagePct": 91.5,
+        "hddDevPct": 0,
+        "utilPct": 91.4,
+        "padd1": 29.4,
+        "brent": 78.5,
+        "nyh": 2.42,
+        "usgc": 2.28,
+        "ara": 780,
+        "roundTripDays": 24,
+        "ladenDays": 13,
+        "cargoWan": 360,
+        "liq": 2.5
+      },
+      "series": {
+        "hddNorm": [
+          {
+            "month": "10月",
+            "degreeDays": 168
+          },
+          {
+            "month": "11月",
+            "degreeDays": 312
+          },
+          {
+            "month": "12月",
+            "degreeDays": 428
+          },
+          {
+            "month": "1月",
+            "degreeDays": 466
+          },
+          {
+            "month": "2月",
+            "degreeDays": 398
+          },
+          {
+            "month": "3月",
+            "degreeDays": 336
+          }
+        ],
+        "gasPremiumEurPerMwh": [
+          0,
+          1.2,
+          3.4,
+          4.8,
+          3.6,
+          1.5
+        ],
+        "dieselPremiumEurPerMwh": [
+          0,
+          0.8,
+          2.2,
+          3.1,
+          2.4,
+          1.0
+        ],
+        "spark25UsdPerDay": [
+          42000,
+          39000,
+          41000,
+          45000,
+          48000,
+          52000,
+          61000,
+          74000,
+          88000,
+          96000,
+          91000,
+          80000,
+          69000,
+          62000,
+          58000,
+          55000
+        ],
+        "padd1DistillateMillionBbl": [
+          34.2,
+          34.0,
+          33.6,
+          33.1,
+          32.8,
+          32.4,
+          32.0,
+          31.5,
+          31.2,
+          30.8,
+          30.6,
+          30.9,
+          31.4,
+          31.8,
+          32.2,
+          32.6,
+          32.1,
+          31.5,
+          31.0,
+          30.6,
+          30.2,
+          29.9,
+          29.7,
+          29.6,
+          29.5,
+          29.4
+        ]
+      },
+      "inventory": {
+        "usDistillateBaseMillionBbl": 121.6,
+        "padd1BaseMillionBbl": 29.4
+      }
     };
 
-    var HDD_NORM = [
-      ["10月", 168],
-      ["11月", 312],
-      ["12月", 428],
-      ["1月", 466],
-      ["2月", 398],
-      ["3月", 336]
-    ];
-    var GAS_PREMIUM = [0, 1.2, 3.4, 4.8, 3.6, 1.5];
-    var DIESEL_PREMIUM = [0, 0.8, 2.2, 3.1, 2.4, 1.0];
-    var SPARK_HIST = [42000, 39000, 41000, 45000, 48000, 52000, 61000, 74000, 88000, 96000, 91000, 80000, 69000, 62000, 58000, 55000];
-    var PADD_HIST = [34.2, 34.0, 33.6, 33.1, 32.8, 32.4, 32.0, 31.5, 31.2, 30.8, 30.6, 30.9, 31.4, 31.8, 32.2, 32.6, 32.1, 31.5, 31.0, 30.6, 30.2, 29.9, 29.7, 29.6, 29.5, 29.4];
+    var SEED_KEYS = ["ttf", "hh", "eurusd", "freight", "storagePct", "hddDevPct", "utilPct", "padd1", "brent", "nyh", "usgc", "ara", "roundTripDays", "ladenDays", "cargoWan", "liq"];
+
+    function numArray(arr, minLen) {
+      if (!Array.isArray(arr) || arr.length < minLen) return null;
+      var out = [];
+      for (var i = 0; i < arr.length; i++) {
+        var n = Number(arr[i]);
+        if (!Number.isFinite(n)) return null;
+        out.push(n);
+      }
+      return out;
+    }
+
+    function parseHdd(arr) {
+      if (!Array.isArray(arr) || arr.length < 1) return null;
+      var out = [];
+      for (var i = 0; i < arr.length; i++) {
+        var row = arr[i];
+        var label;
+        var value;
+        if (Array.isArray(row)) {
+          label = row[0] == null ? "" : String(row[0]);
+          value = Number(row[1]);
+        } else if (row && typeof row === "object") {
+          label = row.month == null ? "" : String(row.month);
+          value = Number(row.degreeDays);
+        } else return null;
+        if (!label || !Number.isFinite(value)) return null;
+        out.push([label, value]);
+      }
+      return out;
+    }
+
+    function parsePayload(data) {
+      if (!data || typeof data !== "object") return null;
+      if (typeof data.asOf !== "string" || !data.asOf) return null;
+      if (!data.seed || typeof data.seed !== "object") return null;
+      var seed = {};
+      for (var i = 0; i < SEED_KEYS.length; i++) {
+        var key = SEED_KEYS[i];
+        var n = Number(data.seed[key]);
+        if (!Number.isFinite(n)) return null;
+        seed[key] = n;
+      }
+      if (!(seed.eurusd > 0) || !(seed.cargoWan > 0)) return null;
+      var series = data.series;
+      if (!series || typeof series !== "object") return null;
+      var hdd = parseHdd(series.hddNorm);
+      var gas = numArray(series.gasPremiumEurPerMwh, 1);
+      var diesel = numArray(series.dieselPremiumEurPerMwh, 1);
+      var spark = numArray(series.spark25UsdPerDay, 2);
+      var padd = numArray(series.padd1DistillateMillionBbl, 2);
+      if (!hdd || !gas || !diesel || !spark || !padd) return null;
+      if (gas.length !== hdd.length || diesel.length !== hdd.length) return null;
+      var inv = data.inventory;
+      if (!inv || typeof inv !== "object") return null;
+      var baseDist = Number(inv.usDistillateBaseMillionBbl);
+      var basePadd = Number(inv.padd1BaseMillionBbl);
+      if (!Number.isFinite(baseDist) || !Number.isFinite(basePadd)) return null;
+      return {
+        asOf: data.asOf,
+        seed: seed,
+        hdd: hdd,
+        gas: gas,
+        diesel: diesel,
+        spark: spark,
+        padd: padd,
+        baseDistillate: baseDist,
+        basePadd: basePadd
+      };
+    }
+
+    function installNumbers(parsed) {
+      SEED = parsed.seed;
+      HDD_NORM = parsed.hdd;
+      GAS_PREMIUM = parsed.gas;
+      DIESEL_PREMIUM = parsed.diesel;
+      SPARK_HIST = parsed.spark;
+      PADD_HIST = parsed.padd;
+      BASE_DISTILLATE = parsed.baseDistillate;
+      BASE_PADD = parsed.basePadd;
+    }
+
+    var SEED;
+    var HDD_NORM;
+    var GAS_PREMIUM;
+    var DIESEL_PREMIUM;
+    var SPARK_HIST;
+    var PADD_HIST;
+    var bootPayload = parsePayload(FALLBACK_PAYLOAD);
+    if (!bootPayload) throw new Error("内置回退无效");
+    installNumbers(bootPayload);
+
+    var dataMeta = { status: "loading", asOf: "", fetchedAt: null, error: "" };
 
     var state = {
       ttf: SEED.ttf,
@@ -1068,7 +1450,23 @@
     }
 
     function renderHeader() {
-      setText("stamp-time", stamp(state.snapshotAt));
+      var node = byId("stamp-time");
+      if (!node) return;
+      if (dataMeta.status === "file") {
+        var asOfText = dataMeta.asOf;
+        var asOfDate = new Date(dataMeta.asOf);
+        if (Number.isFinite(asOfDate.getTime())) asOfText = stamp(asOfDate);
+        node.textContent = "asOf " + asOfText + " · 取得于 " + stamp(dataMeta.fetchedAt);
+        node.title = "";
+        return;
+      }
+      if (dataMeta.status === "fallback") {
+        node.textContent = "内置回退（data.json 未能读取）";
+        node.title = dataMeta.error ? ("data.json：" + dataMeta.error) : "";
+        return;
+      }
+      node.textContent = "正在读取 data.json";
+      node.title = "";
     }
 
     function renderChain(m) {
@@ -1257,6 +1655,7 @@
       setText("util-out", fmt(state.utilPct, 1) + "%");
       byId("util-bar").style.width = clamp(state.utilPct, 0, 100) + "%";
       setText("distillate-out", fmt(m.distillate, 1) + " 百万桶");
+      setText("distillate-note", "随东岸库存同量增减，起点 " + fmt(BASE_DISTILLATE, 1) + " 百万桶。");
       setText("padd-out", fmt(state.padd1, 1) + " 百万桶");
       var padd = PADD_HIST.slice();
       padd[padd.length - 1] = state.padd1;
@@ -1527,6 +1926,56 @@
       recompute();
     }
 
+
+    function applyLoaded(parsed, status) {
+      var keep = {};
+      SEED_KEYS.forEach(function (k) {
+        if (state.pinned[k] || state[k] !== SEED[k]) keep[k] = true;
+      });
+      installNumbers(parsed);
+      SEED_KEYS.forEach(function (k) {
+        if (!keep[k]) state[k] = SEED[k];
+      });
+      if (!keep.eurusd && state.fx && state.fx.rate) state.eurusd = state.fx.rate;
+      dataMeta.status = status;
+      dataMeta.asOf = parsed.asOf;
+      dataMeta.fetchedAt = new Date();
+      if (status === "file") dataMeta.error = "";
+    }
+
+    function loadDeskData() {
+      return fetchJson("data.json").then(function (data) {
+        var parsed = parsePayload(data);
+        if (!parsed) throw new Error("格式不符");
+        applyLoaded(parsed, "file");
+      }).catch(function (err) {
+        var parsed = parsePayload(FALLBACK_PAYLOAD);
+        applyLoaded(parsed, "fallback");
+        dataMeta.error = err && err.name === "AbortError" ? "超时" : ((err && err.message) || "失败");
+      }).then(function () {
+        syncInputs();
+        recompute();
+      });
+    }
+
+    function openGlossary() {
+      var modal = byId("glossary");
+      modal.hidden = false;
+      document.body.classList.add("modal-open");
+      byId("btn-glossary").setAttribute("aria-expanded", "true");
+      hideTip();
+      byId("glossary-close").focus();
+    }
+
+    function closeGlossary() {
+      var modal = byId("glossary");
+      if (modal.hidden) return;
+      modal.hidden = true;
+      document.body.classList.remove("modal-open");
+      byId("btn-glossary").setAttribute("aria-expanded", "false");
+      byId("btn-glossary").focus();
+    }
+
     function init() {
       bindPositive("in-ttf", "ttf", 1, 400);
       bindPositive("in-hh", "hh", 0.2, 40);
@@ -1600,6 +2049,15 @@
         changed();
       });
       byId("btn-reset").addEventListener("click", resetAll);
+      byId("btn-glossary").addEventListener("click", openGlossary);
+      byId("glossary-close").addEventListener("click", closeGlossary);
+      byId("glossary-backdrop").addEventListener("click", closeGlossary);
+      document.addEventListener("keydown", function (ev) {
+        if (ev.key === "Escape" && !byId("glossary").hidden) {
+          ev.preventDefault();
+          closeGlossary();
+        }
+      });
       byId("theme-toggle").addEventListener("click", function () {
         var next = resolvedTheme() === "dark" ? "light" : "dark";
         document.documentElement.setAttribute("data-theme", next);
@@ -1627,6 +2085,7 @@
       updateThemeButton();
       syncInputs();
       recompute();
+      loadDeskData();
       pollFx();
       setInterval(pollFx, CONFIG.fxPollMs);
       setInterval(tickSim, CONFIG.simTickMs);

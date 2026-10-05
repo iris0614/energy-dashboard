@@ -1,0 +1,118 @@
+{
+  "schema": "energy-dashboard.data.v1",
+  "asOf": "2026-10-05T00:00:00Z",
+  "kind": "illustrative",
+  "description": "示意序列与起点价格。替换本文件即可更新看板，不必改 HTML。kind 为 illustrative 时，这些数字不是机构发布值。",
+  "seed": {
+    "ttf": 36.4,
+    "hh": 3.95,
+    "eurusd": 1.1204,
+    "freight": 55000,
+    "storagePct": 91.5,
+    "hddDevPct": 0,
+    "utilPct": 91.4,
+    "padd1": 29.4,
+    "brent": 78.5,
+    "nyh": 2.42,
+    "usgc": 2.28,
+    "ara": 780,
+    "roundTripDays": 24,
+    "ladenDays": 13,
+    "cargoWan": 360,
+    "liq": 2.5
+  },
+  "series": {
+    "hddNorm": [
+      {
+        "month": "10月",
+        "degreeDays": 168
+      },
+      {
+        "month": "11月",
+        "degreeDays": 312
+      },
+      {
+        "month": "12月",
+        "degreeDays": 428
+      },
+      {
+        "month": "1月",
+        "degreeDays": 466
+      },
+      {
+        "month": "2月",
+        "degreeDays": 398
+      },
+      {
+        "month": "3月",
+        "degreeDays": 336
+      }
+    ],
+    "gasPremiumEurPerMwh": [
+      0,
+      1.2,
+      3.4,
+      4.8,
+      3.6,
+      1.5
+    ],
+    "dieselPremiumEurPerMwh": [
+      0,
+      0.8,
+      2.2,
+      3.1,
+      2.4,
+      1.0
+    ],
+    "spark25UsdPerDay": [
+      42000,
+      39000,
+      41000,
+      45000,
+      48000,
+      52000,
+      61000,
+      74000,
+      88000,
+      96000,
+      91000,
+      80000,
+      69000,
+      62000,
+      58000,
+      55000
+    ],
+    "padd1DistillateMillionBbl": [
+      34.2,
+      34.0,
+      33.6,
+      33.1,
+      32.8,
+      32.4,
+      32.0,
+      31.5,
+      31.2,
+      30.8,
+      30.6,
+      30.9,
+      31.4,
+      31.8,
+      32.2,
+      32.6,
+      32.1,
+      31.5,
+      31.0,
+      30.6,
+      30.2,
+      29.9,
+      29.7,
+      29.6,
+      29.5,
+      29.4
+    ]
+  },
+  "inventory": {
+    "usDistillateBaseMillionBbl": 121.6,
+    "padd1BaseMillionBbl": 29.4
+  }
+}
