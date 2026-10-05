@@ -194,7 +194,7 @@ EIA《天然气周报》里的液化进料气，是液化厂实际吃进的管�
 - `series.gasPremiumEurPerMwh` 与 `series.dieselPremiumEurPerMwh`：欧元/兆瓦时（MWh），长度与 `series.hddNorm` 相同。
 - `series.spark25UsdPerDay`：美元/日，至少 2 个点。
 - `series.padd1DistillateMillionBbl`：百万桶，至少 2 个点。
-- `inventory.usDistillateBaseMillionBbl` 与 `inventory.padd1BaseMillionBbl`：百万桶。
+- `inventory.usDistillateBaseMillionBbl` 与 `inventory.padd1BaseMillionBbl`：文件里可以有，页面不读取。全美馏分油固定为 121.6 +（当前 PADD 1 − 29.4）。
 
 曲线右端点会被当前输入盖住。因此 `series.spark25UsdPerDay` 的最后一个点应等于 `seed.freight`，`series.padd1DistillateMillionBbl` 的最后一个点应等于 `seed.padd1`。
 

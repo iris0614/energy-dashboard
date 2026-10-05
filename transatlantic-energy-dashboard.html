@@ -1110,7 +1110,7 @@
           <li><span class="mono">series.gasPremiumEurPerMwh</span> 与 <span class="mono">series.dieselPremiumEurPerMwh</span>：欧元/兆瓦时（MWh），长度与 <span class="mono">series.hddNorm</span> 相同。</li>
           <li><span class="mono">series.spark25UsdPerDay</span>：美元/日，至少 2 个点。</li>
           <li><span class="mono">series.padd1DistillateMillionBbl</span>：百万桶，至少 2 个点。</li>
-          <li><span class="mono">inventory.usDistillateBaseMillionBbl</span> 与 <span class="mono">inventory.padd1BaseMillionBbl</span>：百万桶。</li>
+          <li><span class="mono">inventory.usDistillateBaseMillionBbl</span> 与 <span class="mono">inventory.padd1BaseMillionBbl</span>：文件里可以有，页面不读取。全美馏分油固定为 121.6 +（当前 PADD 1 − 29.4）。</li>
         </ul>
         <p>曲线右端点会被当前输入盖住。因此 <span class="mono">series.spark25UsdPerDay</span> 的最后一个点应等于 <span class="mono">seed.freight</span>，<span class="mono">series.padd1DistillateMillionBbl</span> 的最后一个点应等于 <span class="mono">seed.padd1</span>。</p>
         <p>下面这些系数留在页面里，替换 <span class="mono">data.json</span> 不会改它们：进料气 1.15；蒸发气 0.10%/日；港口 0.12 美元/百万英热（MMBtu）；再气化 0.35 美元/百万英热（MMBtu）；3.412141633 百万英热（MMBtu）/兆瓦时（MWh）；窗口门槛 0.50 欧元/兆瓦时（MWh）；工作气能力 104.5 十亿立方米（bcm）；五年均值 93.2%；11 月 1 日刻度 90%；常年抽取 58 十亿立方米（bcm）；42 加仑/桶；7.45 桶/吨；11.83 兆瓦时（MWh）/吨。</p>
@@ -1160,6 +1160,7 @@
     var GAL_PER_BBL = 42;
     var BASE_DISTILLATE = 121.6;
     var BASE_PADD = 29.4;
+    var FX_FALLBACK = 1.1204;
 
     // Illustrative series and starting prices live in data.json.
     // Used only when that file cannot be fetched or fails validation. The stamp says so.
@@ -1360,8 +1361,6 @@
       DIESEL_PREMIUM = parsed.diesel;
       SPARK_HIST = parsed.spark;
       PADD_HIST = parsed.padd;
-      BASE_DISTILLATE = parsed.baseDistillate;
-      BASE_PADD = parsed.basePadd;
     }
 
     var SEED;
@@ -1379,7 +1378,7 @@
     var state = {
       ttf: SEED.ttf,
       hh: SEED.hh,
-      eurusd: SEED.eurusd,
+      eurusd: FX_FALLBACK,
       fxMode: "EURUSD",
       freight: SEED.freight,
       storagePct: SEED.storagePct,
@@ -1440,8 +1439,14 @@
       return t;
     }
 
+    function fxForCalc() {
+      if (state.pinned.eurusd && state.eurusd > 0) return state.eurusd;
+      if (state.fx && state.fx.rate) return state.fx.rate;
+      return FX_FALLBACK;
+    }
+
     function model() {
-      var eurusd = state.eurusd > 0 ? state.eurusd : SEED.eurusd;
+      var eurusd = fxForCalc();
       var cargo = state.cargoWan * 10000;
       var feed = state.hh * FEEDGAS;
       var fob = feed + state.liq;
@@ -1968,7 +1973,7 @@
         badge.className = "badge";
       } else if (fx.status === "error") {
         banner.className = "banner is-bad";
-        banner.textContent = "汇率源失败（" + fx.error + "）。已沿用回退 EURUSD " + fmt(SEED.eurusd, 4) + "，套利和热值仍可计算。";
+        banner.textContent = "汇率源失败（" + fx.error + "）。已沿用回退 EURUSD " + fmt(FX_FALLBACK, 4) + "，套利和热值仍可计算。";
         badge.textContent = "汇率回退";
         badge.className = "badge";
       } else if (fx.status === "stale") {
@@ -2294,6 +2299,7 @@
       var msg = err && err.name === "AbortError" ? "超时" : ((err && err.message) || "失败");
       state.fx.status = state.fx.rate ? "stale" : "error";
       state.fx.error = msg;
+      if (!state.fx.rate && !state.pinned.eurusd) state.eurusd = FX_FALLBACK;
       recompute();
     }
 
@@ -2348,6 +2354,7 @@
       state.pinned = {};
       state.fxMode = "EURUSD";
       if (state.fx.rate) state.eurusd = state.fx.rate;
+      else state.eurusd = FX_FALLBACK;
       state.snapshotAt = new Date();
       syncInputs();
       recompute();
@@ -2364,6 +2371,7 @@
         if (!keep[k]) state[k] = SEED[k];
       });
       if (!keep.eurusd && state.fx && state.fx.rate) state.eurusd = state.fx.rate;
+      else if (!keep.eurusd) state.eurusd = FX_FALLBACK;
       dataMeta.status = status;
       dataMeta.asOf = parsed.asOf;
       dataMeta.fetchedAt = new Date();
@@ -2403,7 +2411,94 @@
       byId("btn-glossary").focus();
     }
 
+    function nearAudit(name, got, want) {
+      if (!Number.isFinite(got) || !Number.isFinite(want) || Math.abs(got - want) > 1e-6) {
+        throw new Error("公式核对失败 " + name + "：" + got + " ≠ " + want);
+      }
+    }
+
+    function auditFormulas() {
+      if (FEEDGAS !== 1.15 || BOG_PER_DAY !== 0.001 || PORT_USD !== 0.12 || REGAS_USD !== 0.35) throw new Error("公式核对失败 系数");
+      if (MMBTU_PER_MWH !== 3.412141633 || ARB_OPEN !== 0.5 || NORMAL_DRAW !== 58 || FX_FALLBACK !== 1.1204) throw new Error("公式核对失败 系数");
+      if (DIESEL_MWH_PER_T !== 11.83 || BBL_PER_T !== 7.45 || GAL_PER_BBL !== 42) throw new Error("公式核对失败 系数");
+      if (BASE_DISTILLATE !== 121.6 || BASE_PADD !== 29.4) throw new Error("公式核对失败 库存基数");
+      installNumbers({
+        asOf: "audit",
+        seed: SEED,
+        hdd: HDD_NORM,
+        gas: GAS_PREMIUM,
+        diesel: DIESEL_PREMIUM,
+        spark: SPARK_HIST,
+        padd: PADD_HIST,
+        baseDistillate: 999,
+        basePadd: 9
+      });
+      if (BASE_DISTILLATE !== 121.6 || BASE_PADD !== 29.4) throw new Error("公式核对失败 库存基数被数据文件覆盖");
+
+      var saved = {};
+      SEED_KEYS.forEach(function (k) { saved[k] = state[k]; });
+      var savedPin = !!state.pinned.eurusd;
+      var savedRate = state.fx.rate;
+      var savedStatus = state.fx.status;
+      var savedErr = state.fx.error;
+
+      SEED_KEYS.forEach(function (k) { state[k] = SEED[k]; });
+      state.pinned.eurusd = true;
+      state.eurusd = SEED.eurusd > 0 ? SEED.eurusd : FX_FALLBACK;
+      var m = model();
+      var fx = state.eurusd;
+      var fob = SEED.hh * 1.15 + SEED.liq;
+      var cargo = SEED.cargoWan * 10000;
+      var freight = SEED.freight * SEED.roundTripDays / cargo;
+      var bog = SEED.ladenDays * 0.001 * fob;
+      var des = fob + freight + bog + 0.12 + 0.35;
+      var desEur = des * 3.412141633 / fx;
+      var margin = SEED.ttf - desEur;
+      nearAudit("离岸", m.fob, fob);
+      nearAudit("运费", m.freightUsd, freight);
+      nearAudit("蒸发", m.bog, bog);
+      nearAudit("交付美元", m.desUsd, des);
+      nearAudit("交付欧元", m.desEur, desEur);
+      nearAudit("套利", m.marginEur, margin);
+      if (m.open !== (margin > 0.5)) throw new Error("公式核对失败 窗口");
+      state.ttf = desEur + 0.5;
+      if (model().open) throw new Error("公式核对失败 门槛应高于 0.50");
+      state.ttf = desEur + 0.5 + 1e-4;
+      if (!model().open) throw new Error("公式核对失败 窗口开启");
+      state.ttf = SEED.ttf;
+      nearAudit("抽取", m.draw, 58 * (1 + SEED.hddDevPct / 100));
+      nearAudit("馏分油", m.distillate, 121.6 + (SEED.padd1 - 29.4));
+      nearAudit("纽约港桶", m.nyhBbl, SEED.nyh * 42);
+      nearAudit("美湾桶", m.usgcBbl, SEED.usgc * 42);
+      nearAudit("鹿特丹桶", m.araBbl, SEED.ara / 7.45);
+      nearAudit("纽约港裂解", m.nyhBbl - SEED.brent, SEED.nyh * 42 - SEED.brent);
+      nearAudit("鹿特丹裂解", m.araBbl - SEED.brent, SEED.ara / 7.45 - SEED.brent);
+      state.hddDevPct = 12;
+      nearAudit("偏冷抽取", model().draw, 58 * 1.12);
+      state.hddDevPct = -30;
+      nearAudit("偏暖抽取", model().draw, 58 * 0.7);
+      state.padd1 = 24;
+      nearAudit("东岸联动", model().distillate, 121.6 + (24 - 29.4));
+      state.fx.rate = null;
+      delete state.pinned.eurusd;
+      state.eurusd = 9;
+      nearAudit("汇率回退", model().eurusd, 1.1204);
+      state.fx.rate = 1.08;
+      nearAudit("上次汇率", model().eurusd, 1.08);
+      state.pinned.eurusd = true;
+      state.eurusd = 1.25;
+      nearAudit("锁定汇率", model().eurusd, 1.25);
+
+      SEED_KEYS.forEach(function (k) { state[k] = saved[k]; });
+      if (savedPin) state.pinned.eurusd = true;
+      else delete state.pinned.eurusd;
+      state.fx.rate = savedRate;
+      state.fx.status = savedStatus;
+      state.fx.error = savedErr;
+    }
+
     function init() {
+      auditFormulas();
       bindPositive("in-ttf", "ttf", 1, 400);
       bindPositive("in-hh", "hh", 0.2, 40);
       bindPositive("in-freight", "freight", 1000, 500000);
