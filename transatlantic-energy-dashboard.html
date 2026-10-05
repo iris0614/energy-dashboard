@@ -537,6 +537,10 @@
     .src-line a:hover { text-decoration: underline; }
     .kpi { font-size: 26px; }
     .slider-block { margin-top: 8px; }
+    .sub, .stamp-note, .insights li, .note, .formula, .src-line {
+      text-wrap: pretty;
+    }
+    .keep { white-space: nowrap; }
 
     @media (max-width: 1100px) {
       .strip.sheet-strip { grid-template-columns: 1fr 1fr; }
@@ -572,14 +576,14 @@
     <header class="top">
       <div>
         <h1>跨大西洋冬季能源平衡与套利看板</h1>
-        <p class="sub">2025/26 采暖季示意底稿。数字旁的红绿是相对 data.json 起点的变动。</p>
+        <p class="sub">2025/26 采暖季示意底稿。红绿数字是相对起点的<span class="keep">变动。</span></p>
       </div>
       <div class="top-side">
         <div class="stamp-row">
           <p class="stamp">数据快照 <strong id="stamp-time">—</strong></p>
           <button type="button" class="ghost glossary-btn" id="btn-glossary" aria-haspopup="dialog" aria-controls="glossary" aria-expanded="false">指标说明与更新频率（Glossary）</button>
         </div>
-        <p class="stamp-note">示意底稿。欧元兑美元取欧洲央行参考价，其余不是机构发布值。</p>
+        <p class="stamp-note">欧元兑美元为欧洲央行参考价，其余均为<span class="keep">示意。</span></p>
         <div class="tools">
           <label class="check" title="未锁定的示意价格会轻微向起点回归，用来在没有行情接口时保持看板更新">
             <input id="sim-toggle" type="checkbox" checked />
@@ -698,7 +702,7 @@
             </div>
             <input id="hdd-range" type="range" min="-30" max="40" step="1" value="0" aria-label="采暖度日偏离百分比" />
           </div>
-          <p class="formula">抽取 = 58 bcm ×（1 + 偏离）。宽裕 ≥ 30 bcm，平衡 ≥ 15 bcm，否则紧张。</p>
+          <p class="formula">抽取 = 58 bcm ×（1 + 偏离）。宽裕 ≥ 30 bcm，平衡 ≥ 15 bcm，否则<span class="keep">紧张。</span></p>
         </div>
       </div>
       <div class="legend" aria-hidden="true">
@@ -706,7 +710,7 @@
         <span><i class="swatch" style="background: var(--gas)"></i>情景</span>
       </div>
       <svg id="hdd-chart" class="chart-svg cols" role="img" aria-label="西北欧 10 月至 3 月采暖度日柱"></svg>
-      <p class="note" id="hdd-note">西北欧综合采暖度日为示意气候态，不是气象机构的正式序列。</p>
+      <p class="note" id="hdd-note">西北欧综合采暖度日为示意气候态，不是气象机构的正式<span class="keep">序列。</span></p>
     </section>
 
     <section class="card band" id="shipping" aria-labelledby="ship-title">
@@ -758,7 +762,7 @@
               <input id="in-liq" class="mono" type="number" min="0" max="8" step="0.05" />
             </div>
           </div>
-          <p class="note" id="voyage-warn" hidden>装载天数大于往返天数，蒸发气近似会被高估。</p>
+          <p class="note" id="voyage-warn" hidden>装载天数大于往返天数，蒸发气近似会被<span class="keep">高估。</span></p>
           <svg id="fx-chart" class="chart-svg fx-mini" role="img" aria-label="欧元兑美元参考价"></svg>
           <div class="result">
             <div>
@@ -779,7 +783,7 @@
         <div>
           <p class="stat-k">Spark25 日租金</p>
           <svg id="spark-chart" class="chart-svg spark" role="img" aria-label="Spark25 日租金示意轨迹"></svg>
-          <p class="note">右端点标出当前日租金。左侧是示意形状，不是 Spark Commodities 的正式估价。</p>
+          <p class="note">右端点标出当前日租金。左侧是示意形状，不是 Spark Commodities 的正式<span class="keep">估价。</span></p>
         </div>
       </div>
     </section>
@@ -849,7 +853,7 @@
               <tbody id="price-body"></tbody>
             </table>
           </div>
-          <p class="note">裂解 = 成品美元/桶 − 布伦特。加仑按 42，吨按 7.45。示意口径。</p>
+          <p class="note">裂解 = 成品美元/桶 − 布伦特。加仑按 42，吨按 7.45。示意<span class="keep">口径。</span></p>
         </div>
         <div>
           <h3>热值横比</h3>
@@ -861,15 +865,15 @@
 
     <footer>
       <h2>来源</h2>
-      <p class="src-line"><span>Henry Hub</span><a href="https://www.eia.gov/dnav/ng/hist/rngwhhdD.htm" target="_blank" rel="noopener noreferrer">EIA 日度现货</a><span>每个工作日</span></p>
-      <p class="src-line"><span>WTI</span><a href="https://www.eia.gov/dnav/pet/hist/rwtcD.htm" target="_blank" rel="noopener noreferrer">EIA 库欣现货</a><span>每个工作日</span></p>
-      <p class="src-line"><span>布伦特</span><a href="https://www.eia.gov/dnav/pet/hist/rbrteD.htm" target="_blank" rel="noopener noreferrer">EIA 欧洲布伦特</a><span>每个工作日</span></p>
-      <p class="src-line"><span>炼厂开工率</span><a href="https://www.eia.gov/petroleum/supply/weekly/" target="_blank" rel="noopener noreferrer">EIA 周度石油供应报告</a><span>每周，通常美东周三 10:30</span></p>
-      <p class="src-line"><span>Spark25</span><a href="https://www.sparkcommodities.com/lng-freight/" target="_blank" rel="noopener noreferrer">Spark LNG Freight</a><span>现货每个评估日 10:00 GMT</span></p>
-      <p class="src-line"><span>TTF</span><a href="https://www.ice.com/products/27996665/Dutch-TTF-Gas-Futures" target="_blank" rel="noopener noreferrer">ICE 荷兰 TTF</a><span>交易日结算</span></p>
-      <p class="src-line"><span>AGSI+ 库存</span><a href="https://agsi.gie.eu/" target="_blank" rel="noopener noreferrer">GIE AGSI+</a><span>每个天然气日</span></p>
-      <p class="src-line"><span>采暖度日</span><a href="https://ec.europa.eu/eurostat/cache/metadata/en/nrg_chdd_esms.htm" target="_blank" rel="noopener noreferrer">Eurostat</a><span>月度、年度</span></p>
-      <p class="src-line"><span>欧元兑美元</span><a href="https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-usd.en.html" target="_blank" rel="noopener noreferrer">欧洲央行参考汇率</a><a href="https://frankfurter.dev/" target="_blank" rel="noopener noreferrer">Frankfurter</a><span>TARGET 工作日，本页约 60 秒</span></p>
+      <p class="src-line"><span>Henry Hub</span><a href="https://www.eia.gov/dnav/ng/hist/rngwhhdD.htm" target="_blank" rel="noopener noreferrer">EIA 日度现货</a><span>每<span class="keep">个工作日</span></span></p>
+      <p class="src-line"><span>WTI</span><a href="https://www.eia.gov/dnav/pet/hist/rwtcD.htm" target="_blank" rel="noopener noreferrer">EIA 库欣现货</a><span>每<span class="keep">个工作日</span></span></p>
+      <p class="src-line"><span>布伦特</span><a href="https://www.eia.gov/dnav/pet/hist/rbrteD.htm" target="_blank" rel="noopener noreferrer">EIA 欧洲布伦特</a><span>每<span class="keep">个工作日</span></span></p>
+      <p class="src-line"><span>炼厂开工率</span><a href="https://www.eia.gov/petroleum/supply/weekly/" target="_blank" rel="noopener noreferrer">EIA 周度石油供应报告</a><span>每周，通常美东<span class="keep">周三 10:30</span></span></p>
+      <p class="src-line"><span>Spark25</span><a href="https://www.sparkcommodities.com/lng-freight/" target="_blank" rel="noopener noreferrer">Spark LNG Freight</a><span>现货每个评估日 <span class="keep">10:00 GMT</span></span></p>
+      <p class="src-line"><span>TTF</span><a href="https://www.ice.com/products/27996665/Dutch-TTF-Gas-Futures" target="_blank" rel="noopener noreferrer">ICE 荷兰 TTF</a><span>交易<span class="keep">日结算</span></span></p>
+      <p class="src-line"><span>AGSI+ 库存</span><a href="https://agsi.gie.eu/" target="_blank" rel="noopener noreferrer">GIE AGSI+</a><span>每个<span class="keep">天然气日</span></span></p>
+      <p class="src-line"><span>采暖度日</span><a href="https://ec.europa.eu/eurostat/cache/metadata/en/nrg_chdd_esms.htm" target="_blank" rel="noopener noreferrer">Eurostat</a><span>月度<span class="keep">、年度</span></span></p>
+      <p class="src-line"><span>欧元兑美元</span><a href="https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-usd.en.html" target="_blank" rel="noopener noreferrer">欧洲央行参考汇率</a><a href="https://frankfurter.dev/" target="_blank" rel="noopener noreferrer">Frankfurter</a><span>TARGET 工作日，本页约 <span class="keep">60 秒</span></span></p>
     </footer>
 
   <div id="glossary" class="modal" hidden>
@@ -1423,6 +1427,22 @@
       var node = byId(id);
       if (node) node.textContent = text;
     }
+    function setNote(id, text) {
+      var node = byId(id);
+      if (!node) return;
+      var value = text == null ? "" : String(text);
+      node.replaceChildren();
+      if (value.length < 4) {
+        node.textContent = value;
+        return;
+      }
+      var tail = value.slice(-4);
+      node.appendChild(document.createTextNode(value.slice(0, -4)));
+      var keep = document.createElement("span");
+      keep.className = "keep";
+      keep.textContent = tail;
+      node.appendChild(keep);
+    }
     function el(name, attrs) {
       var node = document.createElementNS("http://www.w3.org/2000/svg", name);
       if (attrs) Object.keys(attrs).forEach(function (k) { node.setAttribute(k, attrs[k]); });
@@ -1907,7 +1927,7 @@
     function renderGas(m) {
       drawGauge(state.storagePct);
       setText("gas-pct", fmt(state.storagePct, 1) + "%");
-      setText("gas-progress", state.storagePct >= NOV1_TARGET
+      setNote("gas-progress", state.storagePct >= NOV1_TARGET
         ? "11月1日 90% 注入目标已达成（进度 " + fmt(m.progress, 0) + "%）。琥珀色刻度是目标。"
         : "距 11月1日 90% 注入目标还差 " + fmt(NOV1_TARGET - state.storagePct, 1) + " 个百分点。");
       setText("gas-bcm", fmt(m.bcm, 1) + " bcm");
@@ -1944,7 +1964,7 @@
           ];
         }
       });
-      setText("hdd-note", "常年合计 " + fmt(totalN, 0) + " 度日，情景合计 " + fmt(totalS, 0) + " 度日。基温 15.5°C，西北欧综合示意气候态。");
+      setNote("hdd-note", "常年合计 " + fmt(totalN, 0) + " 度日，情景合计 " + fmt(totalS, 0) + " 度日。基温 15.5°C，西北欧综合示意气候态。");
       byId("storage-range").setAttribute("aria-valuetext", fmt(state.storagePct, 1) + "%");
       byId("hdd-range").setAttribute("aria-valuetext", signed(state.hddDevPct, 0) + "%");
       [["scen-warm", -12], ["scen-norm", 0], ["scen-cold", 12]].forEach(function (pair) {
@@ -1955,9 +1975,9 @@
     function renderInsights(m) {
       var season = state.hddDevPct > 2 ? "偏冷" : state.hddDevPct < -2 ? "偏暖" : "正常";
       var endBit = m.end < 0 ? "短缺 " + fmt(-m.end, 1) : fmt(m.end, 1);
-      setText("insight-gas", "库存 " + fmt(state.storagePct, 1) + "%（" + fmt(m.bcm, 1) + " bcm），较五年均值 " + signed(m.vs5y, 1) + " 个百分点。" + season + "情景抽取 " + fmt(m.draw, 1) + " bcm，3 月末 " + endBit + " bcm，" + m.toneLabel + "。");
-      setText("insight-arb", "美湾到西北欧边际 " + signed(m.marginEur, 2) + " 欧元/兆瓦时，窗口" + (m.open ? "开启" : "关闭") + "。交付 " + fmt(m.desEur, 2) + "，TTF " + fmt(state.ttf, 2) + "。");
-      setText("insight-pad", "PADD 1 东岸 " + fmt(state.padd1, 1) + " 百万桶，全美馏分油 " + fmt(m.distillate, 1) + " 百万桶。鹿特丹对布伦特裂解 " + signed(m.araBbl - state.brent, 2) + " 美元/桶。");
+      setNote("insight-gas", "库存 " + fmt(state.storagePct, 1) + "%（" + fmt(m.bcm, 1) + " bcm），较五年均值 " + signed(m.vs5y, 1) + " 个百分点。" + season + "情景抽取 " + fmt(m.draw, 1) + " bcm，3 月末 " + endBit + " bcm，" + m.toneLabel + "。");
+      setNote("insight-arb", "美湾到西北欧边际 " + signed(m.marginEur, 2) + " 欧元/兆瓦时，窗口" + (m.open ? "开启" : "关闭") + "。交付 " + fmt(m.desEur, 2) + "，TTF " + fmt(state.ttf, 2) + "。");
+      setNote("insight-pad", "PADD 1 东岸 " + fmt(state.padd1, 1) + " 百万桶，全美馏分油 " + fmt(m.distillate, 1) + " 百万桶。鹿特丹对布伦特裂解 " + signed(m.araBbl - state.brent, 2) + " 美元/桶。");
     }
 
     function renderFx(m) {
@@ -1990,10 +2010,10 @@
       if (state.pinned.eurusd && fx.rate) {
         meta = (meta ? meta + "。 " : "") + "输入已手动覆盖，计算用 EURUSD " + fmt(state.eurusd, 4) + "。";
       }
-      setText("fx-meta", meta || "来源：欧洲央行参考价，经 Frankfurter 读取。");
+      setNote("fx-meta", meta || "来源：欧洲央行参考价，经 Frankfurter 读取。");
       var inverse = 1 / m.eurusd;
       setText("fx-label", state.fxMode === "EURUSD" ? "EURUSD · 1 欧元兑美元" : "USDEUR · 1 美元兑欧元");
-      setText("fx-inverse", state.fxMode === "EURUSD"
+      setNote("fx-inverse", state.fxMode === "EURUSD"
         ? "另一标价 USDEUR（欧元/美元） " + fmt(inverse, 4)
         : "另一标价 EURUSD（美元/欧元） " + fmt(m.eurusd, 4));
       byId("fx-eurusd").setAttribute("aria-pressed", state.fxMode === "EURUSD" ? "true" : "false");
@@ -2038,7 +2058,7 @@
         { name: "港口", value: PORT_USD, color: "var(--muted)" },
         { name: "再气化", value: REGAS_USD, color: "var(--faint)" }
       ]);
-      setText("arb-formula", "交付 " + fmt(m.desUsd, 2) + " 美元/百万英热 = 115%×HH + 液化 + 运费 + 蒸发 + 0.12 + 0.35。货量 " +
+      setNote("arb-formula", "交付 " + fmt(m.desUsd, 2) + " 美元/百万英热 = 115%×HH + 液化 + 运费 + 蒸发 + 0.12 + 0.35。货量 " +
         fmt(m.cargo, 0) + " MMBtu。再 × 3.412141633 / EURUSD " + fmt(m.eurusd, 4) + " = " + fmt(m.desEur, 2) + " 欧元/兆瓦时。阈值 " + fmt(ARB_OPEN, 2) + "。");
       byId("voyage-warn").hidden = state.ladenDays <= state.roundTripDays;
       var spark = SPARK_HIST.slice();
@@ -2065,7 +2085,7 @@
     function renderRefining(m) {
       setText("util-out", fmt(state.utilPct, 1) + "%");
       setText("distillate-out", fmt(m.distillate, 1) + " 百万桶");
-      setText("distillate-note", "随东岸库存同量增减，起点 " + fmt(BASE_DISTILLATE, 1) + " 百万桶。");
+      setNote("distillate-note", "随东岸库存同量增减，起点 " + fmt(BASE_DISTILLATE, 1) + " 百万桶。");
       setText("padd-out", fmt(state.padd1, 1) + " 百万桶");
       var padd = PADD_HIST.slice();
       padd[padd.length - 1] = state.padd1;
@@ -2159,7 +2179,7 @@
       var switchText = m.gap > 0
         ? "TTF 高于瓦斯油热值 " + fmt(m.gap, 2) + " 欧元/兆瓦时，气转油激励出现。"
         : "TTF 低于瓦斯油热值 " + fmt(-m.gap, 2) + " 欧元/兆瓦时，气转油激励未打开。";
-      setText("switch-read", "四条都是欧元/兆瓦时。Henry Hub 按 3.412141633 换算，取暖油与瓦斯油按 11.83 兆瓦时/吨。" + switchText);
+      setNote("switch-read", "四条都是欧元/兆瓦时。Henry Hub 按 3.412141633 换算，取暖油与瓦斯油按 11.83 兆瓦时/吨。" + switchText);
     }
 
     function renderLocks() {
