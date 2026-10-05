@@ -427,6 +427,144 @@
     @media (prefers-reduced-motion: reduce) {
       * { scroll-behavior: auto !important; }
     }
+  
+    :root, :root[data-theme="light"] {
+      color-scheme: light;
+      --bg: #ffffff;
+      --elev: #ffffff;
+      --sunken: #f4f5f6;
+      --line: #e6e6e6;
+      --faint: #b9b9b9;
+      --text: #161616;
+      --muted: #6a6a6a;
+      --accent: #9a5b16;
+      --gas: #0c7564;
+      --diesel: #c45c1c;
+      --info: #1d5f99;
+      --up: #0c7a3e;
+      --down: #c4232f;
+      --warn: #c4841a;
+      --glow: transparent;
+    }
+    body { background: #fff; }
+    body::before { display: none; }
+    .wrap { max-width: 1280px; padding: 12px 18px 28px; }
+    h1 { font-size: 18px; font-weight: 650; letter-spacing: -0.02em; }
+    .sub { margin-top: 2px; font-size: 12px; max-width: 54ch; }
+    .top { align-items: flex-start; margin-bottom: 8px; gap: 12px; }
+    .top-side { gap: 4px; }
+    .stamp, .stamp-note, .check, button.ghost, button.solid { font-size: 12px; }
+    button.ghost, button.solid { padding: 3px 9px; background: #fff; }
+    button.solid { background: var(--text); color: #fff; }
+
+    .strip.sheet-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0;
+      margin: 0 0 6px;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+    }
+    .metric { min-width: 0; padding: 7px 12px 8px 0; margin-left: 12px; border-left: 1px solid var(--line); }
+    .metric:first-child { margin-left: 0; padding-left: 0; border-left: 0; }
+    .metric-k { margin: 0; font-size: 11px; color: var(--muted); letter-spacing: 0.01em; }
+    .metric-row { display: flex; gap: 14px; margin-top: 2px; }
+    .quote { min-width: 0; }
+    .quote .lbl { display: block; font-size: 11px; color: var(--muted); line-height: 1.2; }
+    .quote .u { color: var(--faint); }
+    .numline { display: flex; align-items: baseline; gap: 6px; margin-top: 1px; }
+    .numline b { font-size: 22px; font-weight: 650; letter-spacing: -0.03em; line-height: 1.05; font-style: normal; }
+    .delta { font-size: 12px; font-weight: 650; font-style: normal; }
+    .delta.flat { color: var(--muted); font-weight: 550; }
+
+    .insights { gap: 3px; margin: 0 0 2px; }
+    .insights li {
+      border: 0;
+      border-radius: 0;
+      border-left: 0;
+      padding: 4px 8px;
+      font-size: 13px;
+      line-height: 1.35;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .insights .kicker { font-size: 11px; letter-spacing: 0; text-transform: none; color: var(--text); font-weight: 650; }
+    .insights li.tone-gas { background: #e7f4ef; }
+    .insights li.tone-arb { background: #f8f1e3; }
+    .insights li.tone-pad { background: #f8ebe3; }
+
+    .band.card {
+      background: transparent;
+      border: 0;
+      border-radius: 0;
+      border-top: 1px solid var(--line);
+      padding: 10px 0 6px;
+      box-shadow: none;
+    }
+    .card-head { margin-bottom: 6px; }
+    .card h2, .card h3 { font-size: 14px; }
+    .eu-split { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); gap: 22px; align-items: start; }
+    .big-pct { font-size: 40px; font-weight: 650; letter-spacing: -0.04em; line-height: 0.95; margin: 0; }
+    svg.fill-bar { height: 36px; margin-top: 4px; }
+    .eu-facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 8px; }
+    .eu-facts .stat-v { font-size: 14px; margin-top: 0; }
+    .scen-pane { border-left: 1px solid var(--line); padding-left: 16px; }
+    .scen-bcm { font-size: 32px; font-weight: 650; letter-spacing: -0.03em; line-height: 1; margin: 2px 0 4px; }
+    .scen-bcm .u { font-size: 13px; color: var(--muted); font-weight: 500; }
+    svg.chart-svg.cols { height: 188px; }
+    svg.chart-svg.waterfall { height: 168px; }
+    svg.chart-svg.spark { height: 220px; }
+    svg.chart-svg.compact { height: 128px; }
+    svg.chart-svg.fx-mini { height: 72px; }
+    svg.chart-svg.hbars { height: 148px; }
+    .chart-svg .barlab { fill: var(--text); font-size: 10px; font-family: ui-monospace, "Segoe UI Mono", monospace; }
+    .chart-svg .callout { fill: var(--text); font-size: 12px; font-weight: 650; }
+    .form-grid.tight { gap: 6px 10px; }
+    .form-grid.tight input[type="number"] { padding: 5px 8px; font-size: 14px; }
+    .triple { gap: 0; margin-bottom: 8px; }
+    .mini { background: transparent; border-radius: 0; padding: 0 12px; border-left: 1px solid var(--line); }
+    .mini:first-child { border-left: 0; padding-left: 0; }
+    .mini .stat-v { font-size: 26px; letter-spacing: -0.03em; line-height: 1.05; }
+    table { min-width: 0; font-size: 12px; }
+    td.name { white-space: normal; }
+    .src-table { min-width: 0; }
+    footer { margin-top: 8px; padding-top: 8px; }
+    footer h2 { font-size: 12px; margin: 0 0 4px; color: var(--muted); font-weight: 650; }
+    .src-line { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 0; padding: 2px 0; font-size: 12px; color: var(--muted); border-top: 1px solid var(--line); }
+    .src-line a { color: var(--info); text-decoration: none; }
+    .src-line a:hover { text-decoration: underline; }
+    .kpi { font-size: 26px; }
+    .slider-block { margin-top: 8px; }
+
+    @media (max-width: 1100px) {
+      .strip.sheet-strip { grid-template-columns: 1fr 1fr; }
+      .metric:nth-child(3) { border-left: 0; margin-left: 0; padding-left: 0; }
+      .metric:nth-child(odd) { border-left: 0; margin-left: 0; padding-left: 0; }
+      .metric:nth-child(even) { border-left: 1px solid var(--line); margin-left: 12px; }
+      .metric:nth-child(n + 3) { border-top: 1px solid var(--line); }
+      .eu-split, .band-split, .ref-split, .triple { grid-template-columns: 1fr; }
+      .scen-pane { border-left: 0; padding-left: 0; border-top: 1px solid var(--line); padding-top: 8px; }
+      .mini { border-left: 0; padding: 8px 0 0; border-top: 1px solid var(--line); }
+      .mini:first-child { border-top: 0; padding-top: 0; }
+      .insights li { white-space: normal; overflow: visible; }
+    }
+    @media (max-width: 640px) {
+      .strip.sheet-strip { grid-template-columns: 1fr; }
+      .metric, .metric:nth-child(even), .metric:nth-child(odd) {
+        border-left: 0;
+        margin-left: 0;
+        padding-left: 0;
+        border-top: 1px solid var(--line);
+      }
+      .metric:first-child { border-top: 0; }
+      .eu-facts { grid-template-columns: 1fr 1fr; }
+      .numline b { font-size: 20px; }
+      .big-pct { font-size: 34px; }
+      h1 { font-size: 16px; }
+    }
+
   </style>
 </head>
 <body>
@@ -434,7 +572,7 @@
     <header class="top">
       <div>
         <h1>跨大西洋冬季能源平衡与套利看板</h1>
-        <p class="sub">2025/26 采暖季量级的示意底稿。改库存、运价或价格，洞察、瀑布和图表立刻重算。</p>
+        <p class="sub">2025/26 采暖季示意底稿。数字旁的红绿是相对 data.json 起点的变动。</p>
       </div>
       <div class="top-side">
         <div class="stamp-row">
@@ -456,45 +594,65 @@
     <p id="fatal" class="banner is-bad" hidden></p>
     <noscript><p class="banner is-bad">计算、图表和汇率请求需要 JavaScript。页面结构仍可阅读，但数字不会更新。</p></noscript>
 
-    <section class="strip" aria-label="供应链概览">
-      <article class="node">
-        <p class="kicker">01</p>
-        <h2>上游/原料报价</h2>
-        <dl>
-          <div><dt>Henry Hub</dt><dd class="mono" id="chain-hh">—</dd></div>
-          <div><dt>布伦特</dt><dd class="mono" id="chain-brent">—</dd></div>
-        </dl>
-      </article>
-      <article class="node">
-        <p class="kicker">02</p>
-        <h2>加工/液化</h2>
-        <dl>
-          <div><dt>美国炼厂开工率</dt><dd class="mono" id="chain-util">—</dd></div>
-          <div><dt>液化费</dt><dd class="mono" id="chain-liq">—</dd></div>
-        </dl>
-      </article>
-      <article class="node">
-        <p class="kicker">03</p>
-        <h2>跨大西洋航运</h2>
-        <dl>
-          <div><dt>Spark25 日租金</dt><dd class="mono" id="chain-freight">—</dd></div>
-          <div><dt>往返运费</dt><dd class="mono" id="chain-voyage">—</dd></div>
-        </dl>
-      </article>
-      <article class="node">
-        <p class="kicker">04</p>
-        <h2>终端/供暖/柴油</h2>
-        <dl>
-          <div><dt>TTF</dt><dd class="mono" id="chain-ttf">—</dd></div>
-          <div><dt>柴油热值</dt><dd class="mono" id="chain-heat">—</dd></div>
-        </dl>
-      </article>
+    <section class="strip sheet-strip" aria-label="供应链概览">
+      <div class="metric">
+        <p class="metric-k">上游/原料报价</p>
+        <div class="metric-row">
+          <div class="quote">
+            <span class="lbl">Henry Hub <span class="u">美元/百万英热</span></span>
+            <span class="numline"><b class="mono" id="chain-hh">—</b><i class="delta mono flat" id="d-hh">0.00</i></span>
+          </div>
+          <div class="quote">
+            <span class="lbl">布伦特 <span class="u">美元/桶</span></span>
+            <span class="numline"><b class="mono" id="chain-brent">—</b><i class="delta mono flat" id="d-brent">0.00</i></span>
+          </div>
+        </div>
+      </div>
+      <div class="metric">
+        <p class="metric-k">加工/液化</p>
+        <div class="metric-row">
+          <div class="quote">
+            <span class="lbl">炼厂开工率 <span class="u">%</span></span>
+            <span class="numline"><b class="mono" id="chain-util">—</b><i class="delta mono flat" id="d-util">0.0</i></span>
+          </div>
+          <div class="quote">
+            <span class="lbl">液化费 <span class="u">美元/百万英热</span></span>
+            <span class="numline"><b class="mono" id="chain-liq">—</b><i class="delta mono flat" id="d-liq">0.00</i></span>
+          </div>
+        </div>
+      </div>
+      <div class="metric">
+        <p class="metric-k">跨大西洋航运</p>
+        <div class="metric-row">
+          <div class="quote">
+            <span class="lbl">Spark25 <span class="u">美元/日</span></span>
+            <span class="numline"><b class="mono" id="chain-freight">—</b><i class="delta mono flat" id="d-freight">0</i></span>
+          </div>
+          <div class="quote">
+            <span class="lbl">往返运费 <span class="u">美元/百万英热</span></span>
+            <span class="numline"><b class="mono" id="chain-voyage">—</b><i class="delta mono flat" id="d-voyage">0.00</i></span>
+          </div>
+        </div>
+      </div>
+      <div class="metric">
+        <p class="metric-k">终端/供暖/柴油</p>
+        <div class="metric-row">
+          <div class="quote">
+            <span class="lbl">TTF <span class="u">欧元/兆瓦时</span></span>
+            <span class="numline"><b class="mono" id="chain-ttf">—</b><i class="delta mono flat" id="d-ttf">0.00</i></span>
+          </div>
+          <div class="quote">
+            <span class="lbl">柴油热值 <span class="u">欧元/兆瓦时</span></span>
+            <span class="numline"><b class="mono" id="chain-heat">—</b><i class="delta mono flat" id="d-heat">0.00</i></span>
+          </div>
+        </div>
+      </div>
     </section>
 
     <ul class="insights">
-      <li><span class="kicker">欧洲库存</span> <span id="insight-gas">—</span></li>
-      <li><span class="kicker">液化气套利</span> <span id="insight-arb">—</span></li>
-      <li><span class="kicker">馏分油 / PADD 1</span> <span id="insight-pad">—</span></li>
+      <li class="tone-gas"><span class="kicker">欧洲库存</span> <span id="insight-gas">—</span></li>
+      <li class="tone-arb"><span class="kicker">液化气套利</span> <span id="insight-arb">—</span></li>
+      <li class="tone-pad"><span class="kicker">馏分油 / PADD 1</span> <span id="insight-pad">—</span></li>
     </ul>
 
     <section class="card band" id="gas" aria-labelledby="gas-title">
@@ -502,23 +660,20 @@
         <h2 id="gas-title"><span class="idx mono">01</span>欧洲天然气</h2>
         <span class="badge">示意</span>
       </div>
-      <div class="band-split">
+      <div class="eu-split">
         <div>
+          <p class="big-pct mono" id="gas-pct">—</p>
           <svg id="gauge" class="fill-bar" role="img" aria-label="欧洲工作气填充"></svg>
           <p class="note" id="gas-progress">—</p>
-          <div class="stats">
-            <div class="stat"><p class="stat-k">工作气量</p><p class="stat-v mono" id="gas-bcm">—</p></div>
-            <div class="stat"><p class="stat-k">较五年均值</p><p class="stat-v mono" id="gas-vs5y">—</p></div>
-            <div class="stat"><p class="stat-k">采暖季抽取</p><p class="stat-v mono" id="gas-draw">—</p></div>
-            <div class="stat">
-              <p class="stat-k">3月末库存情景</p>
-              <p class="stat-v mono" id="gas-end">—</p>
-              <p id="gas-status" class="pill">—</p>
-            </div>
+          <div class="eu-facts">
+            <div><p class="stat-k">工作气量</p><p class="stat-v mono" id="gas-bcm">—</p></div>
+            <div><p class="stat-k">较五年均值</p><p class="stat-v mono" id="gas-vs5y">—</p></div>
+            <div><p class="stat-k">采暖季抽取</p><p class="stat-v mono" id="gas-draw">—</p></div>
+            <div><p class="stat-k">3月末</p><p class="stat-v mono" id="gas-end">—</p></div>
           </div>
           <div class="slider-block">
             <div class="slider-top">
-              <label for="storage-range">采暖季起点库存</label>
+              <label for="storage-range">起点库存</label>
               <span class="slider-edit">
                 <input id="storage-num" class="tiny mono" type="number" min="55" max="100" step="0.1" inputmode="decimal" aria-label="采暖季起点库存百分比" />
                 <span>%</span>
@@ -526,29 +681,32 @@
             </div>
             <input id="storage-range" type="range" min="55" max="100" step="0.1" value="91.5" aria-label="采暖季起点库存百分比" />
           </div>
+        </div>
+        <div class="scen-pane">
+          <p class="stat-k">3月末情景</p>
+          <p class="scen-bcm mono"><span id="gas-end-big">—</span> <span class="u">bcm</span></p>
+          <p id="gas-status" class="pill">—</p>
+          <div class="seg" role="group" aria-label="采暖季冷暖情景">
+            <button type="button" id="scen-warm" data-scenario="-12" aria-pressed="false">偏暖</button>
+            <button type="button" id="scen-norm" data-scenario="0" aria-pressed="true">正常</button>
+            <button type="button" id="scen-cold" data-scenario="12" aria-pressed="false">偏冷</button>
+          </div>
           <div class="slider-block">
             <div class="slider-top">
-              <span id="hdd-label">3月末情景</span>
+              <label for="hdd-range">采暖度日偏离</label>
               <output class="mono" id="hdd-out" for="hdd-range">较常年 0%</output>
-            </div>
-            <div class="seg" role="group" aria-label="采暖季冷暖情景">
-              <button type="button" id="scen-warm" data-scenario="-12" aria-pressed="false">偏暖</button>
-              <button type="button" id="scen-norm" data-scenario="0" aria-pressed="true">正常</button>
-              <button type="button" id="scen-cold" data-scenario="12" aria-pressed="false">偏冷</button>
             </div>
             <input id="hdd-range" type="range" min="-30" max="40" step="1" value="0" aria-label="采暖度日偏离百分比" />
           </div>
-          <p class="formula">抽取 = 58 bcm ×（1 + 采暖度日偏离）。宽裕 ≥ 30 bcm，平衡 ≥ 15 bcm，否则紧张。</p>
-        </div>
-        <div>
-          <div class="legend" aria-hidden="true">
-            <span><i class="swatch" style="background: var(--faint)"></i>常年</span>
-            <span><i class="swatch" style="background: var(--gas)"></i>情景</span>
-          </div>
-          <svg id="hdd-chart" class="chart-svg" role="img" aria-label="西北欧采暖度日常年与情景"></svg>
-          <p class="note" id="hdd-note">西北欧综合采暖度日为示意气候态，不是气象机构的正式序列。</p>
+          <p class="formula">抽取 = 58 bcm ×（1 + 偏离）。宽裕 ≥ 30 bcm，平衡 ≥ 15 bcm，否则紧张。</p>
         </div>
       </div>
+      <div class="legend" aria-hidden="true">
+        <span><i class="swatch" style="background: var(--faint)"></i>常年</span>
+        <span><i class="swatch" style="background: var(--gas)"></i>情景</span>
+      </div>
+      <svg id="hdd-chart" class="chart-svg cols" role="img" aria-label="西北欧 10 月至 3 月采暖度日柱"></svg>
+      <p class="note" id="hdd-note">西北欧综合采暖度日为示意气候态，不是气象机构的正式序列。</p>
     </section>
 
     <section class="card band" id="shipping" aria-labelledby="ship-title">
@@ -559,7 +717,7 @@
       <p id="fx-banner" class="banner" role="status">正在读取欧洲央行参考价。计算已用回退汇率，界面不会等待。</p>
       <div class="band-split arb-split">
         <div>
-          <div class="form-grid">
+          <div class="form-grid tight">
             <div class="field">
               <label for="in-ttf">TTF（欧元/兆瓦时） <span class="lock" id="lock-ttf" hidden>已锁定</span></label>
               <input id="in-ttf" class="mono" type="number" min="1" max="400" step="0.01" inputmode="decimal" />
@@ -604,7 +762,7 @@
           <svg id="fx-chart" class="chart-svg fx-mini" role="img" aria-label="欧元兑美元参考价"></svg>
           <div class="result">
             <div>
-              <p class="stat-k">套利边际（TTF − 交付成本）</p>
+              <p class="stat-k">套利边际（TTF − 交付）</p>
               <p class="kpi mono" id="arb-margin">—</p>
               <p class="note mono" id="arb-margin-usd">—</p>
             </div>
@@ -614,15 +772,14 @@
               <p class="note">合 <span class="mono" id="arb-des-usd">—</span></p>
             </div>
           </div>
-          <p class="stat-k">交付成本瀑布</p>
-          <svg id="waterfall" class="chart-svg waterfall" role="img" aria-label="离岸到再气化的交付成本瀑布"></svg>
-          <div id="stack-legend" class="stack-legend"></div>
+          <svg id="waterfall" class="chart-svg waterfall" role="img" aria-label="离岸、运费、蒸发、港口、再气化，然后交付成本"></svg>
+          <div id="stack-legend" class="stack-legend" hidden></div>
           <p class="formula" id="arb-formula"></p>
         </div>
         <div>
-          <p class="stat-k">Spark25 日租金趋势</p>
-          <svg id="spark-chart" class="chart-svg" role="img" aria-label="Spark25 日租金示意轨迹"></svg>
-          <p class="note">右端点跟随日租金输入。左侧轨迹是示意形状，不是 Spark Commodities 的正式估价。</p>
+          <p class="stat-k">Spark25 日租金</p>
+          <svg id="spark-chart" class="chart-svg spark" role="img" aria-label="Spark25 日租金示意轨迹"></svg>
+          <p class="note">右端点标出当前日租金。左侧是示意形状，不是 Spark Commodities 的正式估价。</p>
         </div>
       </div>
     </section>
@@ -647,11 +804,11 @@
             <p class="stat-v mono" id="distillate-out">—</p>
           </div>
           <svg id="distillate-chart" class="chart-svg compact" role="img" aria-label="美国馏分油总库存示意曲线"></svg>
-          <p class="note" id="distillate-note">随东岸库存同量增减，起点 121.6 百万桶。</p>
+          <p class="note" id="distillate-note">121.6 +（PADD 1 − 29.4）</p>
         </div>
         <div class="mini">
           <div class="slider-top">
-            <p class="stat-k">PADD 1 东岸库存 <span class="lock" id="lock-padd" hidden>已锁定</span></p>
+            <p class="stat-k">PADD 1 东岸 <span class="lock" id="lock-padd" hidden>已锁定</span></p>
             <p class="stat-v mono" id="padd-out">—</p>
           </div>
           <svg id="padd-chart" class="chart-svg compact" role="img" aria-label="PADD 1 东岸馏分油库存示意曲线"></svg>
@@ -660,7 +817,7 @@
       </div>
       <div class="ref-split">
         <div>
-          <h3>大西洋柴油与裂解</h3>
+          <h3>裂解</h3>
           <div class="form-grid four">
             <div class="field">
               <label for="in-brent">布伦特（美元/桶） <span class="lock" id="lock-brent" hidden>已锁定</span></label>
@@ -692,15 +849,11 @@
               <tbody id="price-body"></tbody>
             </table>
           </div>
-          <p class="note">裂解 = 成品美元/桶 − 布伦特。加仑按 42 加仑/桶，吨按 7.45 桶/吨。示意口径，不是交易所结算价。</p>
+          <p class="note">裂解 = 成品美元/桶 − 布伦特。加仑按 42，吨按 7.45。示意口径。</p>
         </div>
         <div>
-          <h3>气与柴油热值平价</h3>
-          <div class="legend" aria-hidden="true">
-            <span><i class="swatch" style="background: var(--gas)"></i>天然气</span>
-            <span><i class="swatch" style="background: var(--diesel)"></i>柴油热值</span>
-          </div>
-          <svg id="parity-chart" class="chart-svg" role="img" aria-label="天然气与柴油热值平价"></svg>
+          <h3>热值横比</h3>
+          <svg id="parity-chart" class="chart-svg hbars" role="img" aria-label="Henry Hub、TTF、瓦斯油与取暖油的欧元每兆瓦时横比"></svg>
           <p class="note" id="switch-read">—</p>
         </div>
       </div>
@@ -708,61 +861,15 @@
 
     <footer>
       <h2>来源</h2>
-      <p class="note">公开来源页。除欧元兑美元外，本页数字是示意，不是这些机构的发布值。</p>
-      <div class="table-wrap">
-        <table class="src-table">
-          <thead>
-            <tr><th>指标</th><th>官方来源</th><th>频率</th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Henry Hub</td>
-              <td><a href="https://www.eia.gov/dnav/ng/hist/rngwhhdD.htm" target="_blank" rel="noopener noreferrer">EIA Henry Hub 日度现货</a></td>
-              <td>每个工作日</td>
-            </tr>
-            <tr>
-              <td>WTI</td>
-              <td><a href="https://www.eia.gov/dnav/pet/hist/rwtcD.htm" target="_blank" rel="noopener noreferrer">EIA 库欣 WTI 日度现货</a></td>
-              <td>每个工作日</td>
-            </tr>
-            <tr>
-              <td>布伦特</td>
-              <td><a href="https://www.eia.gov/dnav/pet/hist/rbrteD.htm" target="_blank" rel="noopener noreferrer">EIA 欧洲布伦特日度现货</a></td>
-              <td>每个工作日</td>
-            </tr>
-            <tr>
-              <td>美国炼厂开工率</td>
-              <td><a href="https://www.eia.gov/petroleum/supply/weekly/" target="_blank" rel="noopener noreferrer">EIA 周度石油供应报告</a></td>
-              <td>每周，通常美东时间周三 10:30</td>
-            </tr>
-            <tr>
-              <td>Spark25</td>
-              <td><a href="https://www.sparkcommodities.com/lng-freight/" target="_blank" rel="noopener noreferrer">Spark LNG Freight</a></td>
-              <td>现货每个评估日 10:00 GMT</td>
-            </tr>
-            <tr>
-              <td>TTF</td>
-              <td><a href="https://www.ice.com/products/27996665/Dutch-TTF-Gas-Futures" target="_blank" rel="noopener noreferrer">ICE 荷兰 TTF 天然气期货</a></td>
-              <td>交易日连续，每日结算</td>
-            </tr>
-            <tr>
-              <td>AGSI+ 库存</td>
-              <td><a href="https://agsi.gie.eu/" target="_blank" rel="noopener noreferrer">GIE AGSI+</a></td>
-              <td>每个天然气日</td>
-            </tr>
-            <tr>
-              <td>Eurostat 采暖度日</td>
-              <td><a href="https://ec.europa.eu/eurostat/cache/metadata/en/nrg_chdd_esms.htm" target="_blank" rel="noopener noreferrer">Eurostat 采暖与制冷度日</a></td>
-              <td>月度、年度</td>
-            </tr>
-            <tr>
-              <td>欧元兑美元</td>
-              <td><a href="https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-usd.en.html" target="_blank" rel="noopener noreferrer">欧洲央行参考汇率</a>，经 <a href="https://frankfurter.dev/" target="_blank" rel="noopener noreferrer">Frankfurter</a></td>
-              <td>每个 TARGET 工作日；本页约 60 秒轮询</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <p class="src-line"><span>Henry Hub</span><a href="https://www.eia.gov/dnav/ng/hist/rngwhhdD.htm" target="_blank" rel="noopener noreferrer">EIA 日度现货</a><span>每个工作日</span></p>
+      <p class="src-line"><span>WTI</span><a href="https://www.eia.gov/dnav/pet/hist/rwtcD.htm" target="_blank" rel="noopener noreferrer">EIA 库欣现货</a><span>每个工作日</span></p>
+      <p class="src-line"><span>布伦特</span><a href="https://www.eia.gov/dnav/pet/hist/rbrteD.htm" target="_blank" rel="noopener noreferrer">EIA 欧洲布伦特</a><span>每个工作日</span></p>
+      <p class="src-line"><span>炼厂开工率</span><a href="https://www.eia.gov/petroleum/supply/weekly/" target="_blank" rel="noopener noreferrer">EIA 周度石油供应报告</a><span>每周，通常美东周三 10:30</span></p>
+      <p class="src-line"><span>Spark25</span><a href="https://www.sparkcommodities.com/lng-freight/" target="_blank" rel="noopener noreferrer">Spark LNG Freight</a><span>现货每个评估日 10:00 GMT</span></p>
+      <p class="src-line"><span>TTF</span><a href="https://www.ice.com/products/27996665/Dutch-TTF-Gas-Futures" target="_blank" rel="noopener noreferrer">ICE 荷兰 TTF</a><span>交易日结算</span></p>
+      <p class="src-line"><span>AGSI+ 库存</span><a href="https://agsi.gie.eu/" target="_blank" rel="noopener noreferrer">GIE AGSI+</a><span>每个天然气日</span></p>
+      <p class="src-line"><span>采暖度日</span><a href="https://ec.europa.eu/eurostat/cache/metadata/en/nrg_chdd_esms.htm" target="_blank" rel="noopener noreferrer">Eurostat</a><span>月度、年度</span></p>
+      <p class="src-line"><span>欧元兑美元</span><a href="https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-usd.en.html" target="_blank" rel="noopener noreferrer">欧洲央行参考汇率</a><a href="https://frankfurter.dev/" target="_blank" rel="noopener noreferrer">Frankfurter</a><span>TARGET 工作日，本页约 60 秒</span></p>
     </footer>
 
   <div id="glossary" class="modal" hidden>
@@ -880,7 +987,7 @@
         <blockquote class="formula-box">
           <p>柴油热值（欧元/兆瓦时（MWh））=（美元/吨 ÷ EURUSD）÷ 11.83</p>
         </blockquote>
-        <p><strong>11.83</strong> 兆瓦时（MWh）/吨对应柴油低位热值 42.6 MJ/kg。气价高于这个热值时，本页把气转油激励标为出现：用户更愿意烧油、少烧气。平价曲线的 10 月锚在当前输入上，11 月至 3 月另加一组示意季节升水。</p>
+        <p><strong>11.83</strong> 兆瓦时（MWh）/吨对应柴油低位热值 42.6 MJ/kg。气价高于这个热值时，本页把气转油激励标为出现：用户更愿意烧油、少烧气。右侧把 Henry Hub、TTF、鹿特丹瓦斯油和纽约港取暖油画成同一欧元/兆瓦时横条。Henry Hub 按 3.412141633 换算，柴油按 11.83。</p>
 
         <h3>来源与更新频率</h3>
         <div class="table-wrap">
@@ -1387,24 +1494,23 @@
     function drawGauge(pct) {
       var svg = byId("gauge");
       clearSvg(svg);
-      svg.setAttribute("viewBox", "0 0 640 78");
-      var x0 = 16, barW = 460, y = 34, bh = 18;
-      var track = el("rect", { x: x0, y: y, width: barW, height: bh, rx: 9 });
+      svg.setAttribute("viewBox", "0 0 640 36");
+      var x0 = 0, barW = 640, y = 10, bh = 14;
+      var track = el("rect", { x: x0, y: y, width: barW, height: bh, rx: 2 });
       track.style.fill = "var(--sunken)";
       svg.appendChild(track);
       var fw = barW * clamp(pct, 0, 100) / 100;
       if (fw > 1) {
-        var fill = el("rect", { x: x0, y: y, width: Math.max(fw, 10), height: bh, rx: 9 });
+        var fill = el("rect", { x: x0, y: y, width: fw, height: bh, rx: 2 });
         fill.style.fill = "var(--gas)";
         svg.appendChild(fill);
       }
-      var tx = x0 + barW * NOV1_TARGET / 100;
+      var tx = barW * NOV1_TARGET / 100;
       svg.appendChild(el("line", {
-        x1: tx, x2: tx, y1: 16, y2: y + bh + 12,
-        stroke: "var(--warn)", "stroke-width": "2.5"
+        x1: tx, x2: tx, y1: 2, y2: 34,
+        stroke: "var(--warn)", "stroke-width": "2"
       }));
-      svgText(svg, tx, 12, "90% 法定", "num", "middle");
-      svgText(svg, x0 + barW + 18, y + 14, pct.toFixed(1) + "%", "gauge-value mono", "start");
+      svgText(svg, tx, 8, "90%", "barlab", "middle");
       svg.setAttribute("aria-label", "欧洲工作气填充 " + pct.toFixed(1) + "%，琥珀色刻度是 90% 法定目标");
     }
 
@@ -1412,67 +1518,43 @@
       bindChart(svg);
       var box = chartSize(svg);
       clearSvg(svg);
-      var pad = { l: 48, r: 10, t: 14, b: 32 };
-      var innerW = box.w - pad.l - pad.r;
-      var innerH = box.h - pad.t - pad.b;
       var total = steps.reduce(function (a, s) { return a + s.value; }, 0);
-      var max = Math.max(total, 0.01) * 1.15;
-      function yAt(v) { return pad.t + (1 - Math.max(v, 0) / max) * innerH; }
-      for (var g = 0; g <= 4; g++) {
-        var gv = max * (g / 4);
-        var yy = yAt(gv);
-        svg.appendChild(el("line", { x1: pad.l, x2: box.w - pad.r, y1: yy, y2: yy, "class": "grid" }));
-        svgText(svg, pad.l - 6, yy + 4, gv.toFixed(1), "num", "end");
-      }
-      var n = steps.length + 1;
-      var slot = innerW / n;
-      var bw = Math.max(12, slot * 0.52);
+      var rows = steps.map(function (s) { return { name: s.name, value: s.value, color: s.color, full: false }; });
+      rows.push({ name: "交付", value: total, color: "var(--text)", full: true });
+      var pad = { l: 46, r: 52, t: 4, b: 4 };
+      var innerW = Math.max(40, box.w - pad.l - pad.r);
+      var rowH = (box.h - pad.t - pad.b) / rows.length;
+      var max = Math.max(total, 0.01);
+      function xAt(v) { return pad.l + (Math.max(v, 0) / max) * innerW; }
+      svg.appendChild(el("line", { x1: pad.l, x2: pad.l, y1: pad.t, y2: box.h - pad.b, "class": "grid" }));
       var cum = 0;
       var xs = [];
       var tips = [];
-      steps.forEach(function (s, i) {
-        var x = pad.l + i * slot + (slot - bw) / 2;
-        var yTop = yAt(cum + s.value);
-        var yBot = yAt(cum);
+      rows.forEach(function (s, i) {
+        var y = pad.t + i * rowH + rowH * 0.18;
+        var bh = Math.max(7, rowH * 0.62);
+        var x1 = s.full ? pad.l : xAt(cum);
+        var x2 = s.full ? xAt(s.value) : xAt(cum + s.value);
+        if (!s.full) cum += s.value;
         var rect = el("rect", {
-          x: x,
-          y: Math.min(yTop, yBot),
-          width: bw,
-          height: Math.max(1, Math.abs(yBot - yTop)),
-          rx: 3
+          x: Math.min(x1, x2),
+          y: y,
+          width: Math.max(2, Math.abs(x2 - x1)),
+          height: bh,
+          rx: 1
         });
         rect.style.fill = s.color;
         svg.appendChild(rect);
-        if (i < steps.length - 1) {
-          var nextX = pad.l + (i + 1) * slot + (slot - bw) / 2;
-          var link = el("line", { x1: x + bw, x2: nextX, y1: yTop, y2: yTop });
-          link.style.stroke = "var(--faint)";
-          link.style.strokeDasharray = "3 3";
-          svg.appendChild(link);
-        }
-        svgText(svg, x + bw / 2, box.h - 10, s.name, "muted", "middle");
-        xs.push(x + bw / 2);
+        svgText(svg, pad.l - 6, y + bh * 0.78, s.name, "muted", "end");
+        svgText(svg, Math.max(x1, x2) + 5, y + bh * 0.78, fmt(s.value, 2), "num", "start");
+        xs.push((x1 + x2) / 2);
         tips.push([
           { text: s.name, strong: true },
           { text: fmt(s.value, 2) + " 美元/百万英热", swatch: s.color },
-          { text: "累计 " + fmt(cum + s.value, 2) }
+          { text: s.full ? "交付合计" : "累计 " + fmt(s.full ? s.value : cum, 2) }
         ]);
-        cum += s.value;
       });
-      var tx = pad.l + steps.length * slot + (slot - bw) / 2;
-      var totalRect = el("rect", {
-        x: tx, y: yAt(total), width: bw,
-        height: Math.max(1, yAt(0) - yAt(total)), rx: 3
-      });
-      totalRect.style.fill = "var(--text)";
-      svg.appendChild(totalRect);
-      svgText(svg, tx + bw / 2, box.h - 10, "交付", "muted", "middle");
-      xs.push(tx + bw / 2);
-      tips.push([
-        { text: "交付成本", strong: true },
-        { text: fmt(total, 2) + " 美元/百万英热", swatch: "var(--text)" }
-      ]);
-      var guide = el("line", { y1: pad.t, y2: pad.t + innerH, "class": "guide", visibility: "hidden" });
+      var guide = el("line", { y1: pad.t, y2: box.h - pad.b, "class": "guide", visibility: "hidden" });
       guide.style.pointerEvents = "none";
       svg.appendChild(guide);
       svg._hit = {
@@ -1480,22 +1562,6 @@
         guide: guide,
         tip: function (i) { return tips[i] || [{ text: "无数据" }]; }
       };
-      var legend = byId("stack-legend");
-      if (!legend) return;
-      legend.replaceChildren();
-      steps.forEach(function (s) {
-        var item = document.createElement("span");
-        var mark = document.createElement("i");
-        mark.className = "swatch";
-        mark.style.background = s.color;
-        var name = document.createElement("span");
-        name.textContent = s.name;
-        var num = document.createElement("b");
-        num.className = "mono";
-        num.textContent = fmt(s.value, 2);
-        item.append(mark, name, num);
-        legend.appendChild(item);
-      });
     }
 
     function chartSize(svg) {
@@ -1647,9 +1713,21 @@
         path.style.strokeLinecap = "round";
         svg.appendChild(path);
         var last = s.values.length - 1;
-        var dot = el("circle", { cx: xAt(last), cy: yAt(s.values[last]), r: compact ? 2.5 : 3.5 });
+        var cx = xAt(last);
+        var cy = yAt(s.values[last]);
+        var dot = el("circle", { cx: cx, cy: cy, r: s.callout ? 4.5 : (compact ? 2.5 : 3.5) });
         dot.style.fill = s.color;
         svg.appendChild(dot);
+        if (s.callout) {
+          var ring = el("circle", { cx: cx, cy: cy, r: 7 });
+          ring.style.fill = "#fff";
+          ring.style.stroke = s.color;
+          ring.style.strokeWidth = "1.5";
+          svg.insertBefore(ring, dot);
+          var anchor = cx > box.w * 0.7 ? "end" : "start";
+          var tx = anchor === "end" ? cx - 10 : cx + 10;
+          svgText(svg, tx, Math.max(12, cy - 10), s.callout, "callout mono", anchor);
+        }
       });
       var guide = el("line", { y1: pad.t, y2: pad.t + innerH, "class": "guide", visibility: "hidden" });
       guide.style.pointerEvents = "none";
@@ -1665,7 +1743,7 @@
       bindChart(svg);
       var box = chartSize(svg);
       clearSvg(svg);
-      var pad = { l: 46, r: 10, t: 12, b: 28 };
+      var pad = { l: 42, r: 8, t: modelSpec.valueLabels ? 18 : 12, b: 26 };
       var innerW = box.w - pad.l - pad.r;
       var innerH = box.h - pad.t - pad.b;
       var labels = modelSpec.labels;
@@ -1703,6 +1781,11 @@
           });
           rect.style.fill = s.color;
           svg.appendChild(rect);
+          if (modelSpec.valueLabels) {
+            var labY = yAt(val) - 3;
+            if (labY < 11) labY = 11;
+            svgText(svg, gx + 6 + si * barW + Math.max(2, barW - 2) / 2, labY, Math.round(val).toString(), "barlab", "middle");
+          }
         });
         svgText(svg, gx + groupW / 2, box.h - 8, lb, "muted", "middle");
       });
@@ -1710,6 +1793,47 @@
       guide.style.pointerEvents = "none";
       svg.appendChild(guide);
       svg._hit = { xs: xs, guide: guide, tip: modelSpec.tip };
+    }
+
+    function drawHBars(svg, rows) {
+      bindChart(svg);
+      var box = chartSize(svg);
+      clearSvg(svg);
+      if (!rows.length) {
+        svg._hit = null;
+        return;
+      }
+      var pad = { l: 78, r: 48, t: 6, b: 6 };
+      var max = Math.max.apply(null, rows.map(function (r) { return r.value; }).concat([1])) * 1.08;
+      var rowH = (box.h - pad.t - pad.b) / rows.length;
+      var innerW = Math.max(40, box.w - pad.l - pad.r);
+      var xs = [];
+      rows.forEach(function (r, i) {
+        var y = pad.t + i * rowH + rowH * 0.2;
+        var bh = Math.max(8, rowH * 0.58);
+        var w = innerW * Math.max(r.value, 0) / max;
+        var rect = el("rect", { x: pad.l, y: y, width: Math.max(2, w), height: bh, rx: 1 });
+        rect.style.fill = r.color;
+        svg.appendChild(rect);
+        svgText(svg, pad.l - 6, y + bh * 0.75, r.name, "muted", "end");
+        svgText(svg, pad.l + w + 5, y + bh * 0.75, fmt(r.value, 1), "num", "start");
+        xs.push(pad.l + w / 2);
+      });
+      var guide = el("line", { y1: pad.t, y2: box.h - pad.b, "class": "guide", visibility: "hidden" });
+      guide.style.pointerEvents = "none";
+      svg.appendChild(guide);
+      svg._hit = {
+        xs: xs,
+        guide: guide,
+        tip: function (i) {
+          var r = rows[i];
+          if (!r) return [{ text: "无数据" }];
+          return [
+            { text: r.name, strong: true },
+            { text: fmt(r.value, 2) + " 欧元/兆瓦时", swatch: r.color }
+          ];
+        }
+      };
     }
 
     function renderHeader() {
@@ -1732,19 +1856,52 @@
       node.title = "";
     }
 
+    function paintDelta(id, current, base, digits) {
+      var node = byId(id);
+      if (!node) return;
+      var d = current - base;
+      var eps = Math.pow(10, -digits) / 2;
+      if (Math.abs(d) < eps) {
+        node.textContent = digits ? (0).toFixed(digits) : "0";
+        node.className = "delta mono flat";
+        return;
+      }
+      node.textContent = signed(d, digits);
+      node.className = "delta mono " + (d > 0 ? "pos" : "neg");
+    }
+
+    function seedVoyage() {
+      var cargo = SEED.cargoWan * 10000;
+      return SEED.freight * SEED.roundTripDays / cargo;
+    }
+
+    function seedHeat() {
+      var fx = SEED.eurusd > 0 ? SEED.eurusd : 1.1204;
+      return (SEED.ara / fx) / DIESEL_MWH_PER_T;
+    }
+
     function renderChain(m) {
-      setText("chain-hh", fmt(state.hh, 2) + " 美元/百万英热");
-      setText("chain-brent", fmt(state.brent, 2) + " 美元/桶");
-      setText("chain-util", fmt(state.utilPct, 1) + "%");
-      setText("chain-liq", fmt(state.liq, 2) + " 美元/百万英热");
-      setText("chain-freight", fmt(state.freight, 0) + " 美元/日");
-      setText("chain-voyage", fmt(m.freightUsd, 2) + " 美元/百万英热");
-      setText("chain-ttf", fmt(state.ttf, 2) + " 欧元/兆瓦时");
-      setText("chain-heat", fmt(m.dieselEur, 2) + " 欧元/兆瓦时");
+      setText("chain-hh", fmt(state.hh, 2));
+      setText("chain-brent", fmt(state.brent, 2));
+      setText("chain-util", fmt(state.utilPct, 1));
+      setText("chain-liq", fmt(state.liq, 2));
+      setText("chain-freight", fmt(state.freight, 0));
+      setText("chain-voyage", fmt(m.freightUsd, 2));
+      setText("chain-ttf", fmt(state.ttf, 2));
+      setText("chain-heat", fmt(m.dieselEur, 2));
+      paintDelta("d-hh", state.hh, SEED.hh, 2);
+      paintDelta("d-brent", state.brent, SEED.brent, 2);
+      paintDelta("d-util", state.utilPct, SEED.utilPct, 1);
+      paintDelta("d-liq", state.liq, SEED.liq, 2);
+      paintDelta("d-freight", state.freight, SEED.freight, 0);
+      paintDelta("d-voyage", m.freightUsd, seedVoyage(), 2);
+      paintDelta("d-ttf", state.ttf, SEED.ttf, 2);
+      paintDelta("d-heat", m.dieselEur, seedHeat(), 2);
     }
 
     function renderGas(m) {
       drawGauge(state.storagePct);
+      setText("gas-pct", fmt(state.storagePct, 1) + "%");
       setText("gas-progress", state.storagePct >= NOV1_TARGET
         ? "11月1日 90% 注入目标已达成（进度 " + fmt(m.progress, 0) + "%）。琥珀色刻度是目标。"
         : "距 11月1日 90% 注入目标还差 " + fmt(NOV1_TARGET - state.storagePct, 1) + " 个百分点。");
@@ -1755,6 +1912,7 @@
         ? "短缺 " + fmt(-m.end, 1) + " bcm"
         : fmt(m.end, 1) + " bcm（" + fmt(m.end / CAPACITY_BCM * 100, 0) + "%）";
       setText("gas-end", endText);
+      setText("gas-end-big", m.end < 0 ? "短缺 " + fmt(-m.end, 1) : fmt(m.end, 1));
       var pill = byId("gas-status");
       pill.textContent = m.toneLabel;
       pill.className = "pill " + (m.tone === "ok" ? "is-ok" : m.tone === "warn" ? "is-warn" : "is-bad");
@@ -1767,6 +1925,7 @@
       var totalS = scen.reduce(function (a, b) { return a + b; }, 0);
       drawBars(byId("hdd-chart"), {
         labels: labels,
+        valueLabels: true,
         series: [
           { name: "常年", color: "var(--faint)", values: base },
           { name: "情景", color: "var(--gas)", values: scen }
@@ -1885,7 +2044,7 @@
       });
       drawLine(byId("spark-chart"), {
         labels: sparkLabels,
-        series: [{ name: "Spark25", color: "var(--accent)", values: spark, fill: "color-mix(in srgb, var(--accent) 20%, transparent)" }],
+        series: [{ name: "Spark25", color: "var(--accent)", values: spark, callout: fmt(spark[spark.length - 1], 0) }],
         zero: false,
         yFmt: function (v) { return (v / 10000).toFixed(1) + "万"; },
         tip: function (i) {
@@ -1917,7 +2076,7 @@
       });
       drawLine(byId("util-chart"), {
         labels: utilLabels,
-        series: [{ name: "开工率", color: "var(--diesel)", values: utilShape, fill: "color-mix(in srgb, var(--diesel) 16%, transparent)" }],
+        series: [{ name: "开工率", color: "var(--diesel)", values: utilShape }],
         zero: false,
         yFmt: function (v) { return v.toFixed(0); },
         tip: function (i) {
@@ -1931,7 +2090,7 @@
       var distSeries = padd.map(function (v) { return BASE_DISTILLATE + (v - BASE_PADD); });
       drawLine(byId("distillate-chart"), {
         labels: paddLabels,
-        series: [{ name: "馏分油", color: "var(--accent)", values: distSeries, fill: "color-mix(in srgb, var(--accent) 16%, transparent)" }],
+        series: [{ name: "馏分油", color: "var(--accent)", values: distSeries }],
         zero: false,
         yFmt: function (v) { return v.toFixed(0); },
         tip: function (i) {
@@ -1944,7 +2103,7 @@
       });
       drawLine(byId("padd-chart"), {
         labels: paddLabels,
-        series: [{ name: "PADD 1", color: "var(--info)", values: padd, fill: "color-mix(in srgb, var(--info) 18%, transparent)" }],
+        series: [{ name: "PADD 1", color: "var(--info)", values: padd }],
         zero: false,
         yFmt: function (v) { return v.toFixed(0); },
         tip: function (i) {
@@ -1984,30 +2143,18 @@
         tr.append(name, quote, bbl, crack);
         body.appendChild(tr);
       });
-      var labels = HDD_NORM.map(function (row) { return row[0]; });
-      var gas = GAS_PREMIUM.map(function (p) { return state.ttf + p; });
-      var diesel = DIESEL_PREMIUM.map(function (p) { return m.dieselEur + p; });
-      drawLine(byId("parity-chart"), {
-        labels: labels,
-        zero: true,
-        series: [
-          { name: "天然气", color: "var(--gas)", values: gas },
-          { name: "柴油热值", color: "var(--diesel)", values: diesel }
-        ],
-        yFmt: function (v) { return Math.round(v).toString(); },
-        tip: function (i) {
-          return [
-            { text: labels[i], strong: true },
-            { text: "天然气 " + fmt(gas[i], 2) + " 欧元/兆瓦时", swatch: "var(--gas)" },
-            { text: "柴油热值 " + fmt(diesel[i], 2) + " 欧元/兆瓦时", swatch: "var(--diesel)" },
-            { text: i === 0 ? "锚在当前输入" : "含示意季节升水" }
-          ];
-        }
-      });
+      var hhEur = state.hh * MMBTU_PER_MWH / m.eurusd;
+      var heatOil = (state.nyh * GAL_PER_BBL * BBL_PER_T / DIESEL_MWH_PER_T) / m.eurusd;
+      drawHBars(byId("parity-chart"), [
+        { name: "Henry Hub", value: hhEur, color: "var(--info)" },
+        { name: "TTF", value: state.ttf, color: "var(--gas)" },
+        { name: "瓦斯油", value: m.dieselEur, color: "var(--diesel)" },
+        { name: "取暖油", value: heatOil, color: "var(--accent)" }
+      ]);
       var switchText = m.gap > 0
-        ? "气价高于柴油热值 " + fmt(m.gap, 2) + " 欧元/兆瓦时，气转油激励出现（示意）。"
-        : "气价低于柴油热值 " + fmt(-m.gap, 2) + " 欧元/兆瓦时，气转油激励未打开。";
-      setText("switch-read", "当前 ARA 热值 " + fmt(m.dieselEur, 2) + " 欧元/兆瓦时。" + switchText + " 11–3 月曲线另加示意季节升水，10 月与输入一致。");
+        ? "TTF 高于瓦斯油热值 " + fmt(m.gap, 2) + " 欧元/兆瓦时，气转油激励出现。"
+        : "TTF 低于瓦斯油热值 " + fmt(-m.gap, 2) + " 欧元/兆瓦时，气转油激励未打开。";
+      setText("switch-read", "四条都是欧元/兆瓦时。Henry Hub 按 3.412141633 换算，取暖油与瓦斯油按 11.83 兆瓦时/吨。" + switchText);
     }
 
     function renderLocks() {
