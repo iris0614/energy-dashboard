@@ -12,6 +12,8 @@
       if (savedTheme === "light" || savedTheme === "dark") {
         document.documentElement.setAttribute("data-theme", savedTheme);
       }
+      var savedLang = localStorage.getItem("desk-lang");
+      document.documentElement.lang = savedLang === "en" ? "en" : "zh-CN";
     } catch (e) {}
   </script>
   <style>
@@ -705,84 +707,91 @@
       .card h2 { font-size: 16px; }
       .wrap { padding: 14px 12px 32px; }
     }
+    html[lang="en"] .modal-body[data-lang="zh"] { display: none; }
+    html:not([lang="en"]) .modal-body[data-lang="en"] { display: none; }
+    .tools .lang-switch { margin-top: 0; }
   </style>
 </head>
 <body>
   <div class="wrap">
     <header class="top">
       <div>
-        <h1>跨大西洋冬季能源平衡与套利看板</h1>
-        <p class="sub">沿"上游原料 → 加工/液化 → 跨洋海运 → 终端消费"一条链读 12 项指标：欧洲气库还缺多少、美湾 LNG 往哪走、柴油紧到什么程度、冬天冷一<span class="keep">点会怎样。</span></p>
+        <h1 data-i18n="title">跨大西洋冬季能源平衡与套利看板</h1>
+        <p class="sub" data-i18n="sub" data-i18n-mode="html">沿"上游原料 → 加工/液化 → 跨洋海运 → 终端消费"一条链读 12 项指标：欧洲气库还缺多少、美湾 LNG 往哪走、柴油紧到什么程度、冬天冷一<span class="keep">点会怎样。</span></p>
       </div>
       <div class="top-side">
         <div class="stamp-row">
-          <p class="stamp">数据快照 <strong id="stamp-time">—</strong></p>
-          <button type="button" class="ghost glossary-btn" id="btn-glossary" aria-haspopup="dialog" aria-controls="glossary" aria-expanded="false">指标说明与更新频率（Glossary）</button>
+          <p class="stamp"><span data-i18n="stamp-label">数据快照</span> <strong id="stamp-time">—</strong></p>
+          <button type="button" class="ghost glossary-btn" id="btn-glossary" data-i18n="glossary-btn" aria-haspopup="dialog" aria-controls="glossary" aria-expanded="false">指标说明与更新频率（Glossary）</button>
         </div>
-        <p class="stamp-note">各指标日期见卡片标注</p>
+        <p class="stamp-note" data-i18n="stamp-note">各指标日期见卡片标注</p>
         <div class="tools">
-          <label class="check" title="未锁定的示意价格会轻微向起点回归，用来在没有行情接口时保持看板更新">
+          <div class="seg lang-switch" role="group" aria-label="Language">
+            <button type="button" id="lang-zh" aria-pressed="true">中文</button>
+            <button type="button" id="lang-en" aria-pressed="false">English</button>
+          </div>
+          <label class="check" data-i18n-title="sim-title" title="未锁定的示意价格会轻微向起点回归，用来在没有行情接口时保持看板更新">
             <input id="sim-toggle" type="checkbox" checked />
-            示意跳动
+            <span data-i18n="sim">示意跳动</span>
           </label>
-          <button type="button" class="ghost" id="btn-reset">恢复示意起点</button>
+          <button type="button" class="ghost" id="btn-reset" data-i18n="reset">恢复示意起点</button>
           <button type="button" class="solid" id="theme-toggle">切换为深色</button>
         </div>
       </div>
     </header>
 
     <p id="fatal" class="banner is-bad" hidden></p>
-    <noscript><p class="banner is-bad">计算、图表和汇率请求需要 JavaScript。页面结构仍可阅读，但数字不会更新。</p></noscript>
+    <noscript><p class="banner is-bad">计算、图表和汇率请求需要 JavaScript。页面结构仍可阅读，但数字不会更新。 Calculations, charts, and the FX request need JavaScript. The page structure stays readable, but the numbers do not update.</p></noscript>
 
-    <section class="strip sheet-strip" aria-label="供应链概览">
+    <section class="strip sheet-strip" data-i18n-aria="strip-aria" aria-label="供应链概览">
       <div class="metric">
-        <p class="metric-k">上游/原料报价</p>
+        <p class="metric-k" data-i18n="g1">上游/原料报价</p>
         <div class="metric-row">
           <div class="quote">
-            <span class="lbl">Henry Hub <span class="u">美元/百万英热</span></span>
+            <span class="lbl">Henry Hub <span class="u" data-i18n="u-mmbtu">美元/百万英热</span></span>
             <span class="numline"><b class="mono" id="chain-hh">—</b><i class="delta mono flat" id="d-hh">0.00</i></span>
           </div>
           <div class="quote">
-            <span class="lbl">布伦特 <span class="u">美元/桶</span></span>
+            <span class="lbl" data-i18n="lbl-brent" data-i18n-mode="html">布伦特 <span class="u">美元/桶</span></span>
             <span class="numline"><b class="mono" id="chain-brent">—</b><i class="delta mono flat" id="d-brent">0.00</i></span>
           </div>
         </div>
       </div>
       <div class="metric">
-        <p class="metric-k">加工/液化</p>
+        <p class="metric-k" data-i18n="g2">加工/液化</p>
         <div class="metric-row">
           <div class="quote">
-            <span class="lbl">炼厂开工率 <span class="u">%</span></span>
+            <span class="lbl" data-i18n="lbl-util" data-i18n-mode="html">炼厂开工率 <span class="u">%</span></span>
             <span class="numline"><b class="mono" id="chain-util">—</b><i class="delta mono flat" id="d-util">0.0</i></span>
           </div>
           <div class="quote">
-            <span class="lbl">液化费 <span class="u">美元/百万英热</span></span>
+            <span class="lbl" data-i18n="lbl-liqfee" data-i18n-mode="html">液化费 <span class="u">美元/百万英热</span></span>
             <span class="numline"><b class="mono" id="chain-liq">—</b><i class="delta mono flat" id="d-liq">0.00</i></span>
           </div>
         </div>
       </div>
       <div class="metric">
-        <p class="metric-k">跨大西洋航运</p>
+        <p class="metric-k" data-i18n="g3">跨大西洋航运</p>
         <div class="metric-row">
           <div class="quote">
-            <span class="lbl">Spark25 <span class="u">美元/日</span></span>
+            <span class="lbl">Spark25 <span class="u" data-i18n="u-day">美元/日</span></span>
             <span class="numline"><b class="mono" id="chain-freight">—</b><i class="delta mono flat" id="d-freight">0</i></span>
           </div>
           <div class="quote">
-            <span class="lbl">往返运费 <span class="u">美元/百万英热</span></span>
+            <span class="lbl" data-i18n="lbl-voyage" data-i18n-mode="html">往返运费 <span class="u">美元/百万英热</span></span>
             <span class="numline"><b class="mono" id="chain-voyage">—</b><i class="delta mono flat" id="d-voyage">0.00</i></span>
           </div>
         </div>
       </div>
       <div class="metric">
-        <p class="metric-k">终端/供暖/柴油</p>
+        <p class="metric-k" data-i18n="g4">终端/供暖/柴油</p>
         <div class="metric-row">
           <div class="quote">
-            <span class="lbl">TTF <span class="u">欧元/兆瓦时</span></span>
+            <span class="lbl">TTF <span class="u" data-i18n="u-mwh">欧元/兆瓦时</span></span>
             <span class="numline"><b class="mono" id="chain-ttf">—</b><i class="delta mono flat" id="d-ttf">0.00</i></span>
           </div>
           <div class="quote">
-            <span class="lbl">柴油热值 <span class="u">欧元/兆瓦时</span></span>
+            <span class="lbl" data-i18n="lbl-heat" data-i18n-mode="html">柴油热值 <span class="u">欧元/兆瓦时</span></span>
             <span class="numline"><b class="mono" id="chain-heat">—</b><i class="delta mono flat" id="d-heat">0.00</i></span>
           </div>
         </div>
@@ -790,68 +799,68 @@
     </section>
 
     <ul class="insights">
-      <li class="tone-gas"><span class="kicker">欧洲库存</span> <span id="insight-gas">—</span></li>
-      <li class="tone-arb"><span class="kicker">液化气套利</span> <span id="insight-arb">—</span></li>
-      <li class="tone-pad"><span class="kicker">馏分油 / PADD 1</span> <span id="insight-pad">—</span></li>
+      <li class="tone-gas"><span class="kicker" data-i18n="k-gas">欧洲库存</span> <span id="insight-gas">—</span></li>
+      <li class="tone-arb"><span class="kicker" data-i18n="k-arb">液化气套利</span> <span id="insight-arb">—</span></li>
+      <li class="tone-pad"><span class="kicker" data-i18n="k-pad">馏分油 / PADD 1</span> <span id="insight-pad">—</span></li>
     </ul>
 
     <section class="card band" id="gas" aria-labelledby="gas-title">
       <div class="card-head">
-        <h2 id="gas-title"><span class="idx mono">01</span>欧洲天然气</h2>
-        <span class="badge">示意</span>
+        <h2 id="gas-title"><span class="idx mono">01</span><span data-i18n="mod-gas">欧洲天然气</span></h2>
+        <span class="badge" data-i18n="badge-ill">示意</span>
       </div>
       <div class="eu-split">
         <div>
           <p class="big-pct mono" id="gas-pct">—</p>
-          <svg id="gauge" class="fill-bar" role="img" aria-label="欧洲工作气填充"></svg>
+          <svg id="gauge" class="fill-bar" role="img" data-i18n-aria="aria-gauge" aria-label="欧洲工作气填充"></svg>
           <p class="note" id="gas-progress">—</p>
           <div class="eu-facts">
-            <div><p class="stat-k">工作气量</p><p class="stat-v mono" id="gas-bcm">—</p></div>
-            <div><p class="stat-k">较五年均值</p><p class="stat-v mono" id="gas-vs5y">—</p></div>
-            <div><p class="stat-k">采暖季抽取</p><p class="stat-v mono" id="gas-draw">—</p></div>
-            <div><p class="stat-k">3月末</p><p class="stat-v mono" id="gas-end">—</p></div>
+            <div><p class="stat-k" data-i18n="k-working">工作气量</p><p class="stat-v mono" id="gas-bcm">—</p></div>
+            <div><p class="stat-k" data-i18n="k-5y">较五年均值</p><p class="stat-v mono" id="gas-vs5y">—</p></div>
+            <div><p class="stat-k" data-i18n="k-draw">采暖季抽取</p><p class="stat-v mono" id="gas-draw">—</p></div>
+            <div><p class="stat-k" data-i18n="k-endmar">3月末</p><p class="stat-v mono" id="gas-end">—</p></div>
           </div>
           <div class="slider-block">
             <div class="slider-top">
-              <label for="storage-range">起点库存</label>
+              <label for="storage-range" data-i18n="lbl-storage">起点库存</label>
               <span class="slider-edit">
-                <input id="storage-num" class="tiny mono" type="number" min="55" max="100" step="0.1" inputmode="decimal" aria-label="采暖季起点库存百分比" />
+                <input id="storage-num" class="tiny mono" type="number" min="55" max="100" step="0.1" inputmode="decimal" data-i18n-aria="aria-storage" aria-label="采暖季起点库存百分比" />
                 <span>%</span>
               </span>
             </div>
-            <input id="storage-range" type="range" min="55" max="100" step="0.1" value="91.5" aria-label="采暖季起点库存百分比" />
+            <input id="storage-range" type="range" min="55" max="100" step="0.1" value="91.5" data-i18n-aria="aria-storage" aria-label="采暖季起点库存百分比" />
           </div>
         </div>
         <div class="scen-pane">
-          <p class="stat-k">3月末情景</p>
+          <p class="stat-k" data-i18n="k-scen">3月末情景</p>
           <p class="scen-bcm mono"><span id="gas-end-big">—</span> <span class="u">bcm</span></p>
           <p id="gas-status" class="pill">—</p>
-          <div class="seg" role="group" aria-label="采暖季冷暖情景">
-            <button type="button" id="scen-warm" data-scenario="-12" aria-pressed="false">偏暖</button>
-            <button type="button" id="scen-norm" data-scenario="0" aria-pressed="true">正常</button>
-            <button type="button" id="scen-cold" data-scenario="12" aria-pressed="false">偏冷</button>
+          <div class="seg" role="group" data-i18n-aria="aria-scen" aria-label="采暖季冷暖情景">
+            <button type="button" id="scen-warm" data-scenario="-12" data-i18n="scen-warm" aria-pressed="false">偏暖</button>
+            <button type="button" id="scen-norm" data-scenario="0" data-i18n="scen-norm" aria-pressed="true">正常</button>
+            <button type="button" id="scen-cold" data-scenario="12" data-i18n="scen-cold" aria-pressed="false">偏冷</button>
           </div>
           <div class="slider-block">
             <div class="slider-top">
-              <label for="hdd-range">采暖度日偏离</label>
+              <label for="hdd-range" data-i18n="lbl-hdd">采暖度日偏离</label>
               <output class="mono" id="hdd-out" for="hdd-range">较常年 0%</output>
             </div>
-            <input id="hdd-range" type="range" min="-30" max="40" step="1" value="0" aria-label="采暖度日偏离百分比" />
+            <input id="hdd-range" type="range" min="-30" max="40" step="1" value="0" data-i18n-aria="aria-hdd" aria-label="采暖度日偏离百分比" />
           </div>
-          <p class="formula">抽取 = 58 bcm ×（1 + 偏离）。宽裕 ≥ 30 bcm，平衡 ≥ 15 bcm，否则<span class="keep">紧张。</span></p>
+          <p class="formula" data-i18n="gas-formula" data-i18n-mode="html">抽取 = 58 bcm ×（1 + 偏离）。宽裕 ≥ 30 bcm，平衡 ≥ 15 bcm，否则<span class="keep">紧张。</span></p>
         </div>
       </div>
       <div class="legend" aria-hidden="true">
-        <span><i class="swatch" style="background: var(--faint)"></i>常年</span>
-        <span><i class="swatch" style="background: var(--gas)"></i>情景</span>
+        <span><i class="swatch" style="background: var(--faint)"></i><span data-i18n="leg-norm">常年</span></span>
+        <span><i class="swatch" style="background: var(--gas)"></i><span data-i18n="leg-scen">情景</span></span>
       </div>
-      <svg id="hdd-chart" class="chart-svg cols" role="img" aria-label="西北欧 10 月至 3 月采暖度日柱"></svg>
+      <svg id="hdd-chart" class="chart-svg cols" role="img" data-i18n-aria="aria-hdd-chart" aria-label="西北欧 10 月至 3 月采暖度日柱"></svg>
       <p class="note" id="hdd-note">西北欧综合采暖度日为示意气候态，不是气象机构的正式<span class="keep">序列。</span></p>
     </section>
 
     <section class="card band" id="shipping" aria-labelledby="ship-title">
       <div class="card-head">
-        <h2 id="ship-title"><span class="idx mono">02</span>海运与套利 · 美湾到西北欧</h2>
+        <h2 id="ship-title"><span class="idx mono">02</span><span data-i18n="mod-ship">海运与套利 · 美湾到西北欧</span></h2>
         <span class="badge" id="arb-badge">汇率待取</span>
       </div>
       <p id="fx-banner" class="banner" role="status">正在读取欧洲央行参考价。计算已用回退汇率，界面不会等待。</p>
@@ -859,120 +868,120 @@
         <div>
           <div class="form-grid tight">
             <div class="field">
-              <label for="in-ttf">TTF（欧元/兆瓦时） <span class="lock" id="lock-ttf" hidden>已锁定</span></label>
+              <label for="in-ttf"><span data-i18n="lbl-in-ttf">TTF（欧元/兆瓦时）</span> <span class="lock" id="lock-ttf" hidden data-i18n="locked">已锁定</span></label>
               <input id="in-ttf" class="mono" type="number" min="1" max="400" step="0.01" inputmode="decimal" />
             </div>
             <div class="field">
-              <label for="in-hh">Henry Hub（美元/百万英热） <span class="lock" id="lock-hh" hidden>已锁定</span></label>
+              <label for="in-hh"><span data-i18n="lbl-in-hh">Henry Hub（美元/百万英热）</span> <span class="lock" id="lock-hh" hidden data-i18n="locked">已锁定</span></label>
               <input id="in-hh" class="mono" type="number" min="0.2" max="40" step="0.01" inputmode="decimal" />
             </div>
             <div class="field">
-              <label for="in-fx">汇率 <span id="fx-label">EURUSD · 1 欧元兑美元</span> <span class="lock" id="lock-fx" hidden>已锁定</span></label>
+              <label for="in-fx"><span data-i18n="lbl-fx">汇率</span> <span id="fx-label">EURUSD · 1 欧元兑美元</span> <span class="lock" id="lock-fx" hidden data-i18n="locked">已锁定</span></label>
               <input id="in-fx" class="mono" type="number" min="0.3" max="2.5" step="0.0001" inputmode="decimal" />
               <div class="seg">
                 <button type="button" id="fx-eurusd" aria-pressed="true">EURUSD</button>
                 <button type="button" id="fx-usdeur" aria-pressed="false">USDEUR</button>
               </div>
-              <button type="button" class="ghost" id="btn-use-fx" hidden>采用参考价</button>
+              <button type="button" class="ghost" id="btn-use-fx" data-i18n="use-fx" hidden>采用参考价</button>
               <p class="note" id="fx-inverse">—</p>
               <p class="note" id="fx-meta">—</p>
             </div>
             <div class="field">
-              <label for="in-freight">Spark25 日租金（美元/日） <span class="lock" id="lock-freight" hidden>已锁定</span></label>
+              <label for="in-freight"><span data-i18n="lbl-in-freight">Spark25 日租金（美元/日）</span> <span class="lock" id="lock-freight" hidden data-i18n="locked">已锁定</span></label>
               <input id="in-freight" class="mono" type="number" min="1000" max="500000" step="500" inputmode="decimal" />
             </div>
             <div class="field">
-              <label for="in-days">往返天数</label>
+              <label for="in-days" data-i18n="lbl-days">往返天数</label>
               <input id="in-days" class="mono" type="number" min="8" max="60" step="1" />
             </div>
             <div class="field">
-              <label for="in-laden">装载天数</label>
+              <label for="in-laden" data-i18n="lbl-laden">装载天数</label>
               <input id="in-laden" class="mono" type="number" min="4" max="40" step="1" />
             </div>
             <div class="field">
-              <label for="in-cargo">货量（万百万英热）</label>
+              <label for="in-cargo" data-i18n="lbl-cargo">货量（万百万英热）</label>
               <input id="in-cargo" class="mono" type="number" min="200" max="450" step="1" />
             </div>
             <div class="field">
-              <label for="in-liq">液化费（美元/百万英热）</label>
+              <label for="in-liq" data-i18n="lbl-liq">液化费（美元/百万英热）</label>
               <input id="in-liq" class="mono" type="number" min="0" max="8" step="0.05" />
             </div>
           </div>
-          <p class="note" id="voyage-warn" hidden>装载天数大于往返天数，蒸发气近似会被<span class="keep">高估。</span></p>
-          <svg id="fx-chart" class="chart-svg fx-mini" role="img" aria-label="欧元兑美元参考价"></svg>
+          <p class="note" id="voyage-warn" data-i18n="voyage-warn" data-i18n-mode="html" hidden>装载天数大于往返天数，蒸发气近似会被<span class="keep">高估。</span></p>
+          <svg id="fx-chart" class="chart-svg fx-mini" role="img" data-i18n-aria="aria-fx" aria-label="欧元兑美元参考价"></svg>
           <div class="result">
             <div>
-              <p class="stat-k">套利边际（TTF − 交付）</p>
+              <p class="stat-k" data-i18n="k-margin">套利边际（TTF − 交付）</p>
               <p class="kpi mono" id="arb-margin">—</p>
               <p class="note mono" id="arb-margin-usd">—</p>
             </div>
             <div>
               <p id="arb-window" class="pill">—</p>
-              <p class="note">交付 <span class="mono" id="arb-des-eur">—</span></p>
-              <p class="note">合 <span class="mono" id="arb-des-usd">—</span></p>
+              <p class="note"><span data-i18n="des-k">交付</span> <span class="mono" id="arb-des-eur">—</span></p>
+              <p class="note"><span data-i18n="usd-k">合</span> <span class="mono" id="arb-des-usd">—</span></p>
             </div>
           </div>
-          <svg id="waterfall" class="chart-svg waterfall" role="img" aria-label="离岸、运费、蒸发、港口、再气化，然后交付成本"></svg>
+          <svg id="waterfall" class="chart-svg waterfall" role="img" data-i18n-aria="aria-fall" aria-label="离岸、运费、蒸发、港口、再气化，然后交付成本"></svg>
           <div id="stack-legend" class="stack-legend" hidden></div>
           <p class="formula" id="arb-formula"></p>
         </div>
         <div>
-          <p class="stat-k">Spark25 日租金</p>
-          <svg id="spark-chart" class="chart-svg spark" role="img" aria-label="Spark25 日租金示意轨迹"></svg>
-          <p class="note">右端点标出当前日租金。左侧是示意形状，不是 Spark Commodities 的正式<span class="keep">估价。</span></p>
+          <p class="stat-k" data-i18n="k-spark">Spark25 日租金</p>
+          <svg id="spark-chart" class="chart-svg spark" role="img" data-i18n-aria="aria-spark" aria-label="Spark25 日租金示意轨迹"></svg>
+          <p class="note" data-i18n="spark-note" data-i18n-mode="html">右端点标出当前日租金。左侧是示意形状，不是 Spark Commodities 的正式<span class="keep">估价。</span></p>
         </div>
       </div>
     </section>
 
     <section class="card band" id="refining" aria-labelledby="ref-title">
       <div class="card-head">
-        <h2 id="ref-title"><span class="idx mono">03</span>炼厂与中间馏分油</h2>
-        <span class="badge">周度示意</span>
+        <h2 id="ref-title"><span class="idx mono">03</span><span data-i18n="mod-ref">炼厂与中间馏分油</span></h2>
+        <span class="badge" data-i18n="badge-week">周度示意</span>
       </div>
       <div class="triple">
         <div class="mini">
           <div class="slider-top">
-            <p class="stat-k">美国炼厂开工率 <span class="lock" id="lock-util" hidden>已锁定</span></p>
+            <p class="stat-k"><span data-i18n="k-util">美国炼厂开工率</span> <span class="lock" id="lock-util" hidden data-i18n="locked">已锁定</span></p>
             <p class="stat-v mono" id="util-out">—</p>
           </div>
-          <svg id="util-chart" class="chart-svg compact" role="img" aria-label="美国炼厂开工率示意曲线"></svg>
-          <input id="in-util" type="range" min="70" max="100" step="0.1" aria-label="美国炼厂开工率" />
+          <svg id="util-chart" class="chart-svg compact" role="img" data-i18n-aria="aria-util" aria-label="美国炼厂开工率示意曲线"></svg>
+          <input id="in-util" type="range" min="70" max="100" step="0.1" data-i18n-aria="aria-util" aria-label="美国炼厂开工率" />
         </div>
         <div class="mini">
           <div class="slider-top">
-            <p class="stat-k">馏分油总库存</p>
+            <p class="stat-k" data-i18n="k-dist">馏分油总库存</p>
             <p class="stat-v mono" id="distillate-out">—</p>
           </div>
-          <svg id="distillate-chart" class="chart-svg compact" role="img" aria-label="美国馏分油总库存示意曲线"></svg>
+          <svg id="distillate-chart" class="chart-svg compact" role="img" data-i18n-aria="aria-dist" aria-label="美国馏分油总库存示意曲线"></svg>
           <p class="note" id="distillate-note">121.6 +（PADD 1 − 29.4）</p>
         </div>
         <div class="mini">
           <div class="slider-top">
-            <p class="stat-k">PADD 1 东岸 <span class="lock" id="lock-padd" hidden>已锁定</span></p>
+            <p class="stat-k"><span data-i18n="k-padd">PADD 1 东岸</span> <span class="lock" id="lock-padd" hidden data-i18n="locked">已锁定</span></p>
             <p class="stat-v mono" id="padd-out">—</p>
           </div>
-          <svg id="padd-chart" class="chart-svg compact" role="img" aria-label="PADD 1 东岸馏分油库存示意曲线"></svg>
-          <input id="in-padd" type="range" min="12" max="55" step="0.1" aria-label="PADD 1 东岸馏分油库存" />
+          <svg id="padd-chart" class="chart-svg compact" role="img" data-i18n-aria="aria-padd" aria-label="PADD 1 东岸馏分油库存示意曲线"></svg>
+          <input id="in-padd" type="range" min="12" max="55" step="0.1" data-i18n-aria="aria-padd" aria-label="PADD 1 东岸馏分油库存" />
         </div>
       </div>
       <div class="ref-split">
         <div>
-          <h3>裂解</h3>
+          <h3 data-i18n="h-crack">裂解</h3>
           <div class="form-grid four">
             <div class="field">
-              <label for="in-brent">布伦特（美元/桶） <span class="lock" id="lock-brent" hidden>已锁定</span></label>
+              <label for="in-brent"><span data-i18n="lbl-in-brent">布伦特（美元/桶）</span> <span class="lock" id="lock-brent" hidden data-i18n="locked">已锁定</span></label>
               <input id="in-brent" class="mono" type="number" min="20" max="200" step="0.1" inputmode="decimal" />
             </div>
             <div class="field">
-              <label for="in-nyh">纽约港柴油（美元/加仑） <span class="lock" id="lock-nyh" hidden>已锁定</span></label>
+              <label for="in-nyh"><span data-i18n="lbl-in-nyh">纽约港柴油（美元/加仑）</span> <span class="lock" id="lock-nyh" hidden data-i18n="locked">已锁定</span></label>
               <input id="in-nyh" class="mono" type="number" min="0.5" max="8" step="0.001" inputmode="decimal" />
             </div>
             <div class="field">
-              <label for="in-usgc">美湾柴油（美元/加仑） <span class="lock" id="lock-usgc" hidden>已锁定</span></label>
+              <label for="in-usgc"><span data-i18n="lbl-in-usgc">美湾柴油（美元/加仑）</span> <span class="lock" id="lock-usgc" hidden data-i18n="locked">已锁定</span></label>
               <input id="in-usgc" class="mono" type="number" min="0.5" max="8" step="0.001" inputmode="decimal" />
             </div>
             <div class="field">
-              <label for="in-ara">鹿特丹柴油（美元/吨） <span class="lock" id="lock-ara" hidden>已锁定</span></label>
+              <label for="in-ara"><span data-i18n="lbl-in-ara">鹿特丹柴油（美元/吨）</span> <span class="lock" id="lock-ara" hidden data-i18n="locked">已锁定</span></label>
               <input id="in-ara" class="mono" type="number" min="200" max="2000" step="0.5" inputmode="decimal" />
             </div>
           </div>
@@ -980,36 +989,36 @@
             <table>
               <thead>
                 <tr>
-                  <th>基准</th>
-                  <th class="num">报价</th>
-                  <th class="num">美元/桶</th>
-                  <th class="num">对布伦特裂解</th>
+                  <th data-i18n="th-name">基准</th>
+                  <th class="num" data-i18n="th-quote">报价</th>
+                  <th class="num" data-i18n="th-bbl">美元/桶</th>
+                  <th class="num" data-i18n="th-crack">对布伦特裂解</th>
                 </tr>
               </thead>
               <tbody id="price-body"></tbody>
             </table>
           </div>
-          <p class="note">裂解 = 成品美元/桶 − 布伦特。加仑按 42，吨按 7.45。示意<span class="keep">口径。</span></p>
+          <p class="note" data-i18n="crack-note" data-i18n-mode="html">裂解 = 成品美元/桶 − 布伦特。加仑按 42，吨按 7.45。示意<span class="keep">口径。</span></p>
         </div>
         <div>
-          <h3>热值横比</h3>
-          <svg id="parity-chart" class="chart-svg hbars" role="img" aria-label="Henry Hub、TTF、瓦斯油与取暖油的欧元每兆瓦时横比"></svg>
+          <h3 data-i18n="h-parity">热值横比</h3>
+          <svg id="parity-chart" class="chart-svg hbars" role="img" data-i18n-aria="aria-parity" aria-label="Henry Hub、TTF、瓦斯油与取暖油的欧元每兆瓦时横比"></svg>
           <p class="note" id="switch-read">—</p>
         </div>
       </div>
     </section>
 
     <footer>
-      <h2>来源</h2>
-      <p class="src-line"><span>Henry Hub</span><a href="https://www.eia.gov/dnav/ng/hist/rngwhhdD.htm" target="_blank" rel="noopener noreferrer">EIA 日度现货</a><span>每<span class="keep">个工作日</span></span></p>
-      <p class="src-line"><span>WTI</span><a href="https://www.eia.gov/dnav/pet/hist/rwtcD.htm" target="_blank" rel="noopener noreferrer">EIA 库欣现货</a><span>每<span class="keep">个工作日</span></span></p>
-      <p class="src-line"><span>布伦特</span><a href="https://www.eia.gov/dnav/pet/hist/rbrteD.htm" target="_blank" rel="noopener noreferrer">EIA 欧洲布伦特</a><span>每<span class="keep">个工作日</span></span></p>
-      <p class="src-line"><span>炼厂开工率</span><a href="https://www.eia.gov/petroleum/supply/weekly/" target="_blank" rel="noopener noreferrer">EIA 周度石油供应报告</a><span>每周，通常美东<span class="keep">周三 10:30</span></span></p>
-      <p class="src-line"><span>Spark25</span><a href="https://www.sparkcommodities.com/lng-freight/" target="_blank" rel="noopener noreferrer">Spark LNG Freight</a><span>现货每个评估日 <span class="keep">10:00 GMT</span></span></p>
-      <p class="src-line"><span>TTF</span><a href="https://www.ice.com/products/27996665/Dutch-TTF-Gas-Futures" target="_blank" rel="noopener noreferrer">ICE 荷兰 TTF</a><span>交易<span class="keep">日结算</span></span></p>
-      <p class="src-line"><span>AGSI+ 库存</span><a href="https://agsi.gie.eu/" target="_blank" rel="noopener noreferrer">GIE AGSI+</a><span>每个<span class="keep">天然气日</span></span></p>
-      <p class="src-line"><span>采暖度日</span><a href="https://ec.europa.eu/eurostat/cache/metadata/en/nrg_chdd_esms.htm" target="_blank" rel="noopener noreferrer">Eurostat</a><span>月度<span class="keep">、年度</span></span></p>
-      <p class="src-line"><span>欧元兑美元</span><a href="https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-usd.en.html" target="_blank" rel="noopener noreferrer">欧洲央行参考汇率</a><a href="https://frankfurter.dev/" target="_blank" rel="noopener noreferrer">Frankfurter</a><span>TARGET 工作日，本页约 <span class="keep">60 秒</span></span></p>
+      <h2 data-i18n="src-h">来源</h2>
+      <p class="src-line"><span>Henry Hub</span><a href="https://www.eia.gov/dnav/ng/hist/rngwhhdD.htm" target="_blank" rel="noopener noreferrer" data-i18n="src-hh">EIA 日度现货</a><span data-i18n="src-daily" data-i18n-mode="html">每<span class="keep">个工作日</span></span></p>
+      <p class="src-line"><span>WTI</span><a href="https://www.eia.gov/dnav/pet/hist/rwtcD.htm" target="_blank" rel="noopener noreferrer" data-i18n="src-wti">EIA 库欣现货</a><span data-i18n="src-daily" data-i18n-mode="html">每<span class="keep">个工作日</span></span></p>
+      <p class="src-line"><span data-i18n="src-brent-name">布伦特</span><a href="https://www.eia.gov/dnav/pet/hist/rbrteD.htm" target="_blank" rel="noopener noreferrer" data-i18n="src-brent">EIA 欧洲布伦特</a><span data-i18n="src-daily" data-i18n-mode="html">每<span class="keep">个工作日</span></span></p>
+      <p class="src-line"><span data-i18n="src-util-name">炼厂开工率</span><a href="https://www.eia.gov/petroleum/supply/weekly/" target="_blank" rel="noopener noreferrer" data-i18n="src-util">EIA 周度石油供应报告</a><span data-i18n="src-util-when" data-i18n-mode="html">每周，通常美东<span class="keep">周三 10:30</span></span></p>
+      <p class="src-line"><span>Spark25</span><a href="https://www.sparkcommodities.com/lng-freight/" target="_blank" rel="noopener noreferrer">Spark LNG Freight</a><span data-i18n="src-spark-when" data-i18n-mode="html">现货每个评估日 <span class="keep">10:00 GMT</span></span></p>
+      <p class="src-line"><span>TTF</span><a href="https://www.ice.com/products/27996665/Dutch-TTF-Gas-Futures" target="_blank" rel="noopener noreferrer" data-i18n="src-ttf">ICE 荷兰 TTF</a><span data-i18n="src-ttf-when" data-i18n-mode="html">交易<span class="keep">日结算</span></span></p>
+      <p class="src-line"><span data-i18n="src-agsi-name">AGSI+ 库存</span><a href="https://agsi.gie.eu/" target="_blank" rel="noopener noreferrer">GIE AGSI+</a><span data-i18n="src-agsi-when" data-i18n-mode="html">每个<span class="keep">天然气日</span></span></p>
+      <p class="src-line"><span data-i18n="src-hdd-name">采暖度日</span><a href="https://ec.europa.eu/eurostat/cache/metadata/en/nrg_chdd_esms.htm" target="_blank" rel="noopener noreferrer">Eurostat</a><span data-i18n="src-hdd-when" data-i18n-mode="html">月度<span class="keep">、年度</span></span></p>
+      <p class="src-line"><span data-i18n="src-fx-name">欧元兑美元</span><a href="https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-usd.en.html" target="_blank" rel="noopener noreferrer" data-i18n="src-ecb">欧洲央行参考汇率</a><a href="https://frankfurter.dev/" target="_blank" rel="noopener noreferrer">Frankfurter</a><span data-i18n="src-fx-when" data-i18n-mode="html">TARGET 工作日，本页约 <span class="keep">60 秒</span></span></p>
     </footer>
 
   <div id="glossary" class="modal" hidden>
@@ -1018,11 +1027,11 @@
       <div class="modal-head">
         <div>
           <p class="kicker">Glossary</p>
-          <h2 id="glossary-title">指标说明与更新频率</h2>
+          <h2 id="glossary-title" data-i18n="glossary-title">指标说明与更新频率</h2>
         </div>
-        <button type="button" class="ghost" id="glossary-close">关闭</button>
+        <button type="button" class="ghost" id="glossary-close" data-i18n="close">关闭</button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" data-lang="zh">
         <p id="glossary-intro">本说明对着看板上的四张顶栏：上游/原料报价、加工/液化、跨大西洋航运、终端/供暖/柴油，以及下面的欧洲库存、美湾到西北欧套利和炼厂。先讲每个数在业务上是什么、在这页上怎么读。除欧元兑美元（EURUSD）外，价格、库存、运价和采暖度日（HDD）都是示意。改任何一个输入，图表和套利会立刻重算。</p>
         <p>能量单位全篇只使用两种写法：价格和成本用美元/百万英热（MMBtu）或欧元/兆瓦时（MWh）；货量用百万英热（MMBtu）。货量输入框上的「万 MMBtu」与万百万英热（MMBtu）是同一个单位。</p>
 
@@ -1254,6 +1263,137 @@
         </ul>
         <p>曲线右端点会被当前输入盖住。因此 <span class="mono">series.spark25UsdPerDay</span> 的最后一个点应等于 <span class="mono">seed.freight</span>，<span class="mono">series.padd1DistillateMillionBbl</span> 的最后一个点应等于 <span class="mono">seed.padd1</span>。</p>
         <p>下面这些系数留在页面里，替换 <span class="mono">data.json</span> 不会改它们：进料气 1.15；蒸发气 0.10%/日；港口 0.12 美元/百万英热（MMBtu）；再气化 0.35 美元/百万英热（MMBtu）；3.412141633 百万英热（MMBtu）/兆瓦时（MWh）；窗口门槛 0.50 欧元/兆瓦时（MWh）；工作气能力 104.5 十亿立方米（bcm）；五年均值 93.2%；11 月 1 日刻度 90%；常年抽取 58 十亿立方米（bcm）；42 加仑/桶；7.45 桶/吨；11.83 兆瓦时（MWh）/吨。</p>
+      </div>
+      <div class="modal-body" data-lang="en">
+        <p id="glossary-intro-en">This note follows the four strips on the desk: feedstock quotes, liquefaction, transatlantic shipping, and end use (heating and diesel), then European storage, US Gulf to Northwest Europe arbitrage, and refining. It says what each number means and how to read it here. Except EURUSD, prices, stocks, freight, and heating degree days are illustrative. Change any input and the charts and the arb recalculate immediately.</p>
+        <p>Energy units stay in two forms: prices and costs in $/MMBtu or €/MWh, cargo in MMBtu. The cargo box labeled in 万 MMBtu is the same unit as MMBtu × 10,000.</p>
+        <h3>Feedstock</h3>
+        <h4>Henry Hub</h4>
+        <p><strong>Henry Hub</strong> is the Louisiana natural-gas spot hub, quoted in $/MMBtu. It is the feedstock price for US Gulf LNG.</p>
+        <p>Do not read the Henry Hub print as a delivered gas price. The plant burns some gas, so the feedstock leg is grossed up first.</p>
+        <blockquote class="formula-box"><p>Feedgas ($/MMBtu) = Henry Hub × 1.15</p></blockquote>
+        <p><strong>1.15</strong> is this page’s fixed feedgas factor: for each MMBtu exported, buy 15% more feedstock to cover plant fuel and loss. It is not an EIA coefficient.</p>
+        <h4>WTI</h4>
+        <p><strong>WTI</strong> is the US light sweet crude benchmark, priced at Cushing in $/bbl. It describes inland US crude and inland refinery feedstock. This page has no WTI input, and diesel cracks do not subtract WTI.</p>
+        <h4>Brent</h4>
+        <p><strong>Brent</strong> is the crude price used here, in $/bbl. New York Harbor, the US Gulf, and Rotterdam products are compared with seaborne crude, not Cushing. The crack converts the product to $/bbl, then subtracts this Brent. The desk number is an illustrative start, not the EIA print.</p>
+        <h3>Processing and liquefaction</h3>
+        <h4>US refinery utilization</h4>
+        <p><strong>Utilization</strong> is the share of operable crude capacity that was charged that week. High runs loosen gasoline and distillate. Lower runs tighten products and often widen the diesel crack. The reading describes US refineries only. It does not enter the arb or the crack.</p>
+        <h4>Feedgas and the liquefaction fee</h4>
+        <p>Feedgas and the liquefaction fee are two charges. <strong>Feedgas</strong> is Henry Hub already multiplied by 1.15, in $/MMBtu. The <strong>liquefaction fee</strong> is the cost of freezing the gas, starting at 2.50 $/MMBtu, and it can be edited.</p>
+        <blockquote class="formula-box"><p>FOB ($/MMBtu) = feedgas + liquefaction fee = Henry Hub × 1.15 + fee</p></blockquote>
+        <p>EIA feedgas is the physical pipeline gas a plant takes in. The 1.15 here is only a fuel-gas gross-up. Do not read it as that series. Delivered cost then adds freight, boil-off, port, and regas.</p>
+        <h3>Shipping and arbitrage</h3>
+        <h4>Spark25 day rate</h4>
+        <p><strong>Spark25</strong> is Spark Commodities’ assessment of Atlantic-basin LNG carrier day rates, in $/day. A higher day rate makes the same voyage dearer and shuts the US Gulf–Europe window more easily.</p>
+        <p>Spot <strong>Spark25S</strong> is published each assessment day: the window is 08:00–10:00 GMT and the print is at 10:00 GMT. Forward <strong>Spark25Fo</strong> is published on Tuesdays. The left side of the curve is illustrative. The right-hand point follows the current day rate. It is not a formal Spark assessment.</p>
+        <blockquote class="formula-box">
+          <p>Freight ($/MMBtu) = day rate ($/day) × round-trip days / cargo (MMBtu)</p>
+          <p>Cargo (MMBtu) = the 万 MMBtu input × 10,000</p>
+        </blockquote>
+        <p>The start is a 55,000 $/day rate, a 24-day round trip, and 360 万 MMBtu. A smaller cargo or a longer round trip raises unit freight.</p>
+        <h4>Delivered cost and the arb margin</h4>
+        <p><strong>TTF</strong> is the European hub price, in €/MWh here. It is what the cargo can sell for in Europe. The desk TTF is an illustrative input, not the ICE settlement. Delivered cost is summed in $/MMBtu, then converted to €/MWh.</p>
+        <blockquote class="formula-box">
+          <p>Boil-off ($/MMBtu) = laden days × 0.10%/day × FOB</p>
+          <p>Delivered ($/MMBtu) = FOB + freight + boil-off + port 0.12 + regas 0.35</p>
+          <p>Delivered (€/MWh) = delivered ($/MMBtu) × 3.412141633 / EURUSD</p>
+        </blockquote>
+        <blockquote class="formula-box">
+          <p>Arb margin (€/MWh) = TTF − delivered (€/MWh)</p>
+          <p>The window is open only when the margin is above 0.50 €/MWh</p>
+        </blockquote>
+        <p><strong>0.10%/day</strong> is 0.001. If laden days exceed the round trip, boil-off is overstated and the page says so. Port <strong>0.12</strong> and regas <strong>0.35</strong> are fixed $/MMBtu adders. <strong>3.412141633</strong> is MMBtu per MWh. <strong>EURUSD</strong> is dollars per euro, the ECB quoting convention. <strong>USDEUR</strong> is its reciprocal. <strong>0.50</strong> €/MWh is this desk’s illustrative threshold, not an exchange rule.</p>
+        <p>A positive margin means the European gas price covers the stack: US gas, the feedgas factor, the liquefaction fee, the Atlantic voyage, boil-off, port, and regas. US Gulf cargo then has a reason to point at Europe. A higher Henry Hub, liquefaction fee, or Spark25 day rate lifts delivered cost and compresses the margin.</p>
+        <h4>EURUSD</h4>
+        <p><strong>EURUSD</strong> is polled from Frankfurter about every 60 seconds, with an 8-second timeout, for the ECB reference rate. After a print arrives, an unlocked rate recalculates the arb and the diesel heat value immediately.</p>
+        <p>A failure keeps the last good print. If none has ever arrived, the page uses 1.1204. The reference rate is published on TARGET business days, around 16:00 CET. A manual rate stays locked until “Use reference” is pressed.</p>
+        <h3>End use</h3>
+        <h4>EU storage: the 80% rule and this page’s 90% tick</h4>
+        <p><strong>Working gas</strong> turns the stock percent into bcm. The winter draw depends on how cold it is. What is left at end-March is marked comfortable, balanced, tight, or exhausted.</p>
+        <blockquote class="formula-box">
+          <p>Working gas (bcm) = stock% / 100 × 104.5</p>
+          <p>Versus the five-year average = stock% − 93.2 percentage points</p>
+          <p>Scenario withdrawal (bcm) = 58 × (1 + HDD deviation)</p>
+          <p>End-March stock = starting working gas − scenario withdrawal</p>
+          <p>Comfortable ≥ 30 bcm, balanced ≥ 15 bcm, otherwise tight; below zero is exhausted</p>
+        </blockquote>
+        <p><strong>104.5</strong>, <strong>93.2%</strong>, and <strong>58</strong> are this page’s illustrative basis, not that day’s AGSI technical capacity and not an official five-year curve.</p>
+        <p>The legal <strong>80%</strong> was the first-year fill target for 2022. Regulation (EU) 2022/1032 required at least 80% of working-gas capacity before 1 November 2022, and at least <strong>90%</strong> before 1 November each year from 2023. The extended Regulation (EU) 2025/1733 still uses 90% as the annual target, but it must be met between 1 October and 1 December, and member states may deviate under market or technical stress.</p>
+        <p>This page does not use 80% in the math. The amber tick is an illustrative 1 November 90% target. Progress = current stock% / 90%. It is the same order of magnitude as the post-2023 legal fill, but the numbers on either side of the tick are an illustrative start, not the AGSI reading.</p>
+        <h4>Heating degree days (HDD)</h4>
+        <p><strong>HDD</strong> compresses cold into one number: degrees by which the daily mean sits below a 15.5°C base, summed. Colder weather means more heating gas.</p>
+        <p>The October–March “normal” bars are an illustrative Northwest Europe climate, not a Eurostat or meteorological series.</p>
+        <blockquote class="formula-box"><p>Scenario HDD = normal HDD × (1 + HDD deviation)</p></blockquote>
+        <p>The deviation slider scales both the columns and the 58 bcm withdrawal. A positive deviation is colder than normal, and end-March stocks finish lower.</p>
+        <h4>Diesel cracks and PADD 1</h4>
+        <p>The <strong>diesel crack</strong> is what is left of the product versus crude, in $/bbl. The crude leg is Brent. A wider crack gives refiners more reason to make diesel. A narrow or negative crack means diesel is cheap versus crude.</p>
+        <blockquote class="formula-box">
+          <p>Diesel crack ($/bbl) = product ($/bbl) − Brent ($/bbl)</p>
+          <p>$/gallon × 42 = $/bbl</p>
+          <p>$/tonne / 7.45 = $/bbl</p>
+        </blockquote>
+        <p>New York Harbor and the US Gulf are quoted in $/gallon. Rotterdam is $/tonne. <strong>42</strong> gallons per barrel and <strong>7.45</strong> barrels per tonne are this page’s conversions, not exchange settlements.</p>
+        <p><strong>PADD 1</strong> is the US East Coast. Low East Coast distillate stocks mean a thin buffer at the point of consumption. Tight stocks and a wide crack mean products are tight. Thick stocks and a narrow crack mean supply has loosened.</p>
+        <p>The slider’s current value is written on the right-hand point of the curve. US distillate stocks move one for one with the East Coast versus its start.</p>
+        <blockquote class="formula-box"><p>Distillate stocks (million bbl) = 121.6 + (current PADD 1 − 29.4)</p></blockquote>
+        <p>The East Coast is treated as the marginal change, not as EIA’s sum of five PADDs. The start is 121.6 million bbl for the US and 29.4 million bbl for PADD 1.</p>
+        <p>Gas and diesel are compared on one energy unit:</p>
+        <blockquote class="formula-box"><p>Diesel heat (€/MWh) = ($/tonne ÷ EURUSD) ÷ 11.83</p></blockquote>
+        <p><strong>11.83</strong> MWh per tonne matches a diesel lower heating value of 42.6 MJ/kg. When gas is above that heat value, this page marks a gas-to-oil incentive: users would rather burn oil. The bars on the right put Henry Hub, TTF, Rotterdam gasoil, and New York Harbor heating oil on one €/MWh scale. Henry Hub uses 3.412141633. Diesel uses 11.83.</p>
+        <h3>Sources and update frequency</h3>
+        <div class="table-wrap">
+          <table class="glossary-table">
+            <thead><tr><th>Indicator</th><th>Official source</th><th>Frequency</th><th>How this page uses it</th></tr></thead>
+            <tbody>
+              <tr><td>Henry Hub</td><td><a href="https://www.eia.gov/dnav/ng/hist/rngwhhdD.htm" target="_blank" rel="noopener noreferrer">EIA Henry Hub daily spot</a></td><td>Each business day, usually the prior business day</td><td>Feedstock in $/MMBtu. Multiply by 1.15, then it enters FOB. The desk print is an illustrative start.</td></tr>
+              <tr><td>WTI</td><td><a href="https://www.eia.gov/dnav/pet/hist/rwtcD.htm" target="_blank" rel="noopener noreferrer">EIA Cushing WTI daily spot</a></td><td>Each business day</td><td>Inland US crude benchmark, $/bbl. This page does not read it and it does not enter the crack.</td></tr>
+              <tr><td>Brent</td><td><a href="https://www.eia.gov/dnav/pet/hist/rbrteD.htm" target="_blank" rel="noopener noreferrer">EIA Europe Brent daily spot</a></td><td>Each business day</td><td>The crude leg, $/bbl. Diesel cracks subtract this price. The desk print is an illustrative input.</td></tr>
+              <tr><td>US refinery utilization</td><td><a href="https://www.eia.gov/petroleum/supply/weekly/" target="_blank" rel="noopener noreferrer">EIA Weekly Petroleum Status Report</a></td><td>Weekly, usually Wednesday 10:30 US Eastern, for the week ended the prior Friday</td><td>A refinery tightness reading only. It does not enter the arb or the crack.</td></tr>
+              <tr><td>LNG feedgas</td><td><a href="https://www.eia.gov/naturalgas/weekly/" target="_blank" rel="noopener noreferrer">EIA Natural Gas Weekly</a></td><td>Usually Thursday</td><td>The official series is physical pipeline gas into plants. The 1.15 here is a fuel-gas factor, not that series.</td></tr>
+              <tr><td>Spark25</td><td><a href="https://www.sparkcommodities.com/lng-freight/" target="_blank" rel="noopener noreferrer">Spark LNG Freight</a></td><td>Spot Spark25S at 10:00 GMT each assessment day; forward Spark25Fo on Tuesdays</td><td>Atlantic-basin day rate, $/day. The left side is illustrative. The right-hand point follows the input.</td></tr>
+              <tr><td>TTF</td><td><a href="https://www.ice.com/products/27996665/Dutch-TTF-Gas-Futures" target="_blank" rel="noopener noreferrer">ICE Dutch TTF</a></td><td>Continuous on trading days, settled each trading day</td><td>European sale price, €/MWh. The desk print is an illustrative input, not the ICE settlement.</td></tr>
+              <tr><td>EURUSD</td><td><a href="https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-usd.en.html" target="_blank" rel="noopener noreferrer">ECB euro reference rate</a>, via <a href="https://frankfurter.dev/" target="_blank" rel="noopener noreferrer">Frankfurter</a></td><td>Each TARGET business day, around 16:00 CET. This page polls about every 60 seconds</td><td>Dollars per euro. Used to turn $/MMBtu into €/MWh.</td></tr>
+              <tr><td>EU storage</td><td><a href="https://agsi.gie.eu/" target="_blank" rel="noopener noreferrer">GIE AGSI+</a>, <a href="https://eur-lex.europa.eu/eli/reg/2022/1032/oj" target="_blank" rel="noopener noreferrer">Regulation (EU) 2022/1032</a>, <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32025R1733" target="_blank" rel="noopener noreferrer">Regulation (EU) 2025/1733</a></td><td>AGSI+ updates each gas day, usually for the previous gas day</td><td>Stock levels are an AGSI+ idea. The legal 80% was the 1 November 2022 target. This page’s tick is an illustrative 90%.</td></tr>
+              <tr><td>HDD</td><td><a href="https://ec.europa.eu/eurostat/cache/metadata/en/nrg_chdd_esms.htm" target="_blank" rel="noopener noreferrer">Eurostat heating and cooling degree days</a></td><td>Monthly and annual statistics</td><td>October–March here is an illustrative climate, base 15.5°C, not the Eurostat series.</td></tr>
+              <tr><td>US distillate stocks</td><td><a href="https://www.eia.gov/dnav/pet/pet_stoc_wstk_dcu_nus_w.htm" target="_blank" rel="noopener noreferrer">EIA US stocks</a></td><td>Weekly, usually Wednesday 10:30 US Eastern</td><td>Total = 121.6 + (current PADD 1 − 29.4) million bbl, moving one for one with the East Coast.</td></tr>
+              <tr><td>PADD 1 distillate</td><td><a href="https://www.eia.gov/dnav/pet/pet_stoc_wstk_dcu_r10_w.htm" target="_blank" rel="noopener noreferrer">EIA PADD 1 stocks</a></td><td>Weekly, usually Wednesday 10:30 US Eastern</td><td>East Coast buffer, million bbl. The slider is written on the right-hand point. Start 29.4 million bbl.</td></tr>
+              <tr><td>Diesel crack</td><td>Crude leg: <a href="https://www.eia.gov/dnav/pet/hist/rbrteD.htm" target="_blank" rel="noopener noreferrer">EIA Europe Brent daily spot</a>. Product quotes here are illustrative</td><td>Brent each business day. The crack recalculates with the inputs</td><td>Product $/bbl minus Brent. Gallons × 42, tonnes / 7.45. Not an exchange settlement.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3 class="appendix">Appendix: maintaining the data</h3>
+        <p>This section is for the person who maintains the data. Reading the desk does not require it.</p>
+        <p>On load the page requests <span class="mono">data.json</span> in the same directory. The header snapshot prints the file’s <span class="mono">asOf</span> (shown in UTC) and the time the browser fetched the file. If the request fails, times out, or a required field does not match, the whole file is dropped and the inline fallback is used. The snapshot then says “Built-in fallback”. Sliders and price inputs still recalculate immediately on the loaded sheet. The Frankfurter EURUSD poll does not read this file.</p>
+        <p>Replace <span class="mono">data.json</span> as a whole. Do not edit the HTML. <span class="mono">index.html</span> and <span class="mono">transatlantic-energy-dashboard.html</span> stay identical. The parser does not read <span class="mono">schema</span>, <span class="mono">kind</span>, or <span class="mono">description</span>. The current file still sets <span class="mono">schema</span> to <span class="mono">energy-dashboard.data.v1</span> and <span class="mono">kind</span> to <span class="mono">illustrative</span>.</p>
+        <p>Required fields:</p>
+        <ul>
+          <li><span class="mono">asOf</span>: a non-empty ISO-8601 string.</li>
+          <li><span class="mono">seed</span>: every key below is a finite number, with <span class="mono">eurusd</span> &gt; 0 and <span class="mono">cargoWan</span> &gt; 0.
+            <ul>
+              <li><span class="mono">ttf</span>: €/MWh</li>
+              <li><span class="mono">hh</span>: $/MMBtu</li>
+              <li><span class="mono">eurusd</span>: dollars per euro, used only before a reference rate arrives</li>
+              <li><span class="mono">freight</span>: $/day</li>
+              <li><span class="mono">storagePct</span>, <span class="mono">hddDevPct</span>, <span class="mono">utilPct</span>: percent</li>
+              <li><span class="mono">padd1</span>: million bbl</li>
+              <li><span class="mono">brent</span>: $/bbl</li>
+              <li><span class="mono">nyh</span>, <span class="mono">usgc</span>: $/gallon</li>
+              <li><span class="mono">ara</span>: $/tonne</li>
+              <li><span class="mono">roundTripDays</span>, <span class="mono">ladenDays</span>: days</li>
+              <li><span class="mono">cargoWan</span>: 万 MMBtu</li>
+              <li><span class="mono">liq</span>: $/MMBtu</li>
+            </ul>
+          </li>
+          <li><span class="mono">series.hddNorm</span>: at least one month. Each item is <span class="mono">month</span> and <span class="mono">degreeDays</span>, or <span class="mono">[month, degree days]</span>.</li>
+          <li><span class="mono">series.gasPremiumEurPerMwh</span> and <span class="mono">series.dieselPremiumEurPerMwh</span>: €/MWh, same length as <span class="mono">series.hddNorm</span>.</li>
+          <li><span class="mono">series.spark25UsdPerDay</span>: $/day, at least two points.</li>
+          <li><span class="mono">series.padd1DistillateMillionBbl</span>: million bbl, at least two points.</li>
+          <li><span class="mono">inventory.usDistillateBaseMillionBbl</span> and <span class="mono">inventory.padd1BaseMillionBbl</span> may be present. The page does not read them. US distillate stays 121.6 + (current PADD 1 − 29.4).</li>
+        </ul>
+        <p>The current input overwrites the right-hand point. So the last <span class="mono">series.spark25UsdPerDay</span> point should equal <span class="mono">seed.freight</span>, and the last <span class="mono">series.padd1DistillateMillionBbl</span> point should equal <span class="mono">seed.padd1</span>.</p>
+        <p>These coefficients stay in the page. Replacing <span class="mono">data.json</span> does not change them: feedgas 1.15; boil-off 0.10%/day; port 0.12 $/MMBtu; regas 0.35 $/MMBtu; 3.412141633 MMBtu/MWh; window threshold 0.50 €/MWh; working-gas capacity 104.5 bcm; five-year average 93.2%; 1 November tick 90%; normal withdrawal 58 bcm; 42 gallons/bbl; 7.45 bbl/tonne; 11.83 MWh/tonne.</p>
       </div>
     </div>
   </div>
@@ -1541,6 +1681,191 @@
     var pointer = { over: null, x: 0, y: 0 };
     var lastChartSize = {};
 
+
+    function tr(zh, en) {
+      return document.documentElement.lang === "en" ? en : zh;
+    }
+    function monthLabel(name) {
+      if (document.documentElement.lang !== "en") return name;
+      var map = { "10月": "Oct", "11月": "Nov", "12月": "Dec", "1月": "Jan", "2月": "Feb", "3月": "Mar" };
+      return map[name] || name;
+    }
+    function toneText(label) {
+      if (document.documentElement.lang !== "en") return label;
+      var map = { "耗尽": "Exhausted", "紧张": "Tight", "平衡": "Balanced", "宽裕": "Comfortable" };
+      return map[label] || label;
+    }
+    function weekLabel(ago) {
+      if (ago === 0) return tr("当前", "Now");
+      return ago + tr("周前", "w ago");
+    }
+    function fxErr(msg) {
+      if (document.documentElement.lang !== "en") return msg;
+      var map = {
+        "超时": "timeout",
+        "失败": "failed",
+        "空序列": "empty series",
+        "无 USD": "no USD",
+        "内置回退无效": "built-in fallback is invalid",
+        "格式不符": "format does not match"
+      };
+      return map[msg] || msg;
+    }
+    var STR = {
+      title: ["跨大西洋冬季能源平衡与套利看板", "Transatlantic winter energy balance and arbitrage"],
+      sub: [
+        '沿"上游原料 → 加工/液化 → 跨洋海运 → 终端消费"一条链读 12 项指标：欧洲气库还缺多少、美湾 LNG 往哪走、柴油紧到什么程度、冬天冷一<span class="keep">点会怎样。</span>',
+        'Read 12 indicators along feedstock → liquefaction → ocean freight → end use: how short European storage is, where US Gulf LNG is pointed, how tight diesel is, and what a colder <span class="keep">winter does.</span>'
+      ],
+      "stamp-label": ["数据快照", "Snapshot"],
+      "glossary-btn": ["指标说明与更新频率（Glossary）", "Indicator notes and update frequency (Glossary)"],
+      "stamp-note": ["各指标日期见卡片标注", "Dates for each indicator are marked on the cards."],
+      sim: ["示意跳动", "Illustrative ticks"],
+      "sim-title": ["未锁定的示意价格会轻微向起点回归，用来在没有行情接口时保持看板更新", "Unlocked illustrative prices drift slightly back toward the start so the desk keeps moving without a live feed"],
+      reset: ["恢复示意起点", "Restore the start"],
+      locked: ["已锁定", "Locked"],
+      g1: ["上游/原料报价", "Feedstock quotes"],
+      g2: ["加工/液化", "Liquefaction"],
+      g3: ["跨大西洋航运", "Ocean freight"],
+      g4: ["终端/供暖/柴油", "End use / heat / diesel"],
+      "u-mmbtu": ["美元/百万英热", "$/MMBtu"],
+      "u-day": ["美元/日", "$/day"],
+      "u-mwh": ["欧元/兆瓦时", "€/MWh"],
+      "lbl-brent": ["布伦特 <span class=\"u\">美元/桶</span>", "Brent <span class=\"u\">$/bbl</span>"],
+      "lbl-util": ["炼厂开工率 <span class=\"u\">%</span>", "Refinery runs <span class=\"u\">%</span>"],
+      "lbl-liqfee": ["液化费 <span class=\"u\">美元/百万英热</span>", "Liquefaction fee <span class=\"u\">$/MMBtu</span>"],
+      "lbl-voyage": ["往返运费 <span class=\"u\">美元/百万英热</span>", "Round-trip freight <span class=\"u\">$/MMBtu</span>"],
+      "lbl-heat": ["柴油热值 <span class=\"u\">欧元/兆瓦时</span>", "Diesel heat <span class=\"u\">€/MWh</span>"],
+      "k-gas": ["欧洲库存", "European storage"],
+      "k-arb": ["液化气套利", "LNG arbitrage"],
+      "k-pad": ["馏分油 / PADD 1", "Distillate / PADD 1"],
+      "mod-gas": ["欧洲天然气", "European gas"],
+      "badge-ill": ["示意", "Illustrative"],
+      "k-working": ["工作气量", "Working gas"],
+      "k-5y": ["较五年均值", "Vs 5-year average"],
+      "k-draw": ["采暖季抽取", "Winter withdrawal"],
+      "k-endmar": ["3月末", "End-March"],
+      "lbl-storage": ["起点库存", "Starting stock"],
+      "k-scen": ["3月末情景", "End-March scenario"],
+      "scen-warm": ["偏暖", "Mild"],
+      "scen-norm": ["正常", "Normal"],
+      "scen-cold": ["偏冷", "Cold"],
+      "lbl-hdd": ["采暖度日偏离", "HDD deviation"],
+      "gas-formula": [
+        '抽取 = 58 bcm ×（1 + 偏离）。宽裕 ≥ 30 bcm，平衡 ≥ 15 bcm，否则<span class="keep">紧张。</span>',
+        'Withdrawal = 58 bcm × (1 + deviation). Comfortable ≥ 30 bcm, balanced ≥ 15 bcm, otherwise <span class="keep">tight.</span>'
+      ],
+      "leg-norm": ["常年", "Normal"],
+      "leg-scen": ["情景", "Scenario"],
+      "mod-ship": ["海运与套利 · 美湾到西北欧", "Shipping and arb · US Gulf to NWE"],
+      "lbl-in-ttf": ["TTF（欧元/兆瓦时）", "TTF (€/MWh)"],
+      "lbl-in-hh": ["Henry Hub（美元/百万英热）", "Henry Hub ($/MMBtu)"],
+      "lbl-fx": ["汇率", "FX"],
+      "use-fx": ["采用参考价", "Use reference"],
+      "lbl-in-freight": ["Spark25 日租金（美元/日）", "Spark25 day rate ($/day)"],
+      "lbl-days": ["往返天数", "Round-trip days"],
+      "lbl-laden": ["装载天数", "Laden days"],
+      "lbl-cargo": ["货量（万百万英热）", "Cargo (万 MMBtu)"],
+      "lbl-liq": ["液化费（美元/百万英热）", "Liquefaction fee ($/MMBtu)"],
+      "voyage-warn": [
+        '装载天数大于往返天数，蒸发气近似会被<span class="keep">高估。</span>',
+        'Laden days exceed the round trip, so boil-off is overstated<span class="keep">.</span>'
+      ],
+      "k-margin": ["套利边际（TTF − 交付）", "Arb margin (TTF − delivered)"],
+      "des-k": ["交付", "Delivered"],
+      "usd-k": ["合", "USD"],
+      "k-spark": ["Spark25 日租金", "Spark25 day rate"],
+      "spark-note": [
+        '右端点标出当前日租金。左侧是示意形状，不是 Spark Commodities 的正式<span class="keep">估价。</span>',
+        'The right-hand point is the current day rate. The left side is illustrative, not a Spark Commodities <span class="keep">assessment.</span>'
+      ],
+      "mod-ref": ["炼厂与中间馏分油", "Refining and middle distillate"],
+      "badge-week": ["周度示意", "Weekly illustrative"],
+      "k-util": ["美国炼厂开工率", "US refinery utilization"],
+      "k-dist": ["馏分油总库存", "Total distillate stocks"],
+      "k-padd": ["PADD 1 东岸", "PADD 1 East Coast"],
+      "h-crack": ["裂解", "Cracks"],
+      "lbl-in-brent": ["布伦特（美元/桶）", "Brent ($/bbl)"],
+      "lbl-in-nyh": ["纽约港柴油（美元/加仑）", "NYH diesel ($/gallon)"],
+      "lbl-in-usgc": ["美湾柴油（美元/加仑）", "USGC diesel ($/gallon)"],
+      "lbl-in-ara": ["鹿特丹柴油（美元/吨）", "Rotterdam diesel ($/tonne)"],
+      "th-name": ["基准", "Benchmark"],
+      "th-quote": ["报价", "Quote"],
+      "th-bbl": ["美元/桶", "$/bbl"],
+      "th-crack": ["对布伦特裂解", "Crack vs Brent"],
+      "crack-note": [
+        '裂解 = 成品美元/桶 − 布伦特。加仑按 42，吨按 7.45。示意<span class="keep">口径。</span>',
+        'Crack = product $/bbl − Brent. Gallons × 42, tonnes / 7.45. Illustrative <span class="keep">basis.</span>'
+      ],
+      "h-parity": ["热值横比", "Heat-value bars"],
+      "src-h": ["来源", "Sources"],
+      "src-hh": ["EIA 日度现货", "EIA daily spot"],
+      "src-wti": ["EIA 库欣现货", "EIA Cushing spot"],
+      "src-brent-name": ["布伦特", "Brent"],
+      "src-brent": ["EIA 欧洲布伦特", "EIA Europe Brent"],
+      "src-daily": ['每<span class="keep">个工作日</span>', 'Each <span class="keep">business day</span>'],
+      "src-util-name": ["炼厂开工率", "Refinery utilization"],
+      "src-util": ["EIA 周度石油供应报告", "EIA weekly petroleum status"],
+      "src-util-when": ['每周，通常美东<span class="keep">周三 10:30</span>', 'Weekly, usually <span class="keep">Wed 10:30 ET</span>'],
+      "src-spark-when": ['现货每个评估日 <span class="keep">10:00 GMT</span>', 'Spot each assessment day <span class="keep">10:00 GMT</span>'],
+      "src-ttf": ["ICE 荷兰 TTF", "ICE Dutch TTF"],
+      "src-ttf-when": ['交易<span class="keep">日结算</span>', 'Settled each <span class="keep">trading day</span>'],
+      "src-agsi-name": ["AGSI+ 库存", "AGSI+ storage"],
+      "src-agsi-when": ['每个<span class="keep">天然气日</span>', 'Each <span class="keep">gas day</span>'],
+      "src-hdd-name": ["采暖度日", "Heating degree days"],
+      "src-hdd-when": ['月度<span class="keep">、年度</span>', 'Monthly <span class="keep">and annual</span>'],
+      "src-fx-name": ["欧元兑美元", "Euro vs dollar"],
+      "src-ecb": ["欧洲央行参考汇率", "ECB reference rate"],
+      "src-fx-when": ['TARGET 工作日，本页约 <span class="keep">60 秒</span>', 'TARGET business days, this page about <span class="keep">every 60s</span>'],
+      "glossary-title": ["指标说明与更新频率", "Indicator notes and update frequency"],
+      close: ["关闭", "Close"],
+      "strip-aria": ["供应链概览", "Supply chain overview"],
+      "aria-gauge": ["欧洲工作气填充", "European working-gas fill"],
+      "aria-storage": ["采暖季起点库存百分比", "Starting winter storage percent"],
+      "aria-scen": ["采暖季冷暖情景", "Winter weather scenario"],
+      "aria-hdd": ["采暖度日偏离百分比", "Heating degree day deviation percent"],
+      "aria-hdd-chart": ["西北欧 10 月至 3 月采暖度日柱", "Northwest Europe October–March heating degree days"],
+      "aria-fx": ["欧元兑美元参考价", "Euro versus dollar reference rate"],
+      "aria-fall": ["离岸、运费、蒸发、港口、再气化，然后交付成本", "FOB, freight, boil-off, port, regas, then delivered cost"],
+      "aria-spark": ["Spark25 日租金示意轨迹", "Illustrative Spark25 day-rate path"],
+      "aria-util": ["美国炼厂开工率示意曲线", "Illustrative US refinery utilization"],
+      "aria-dist": ["美国馏分油总库存示意曲线", "Illustrative US distillate stocks"],
+      "aria-padd": ["PADD 1 东岸馏分油库存示意曲线", "Illustrative PADD 1 East Coast distillate stocks"],
+      "aria-parity": ["Henry Hub、TTF、瓦斯油与取暖油的欧元每兆瓦时横比", "Henry Hub, TTF, gasoil, and heating oil in euro per MWh"]
+    };
+    function applyStatic() {
+      var en = document.documentElement.lang === "en";
+      document.querySelectorAll("[data-i18n]").forEach(function (el) {
+        var pair = STR[el.getAttribute("data-i18n")];
+        if (!pair) return;
+        var value = en ? pair[1] : pair[0];
+        if (el.getAttribute("data-i18n-mode") === "html") el.innerHTML = value;
+        else el.textContent = value;
+      });
+      document.querySelectorAll("[data-i18n-aria]").forEach(function (el) {
+        var pair = STR[el.getAttribute("data-i18n-aria")];
+        if (pair) el.setAttribute("aria-label", en ? pair[1] : pair[0]);
+      });
+      document.querySelectorAll("[data-i18n-title]").forEach(function (el) {
+        var pair = STR[el.getAttribute("data-i18n-title")];
+        if (pair) el.setAttribute("title", en ? pair[1] : pair[0]);
+      });
+      if (STR.title) document.title = en ? STR.title[1] : STR.title[0];
+      var zhBtn = document.getElementById("lang-zh");
+      var enBtn = document.getElementById("lang-en");
+      if (zhBtn) zhBtn.setAttribute("aria-pressed", en ? "false" : "true");
+      if (enBtn) enBtn.setAttribute("aria-pressed", en ? "true" : "false");
+      var described = document.querySelector(".modal-panel");
+      if (described) described.setAttribute("aria-describedby", en ? "glossary-intro-en" : "glossary-intro");
+    }
+    function setLang(code) {
+      document.documentElement.lang = code === "en" ? "en" : "zh-CN";
+      try { localStorage.setItem("desk-lang", code === "en" ? "en" : "zh"); } catch (e) {}
+      applyStatic();
+      if (typeof updateThemeButton === "function") updateThemeButton();
+      if (typeof recompute === "function") recompute();
+    }
+
     function byId(id) { return document.getElementById(id); }
     function clamp(n, a, b) { return Math.min(b, Math.max(a, n)); }
     function fmt(n, d) {
@@ -1675,7 +2000,10 @@
       }));
       var label = svgText(svg, tx, y - 8, "90%", "barlab", "middle");
       label.setAttribute("font-size", "13");
-      svg.setAttribute("aria-label", "欧洲工作气填充 " + pct.toFixed(1) + "%，琥珀色刻度是 90% 法定目标");
+      svg.setAttribute("aria-label", tr(
+        "欧洲工作气填充 " + pct.toFixed(1) + "%，琥珀色刻度是 90% 法定目标",
+        "European working-gas fill " + pct.toFixed(1) + "%, amber tick is the 90% statutory target"
+      ));
     }
 
     function drawWaterfall(svg, steps) {
@@ -1684,7 +2012,7 @@
       clearSvg(svg);
       var total = steps.reduce(function (a, s) { return a + s.value; }, 0);
       var rows = steps.map(function (s) { return { name: s.name, value: s.value, color: s.color, full: false }; });
-      rows.push({ name: "交付", value: total, color: "var(--text)", full: true });
+      rows.push({ name: tr("交付", "DES"), value: total, color: "var(--text)", full: true });
       var pad = { l: 58, r: 56, t: 6, b: 6 };
       var innerW = Math.max(40, box.w - pad.l - pad.r);
       var rowH = (box.h - pad.t - pad.b) / rows.length;
@@ -1714,8 +2042,8 @@
         xs.push((x1 + x2) / 2);
         tips.push([
           { text: s.name, strong: true },
-          { text: fmt(s.value, 2) + " 美元/百万英热", swatch: s.color },
-          { text: s.full ? "交付合计" : "累计 " + fmt(s.full ? s.value : cum, 2) }
+          { text: fmt(s.value, 2) + tr(" 美元/百万英热", " $/MMBtu"), swatch: s.color },
+          { text: s.full ? tr("交付合计", "Delivered total") : tr("累计 ", "Running ") + fmt(s.full ? s.value : cum, 2) }
         ]);
       });
       var guide = el("line", { y1: pad.t, y2: box.h - pad.b, "class": "guide", visibility: "hidden" });
@@ -1724,7 +2052,7 @@
       svg._hit = {
         xs: xs,
         guide: guide,
-        tip: function (i) { return tips[i] || [{ text: "无数据" }]; }
+        tip: function (i) { return tips[i] || [{ text: tr("无数据", "No data") }]; }
       };
     }
 
@@ -1822,7 +2150,7 @@
       var innerH = box.h - pad.t - pad.b;
       var labels = modelSpec.labels;
       if (!labels.length || !modelSpec.series.length) {
-        svgText(svg, box.w / 2, box.h / 2, modelSpec.empty || "暂无数据", "muted", "middle");
+        svgText(svg, box.w / 2, box.h / 2, modelSpec.empty || tr("暂无数据", "No data"), "muted", "middle");
         svg._hit = null;
         return;
       }
@@ -1916,7 +2244,7 @@
       var vals = [];
       modelSpec.series.forEach(function (s) { vals = vals.concat(s.values); });
       if (!labels.length) {
-        svgText(svg, box.w / 2, box.h / 2, "暂无数据", "muted", "middle");
+        svgText(svg, box.w / 2, box.h / 2, tr("暂无数据", "No data"), "muted", "middle");
         svg._hit = null;
         return;
       }
@@ -1993,10 +2321,10 @@
         guide: guide,
         tip: function (i) {
           var r = rows[i];
-          if (!r) return [{ text: "无数据" }];
+          if (!r) return [{ text: tr("无数据", "No data") }];
           return [
             { text: r.name, strong: true },
-            { text: fmt(r.value, 2) + " 欧元/兆瓦时", swatch: r.color }
+            { text: fmt(r.value, 2) + tr(" 欧元/兆瓦时", " €/MWh"), swatch: r.color }
           ];
         }
       };
@@ -2009,16 +2337,16 @@
         var asOfText = dataMeta.asOf;
         var asOfDate = new Date(dataMeta.asOf);
         if (Number.isFinite(asOfDate.getTime())) asOfText = stamp(asOfDate);
-        node.textContent = "asOf " + asOfText + " · 取得于 " + stamp(dataMeta.fetchedAt);
+        node.textContent = "asOf " + asOfText + " · " + tr("取得于 ", "Fetched ") + stamp(dataMeta.fetchedAt);
         node.title = "";
         return;
       }
       if (dataMeta.status === "fallback") {
-        node.textContent = "内置回退（data.json 未能读取）";
-        node.title = dataMeta.error ? ("data.json：" + dataMeta.error) : "";
+        node.textContent = tr("内置回退（data.json 未能读取）", "Built-in fallback (data.json could not be read)");
+        node.title = dataMeta.error ? (tr("data.json：", "data.json: ") + fxErr(dataMeta.error)) : "";
         return;
       }
-      node.textContent = "正在读取 data.json";
+      node.textContent = tr("正在读取 data.json", "Reading data.json");
       node.title = "";
     }
 
@@ -2069,21 +2397,27 @@
       drawGauge(state.storagePct);
       setText("gas-pct", fmt(state.storagePct, 1) + "%");
       setNote("gas-progress", state.storagePct >= NOV1_TARGET
-        ? "11月1日 90% 注入目标已达成（进度 " + fmt(m.progress, 0) + "%）。琥珀色刻度是目标。"
-        : "距 11月1日 90% 注入目标还差 " + fmt(NOV1_TARGET - state.storagePct, 1) + " 个百分点。");
+        ? tr(
+          "11月1日 90% 注入目标已达成（进度 " + fmt(m.progress, 0) + "%）。琥珀色刻度是目标。",
+          "The 1 Nov 90% fill target is met (progress " + fmt(m.progress, 0) + "%). The amber tick is the target."
+        )
+        : tr(
+          "距 11月1日 90% 注入目标还差 " + fmt(NOV1_TARGET - state.storagePct, 1) + " 个百分点。",
+          "Short of the 1 Nov 90% fill target by " + fmt(NOV1_TARGET - state.storagePct, 1) + " percentage points."
+        ));
       setText("gas-bcm", fmt(m.bcm, 1) + " bcm");
-      setText("gas-vs5y", signed(m.vs5y, 1) + " 个百分点");
+      setText("gas-vs5y", signed(m.vs5y, 1) + tr(" 个百分点", " pp"));
       setText("gas-draw", fmt(m.draw, 1) + " bcm");
       var endText = m.end < 0
-        ? "短缺 " + fmt(-m.end, 1) + " bcm"
-        : fmt(m.end, 1) + " bcm（" + fmt(m.end / CAPACITY_BCM * 100, 0) + "%）";
+        ? tr("短缺 ", "Short ") + fmt(-m.end, 1) + " bcm"
+        : fmt(m.end, 1) + " bcm" + tr("（", " (") + fmt(m.end / CAPACITY_BCM * 100, 0) + tr("%）", "%)");
       setText("gas-end", endText);
-      setText("gas-end-big", m.end < 0 ? "短缺 " + fmt(-m.end, 1) : fmt(m.end, 1));
+      setText("gas-end-big", m.end < 0 ? tr("短缺 ", "Short ") + fmt(-m.end, 1) : fmt(m.end, 1));
       var pill = byId("gas-status");
-      pill.textContent = m.toneLabel;
+      pill.textContent = toneText(m.toneLabel);
       pill.className = "pill " + (m.tone === "ok" ? "is-ok" : m.tone === "warn" ? "is-warn" : "is-bad");
-      setText("hdd-out", "较常年 " + signed(state.hddDevPct, 0) + "%");
-      var labels = HDD_NORM.map(function (row) { return row[0]; });
+      setText("hdd-out", tr("较常年 ", "Vs normal ") + signed(state.hddDevPct, 0) + "%");
+      var labels = HDD_NORM.map(function (row) { return monthLabel(row[0]); });
       var base = HDD_NORM.map(function (row) { return row[1]; });
       var factor = 1 + state.hddDevPct / 100;
       var scen = base.map(function (v) { return v * factor; });
@@ -2093,19 +2427,22 @@
         labels: labels,
         valueLabels: true,
         series: [
-          { name: "常年", color: "var(--faint)", values: base },
-          { name: "情景", color: "var(--gas)", values: scen }
+          { name: tr("常年", "Normal"), color: "var(--faint)", values: base },
+          { name: tr("情景", "Scenario"), color: "var(--gas)", values: scen }
         ],
         yFmt: function (v) { return Math.round(v).toString(); },
         tip: function (i) {
           return [
             { text: labels[i], strong: true },
-            { text: "常年 " + fmt(base[i], 0) + " 度日", swatch: "var(--faint)" },
-            { text: "情景 " + fmt(scen[i], 0) + " 度日", swatch: "var(--gas)" }
+            { text: tr("常年 ", "Normal ") + fmt(base[i], 0) + tr(" 度日", " HDD"), swatch: "var(--faint)" },
+            { text: tr("情景 ", "Scenario ") + fmt(scen[i], 0) + tr(" 度日", " HDD"), swatch: "var(--gas)" }
           ];
         }
       });
-      setNote("hdd-note", "常年合计 " + fmt(totalN, 0) + " 度日，情景合计 " + fmt(totalS, 0) + " 度日。基温 15.5°C，西北欧综合示意气候态。");
+      setNote("hdd-note", tr(
+        "常年合计 " + fmt(totalN, 0) + " 度日，情景合计 " + fmt(totalS, 0) + " 度日。基温 15.5°C，西北欧综合示意气候态。",
+        "Normal total " + fmt(totalN, 0) + " HDD, scenario total " + fmt(totalS, 0) + " HDD. Base 15.5°C, illustrative Northwest Europe climate."
+      ));
       byId("storage-range").setAttribute("aria-valuetext", fmt(state.storagePct, 1) + "%");
       byId("hdd-range").setAttribute("aria-valuetext", signed(state.hddDevPct, 0) + "%");
       [["scen-warm", -12], ["scen-norm", 0], ["scen-cold", 12]].forEach(function (pair) {
@@ -2114,11 +2451,20 @@
     }
 
     function renderInsights(m) {
-      var season = state.hddDevPct > 2 ? "偏冷" : state.hddDevPct < -2 ? "偏暖" : "正常";
-      var endBit = m.end < 0 ? "短缺 " + fmt(-m.end, 1) : fmt(m.end, 1);
-      setNote("insight-gas", "库存 " + fmt(state.storagePct, 1) + "%（" + fmt(m.bcm, 1) + " bcm），较五年均值 " + signed(m.vs5y, 1) + " 个百分点。" + season + "情景抽取 " + fmt(m.draw, 1) + " bcm，3 月末 " + endBit + " bcm，" + m.toneLabel + "。");
-      setNote("insight-arb", "美湾到西北欧边际 " + signed(m.marginEur, 2) + " 欧元/兆瓦时，窗口" + (m.open ? "开启" : "关闭") + "。交付 " + fmt(m.desEur, 2) + "，TTF " + fmt(state.ttf, 2) + "。");
-      setNote("insight-pad", "PADD 1 东岸 " + fmt(state.padd1, 1) + " 百万桶，全美馏分油 " + fmt(m.distillate, 1) + " 百万桶。鹿特丹对布伦特裂解 " + signed(m.araBbl - state.brent, 2) + " 美元/桶。");
+      var season = state.hddDevPct > 2 ? tr("偏冷", "Cold") : state.hddDevPct < -2 ? tr("偏暖", "Mild") : tr("正常", "Normal");
+      var endBit = m.end < 0 ? tr("短缺 ", "short ") + fmt(-m.end, 1) : fmt(m.end, 1);
+      setNote("insight-gas", tr(
+        "库存 " + fmt(state.storagePct, 1) + "%（" + fmt(m.bcm, 1) + " bcm），较五年均值 " + signed(m.vs5y, 1) + " 个百分点。" + season + "情景抽取 " + fmt(m.draw, 1) + " bcm，3 月末 " + endBit + " bcm，" + toneText(m.toneLabel) + "。",
+        "Storage " + fmt(state.storagePct, 1) + "% (" + fmt(m.bcm, 1) + " bcm), " + signed(m.vs5y, 1) + " pp vs the 5-year average. " + season + " scenario withdraws " + fmt(m.draw, 1) + " bcm; end-March " + endBit + " bcm, " + toneText(m.toneLabel) + "."
+      ));
+      setNote("insight-arb", tr(
+        "美湾到西北欧边际 " + signed(m.marginEur, 2) + " 欧元/兆瓦时，窗口" + (m.open ? "开启" : "关闭") + "。交付 " + fmt(m.desEur, 2) + "，TTF " + fmt(state.ttf, 2) + "。",
+        "US Gulf to NWE margin " + signed(m.marginEur, 2) + " €/MWh, window " + (m.open ? "open" : "shut") + ". Delivered " + fmt(m.desEur, 2) + ", TTF " + fmt(state.ttf, 2) + "."
+      ));
+      setNote("insight-pad", tr(
+        "PADD 1 东岸 " + fmt(state.padd1, 1) + " 百万桶，全美馏分油 " + fmt(m.distillate, 1) + " 百万桶。鹿特丹对布伦特裂解 " + signed(m.araBbl - state.brent, 2) + " 美元/桶。",
+        "PADD 1 East Coast " + fmt(state.padd1, 1) + " million bbl, US distillate " + fmt(m.distillate, 1) + " million bbl. Rotterdam crack vs Brent " + signed(m.araBbl - state.brent, 2) + " $/bbl."
+      ));
     }
 
     function renderFx(m) {
@@ -2129,34 +2475,51 @@
       banner.hidden = false;
       banner.className = "banner";
       if (fx.status === "pending") {
-        banner.textContent = "正在读取欧洲央行参考价。计算已用回退汇率 " + fmt(m.eurusd, 4) + "，界面不会等待。";
-        badge.textContent = "汇率待取";
+        banner.textContent = tr(
+          "正在读取欧洲央行参考价。计算已用回退汇率 " + fmt(m.eurusd, 4) + "，界面不会等待。",
+          "Reading the ECB reference rate. Calculations use fallback " + fmt(m.eurusd, 4) + " and the page does not wait."
+        );
+        badge.textContent = tr("汇率待取", "FX pending");
         badge.className = "badge";
       } else if (fx.status === "error") {
         banner.className = "banner is-bad";
-        banner.textContent = "汇率源失败（" + fx.error + "）。已沿用回退 EURUSD " + fmt(FX_FALLBACK, 4) + "，套利和热值仍可计算。";
-        badge.textContent = "汇率回退";
+        banner.textContent = tr(
+          "汇率源失败（" + fx.error + "）。已沿用回退 EURUSD " + fmt(FX_FALLBACK, 4) + "，套利和热值仍可计算。",
+          "FX source failed (" + fxErr(fx.error) + "). Using fallback EURUSD " + fmt(FX_FALLBACK, 4) + "; arb and heat values still compute."
+        );
+        badge.textContent = tr("汇率回退", "FX fallback");
         badge.className = "badge";
       } else if (fx.status === "stale") {
         banner.className = "banner is-warn";
-        banner.textContent = "汇率刷新失败（" + fx.error + "）。沿用上次成功值 EURUSD " + fmt(fx.rate, 4) + "（" + fx.date + "）。";
-        badge.textContent = "汇率沿用";
+        banner.textContent = tr(
+          "汇率刷新失败（" + fx.error + "）。沿用上次成功值 EURUSD " + fmt(fx.rate, 4) + "（" + fx.date + "）。",
+          "FX refresh failed (" + fxErr(fx.error) + "). Keeping the last good EURUSD " + fmt(fx.rate, 4) + " (" + fx.date + ")."
+        );
+        badge.textContent = tr("汇率沿用", "FX held");
         badge.className = "badge";
       } else {
         banner.hidden = true;
-        badge.textContent = "汇率实时";
+        badge.textContent = tr("汇率实时", "FX live");
         badge.className = "badge badge-live";
-        meta = "ECB 参考价 " + fx.date + " · EURUSD " + fmt(fx.rate, 4) + " · 取得于 " + stamp(fx.fetchedAt) + " · Frankfurter";
+        meta = tr(
+          "ECB 参考价 " + fx.date + " · EURUSD " + fmt(fx.rate, 4) + " · 取得于 " + stamp(fx.fetchedAt) + " · Frankfurter",
+          "ECB reference " + fx.date + " · EURUSD " + fmt(fx.rate, 4) + " · fetched " + stamp(fx.fetchedAt) + " · Frankfurter"
+        );
       }
       if (state.pinned.eurusd && fx.rate) {
-        meta = (meta ? meta + "。 " : "") + "输入已手动覆盖，计算用 EURUSD " + fmt(state.eurusd, 4) + "。";
+        meta = (meta ? meta + tr("。 ", ". ") : "") + tr(
+          "输入已手动覆盖，计算用 EURUSD " + fmt(state.eurusd, 4) + "。",
+          "Manual override; calculations use EURUSD " + fmt(state.eurusd, 4) + "."
+        );
       }
-      setNote("fx-meta", meta || "来源：欧洲央行参考价，经 Frankfurter 读取。");
+      setNote("fx-meta", meta || tr("来源：欧洲央行参考价，经 Frankfurter 读取。", "Source: ECB reference rate, via Frankfurter."));
       var inverse = 1 / m.eurusd;
-      setText("fx-label", state.fxMode === "EURUSD" ? "EURUSD · 1 欧元兑美元" : "USDEUR · 1 美元兑欧元");
+      setText("fx-label", state.fxMode === "EURUSD"
+        ? tr("EURUSD · 1 欧元兑美元", "EURUSD · 1 euro in dollars")
+        : tr("USDEUR · 1 美元兑欧元", "USDEUR · 1 dollar in euros"));
       setNote("fx-inverse", state.fxMode === "EURUSD"
-        ? "另一标价 USDEUR（欧元/美元） " + fmt(inverse, 4)
-        : "另一标价 EURUSD（美元/欧元） " + fmt(m.eurusd, 4));
+        ? tr("另一标价 USDEUR（欧元/美元） ", "Other quote USDEUR (euro per dollar) ") + fmt(inverse, 4)
+        : tr("另一标价 EURUSD（美元/欧元） ", "Other quote EURUSD (dollar per euro) ") + fmt(m.eurusd, 4));
       byId("fx-eurusd").setAttribute("aria-pressed", state.fxMode === "EURUSD" ? "true" : "false");
       byId("fx-usdeur").setAttribute("aria-pressed", state.fxMode === "USDEUR" ? "true" : "false");
       byId("btn-use-fx").hidden = !(state.pinned.eurusd && fx.rate);
@@ -2165,14 +2528,14 @@
         labels: series.map(function (p) { return p.date.slice(5); }),
         series: series.length ? [{ name: "EURUSD", color: "var(--info)", values: series.map(function (p) { return p.rate; }), fill: "color-mix(in srgb, var(--info) 22%, transparent)" }] : [],
         zero: false,
-        empty: fx.status === "error" ? "汇率曲线暂无数据" : "正在读取汇率",
+        empty: fx.status === "error" ? tr("汇率曲线暂无数据", "No FX series yet") : tr("正在读取汇率", "Reading the rate"),
         yFmt: function (v) { return v.toFixed(3); },
         tip: function (i) {
-          if (!series[i]) return [{ text: "无数据" }];
+          if (!series[i]) return [{ text: tr("无数据", "No data") }];
           return [
             { text: series[i].date, strong: true },
             { text: "EURUSD " + fmt(series[i].rate, 4), swatch: "var(--info)" },
-            { text: "ECB 参考价 · Frankfurter" }
+            { text: tr("ECB 参考价 · Frankfurter", "ECB reference · Frankfurter") }
           ];
         }
       });
@@ -2184,40 +2547,45 @@
       margin.className = "kpi mono " + (m.marginEur >= 0 ? "pos" : "neg");
       var unit = document.createElement("span");
       unit.className = "unit";
-      unit.textContent = "欧元/兆瓦时";
+      unit.textContent = tr("欧元/兆瓦时", "€/MWh");
       margin.appendChild(unit);
-      setText("arb-margin-usd", "合 " + signed(m.marginUsd, 2) + " 美元/百万英热");
+      setText("arb-margin-usd", tr("合 ", "USD ") + signed(m.marginUsd, 2) + tr(" 美元/百万英热", " $/MMBtu"));
       var win = byId("arb-window");
-      win.textContent = m.open ? "窗口开启" : "窗口关闭";
+      win.textContent = m.open ? tr("窗口开启", "Window open") : tr("窗口关闭", "Window shut");
       win.className = "pill " + (m.open ? "is-open" : "is-shut");
-      setText("arb-des-eur", fmt(m.desEur, 2) + " 欧元/兆瓦时");
-      setText("arb-des-usd", fmt(m.desUsd, 2) + " 美元/百万英热");
+      setText("arb-des-eur", fmt(m.desEur, 2) + tr(" 欧元/兆瓦时", " €/MWh"));
+      setText("arb-des-usd", fmt(m.desUsd, 2) + tr(" 美元/百万英热", " $/MMBtu"));
       drawWaterfall(byId("waterfall"), [
-        { name: "离岸", value: m.fob, color: "var(--info)" },
-        { name: "运费", value: m.freightUsd, color: "var(--accent)" },
-        { name: "蒸发", value: m.bog, color: "var(--diesel)" },
-        { name: "港口", value: PORT_USD, color: "var(--muted)" },
-        { name: "再气化", value: REGAS_USD, color: "var(--faint)" }
+        { name: tr("离岸", "FOB"), value: m.fob, color: "var(--info)" },
+        { name: tr("运费", "Freight"), value: m.freightUsd, color: "var(--accent)" },
+        { name: tr("蒸发", "BOG"), value: m.bog, color: "var(--diesel)" },
+        { name: tr("港口", "Port"), value: PORT_USD, color: "var(--muted)" },
+        { name: tr("再气化", "Regas"), value: REGAS_USD, color: "var(--faint)" }
       ]);
-      setNote("arb-formula", "交付 " + fmt(m.desUsd, 2) + " 美元/百万英热 = 115%×HH + 液化 + 运费 + 蒸发 + 0.12 + 0.35。货量 " +
-        fmt(m.cargo, 0) + " MMBtu。再 × 3.412141633 / EURUSD " + fmt(m.eurusd, 4) + " = " + fmt(m.desEur, 2) + " 欧元/兆瓦时。阈值 " + fmt(ARB_OPEN, 2) + "。");
+      setNote("arb-formula", tr(
+        "交付 " + fmt(m.desUsd, 2) + " 美元/百万英热 = 115%×HH + 液化 + 运费 + 蒸发 + 0.12 + 0.35。货量 " +
+          fmt(m.cargo, 0) + " MMBtu。再 × 3.412141633 / EURUSD " + fmt(m.eurusd, 4) + " = " + fmt(m.desEur, 2) + " 欧元/兆瓦时。阈值 " + fmt(ARB_OPEN, 2) + "。",
+        "Delivered " + fmt(m.desUsd, 2) + " $/MMBtu = 115%×HH + liquefaction + freight + boil-off + 0.12 + 0.35. Cargo " +
+          fmt(m.cargo, 0) + " MMBtu. Then × 3.412141633 / EURUSD " + fmt(m.eurusd, 4) + " = " + fmt(m.desEur, 2) + " €/MWh. Threshold " + fmt(ARB_OPEN, 2) + "."
+      ));
       byId("voyage-warn").hidden = state.ladenDays <= state.roundTripDays;
       var spark = SPARK_HIST.slice();
       spark[spark.length - 1] = state.freight;
       var sparkLabels = spark.map(function (_, i) {
-        var ago = spark.length - 1 - i;
-        return ago === 0 ? "当前" : ago + "周前";
+        return weekLabel(spark.length - 1 - i);
       });
       drawLine(byId("spark-chart"), {
         labels: sparkLabels,
         series: [{ name: "Spark25", color: "var(--accent)", values: spark, callout: fmt(spark[spark.length - 1], 0) }],
         zero: false,
-        yFmt: function (v) { return (v / 10000).toFixed(1) + "万"; },
+        yFmt: function (v) {
+          return document.documentElement.lang === "en" ? (v / 1000).toFixed(0) + "k" : (v / 10000).toFixed(1) + "万";
+        },
         tip: function (i) {
           return [
             { text: sparkLabels[i], strong: true },
-            { text: "日租金 " + fmt(spark[i], 0) + " 美元/日", swatch: "var(--accent)" },
-            { text: i === spark.length - 1 ? "跟随当前输入" : "示意轨迹" }
+            { text: tr("日租金 ", "Day rate ") + fmt(spark[i], 0) + tr(" 美元/日", " $/day"), swatch: "var(--accent)" },
+            { text: i === spark.length - 1 ? tr("跟随当前输入", "Follows the current input") : tr("示意轨迹", "Illustrative path") }
           ];
         }
       });
@@ -2225,45 +2593,42 @@
 
     function renderRefining(m) {
       setText("util-out", fmt(state.utilPct, 1) + "%");
-      setText("distillate-out", fmt(m.distillate, 1) + " 百万桶");
-      setNote("distillate-note", "随东岸库存同量增减，起点 " + fmt(BASE_DISTILLATE, 1) + " 百万桶。");
-      setText("padd-out", fmt(state.padd1, 1) + " 百万桶");
+      setText("distillate-out", fmt(m.distillate, 1) + tr(" 百万桶", " million bbl"));
+      setNote("distillate-note", tr(
+        "随东岸库存同量增减，起点 " + fmt(BASE_DISTILLATE, 1) + " 百万桶。",
+        "Moves one-for-one with East Coast stocks, from " + fmt(BASE_DISTILLATE, 1) + " million bbl."
+      ));
+      setText("padd-out", fmt(state.padd1, 1) + tr(" 百万桶", " million bbl"));
       var padd = PADD_HIST.slice();
       padd[padd.length - 1] = state.padd1;
-      var paddLabels = padd.map(function (_, i) {
-        var ago = padd.length - 1 - i;
-        return ago === 0 ? "当前" : ago + "周前";
-      });
+      var paddLabels = padd.map(function (_, i) { return weekLabel(padd.length - 1 - i); });
       var utilShape = [94.1, 93.8, 93.4, 93.0, 92.6, 92.2, 91.9, 91.6, 91.2, 90.9, 91.1, 91.5, 91.8, 92.1, 91.7, 91.4];
       utilShape[utilShape.length - 1] = state.utilPct;
-      var utilLabels = utilShape.map(function (_, i) {
-        var ago = utilShape.length - 1 - i;
-        return ago === 0 ? "当前" : ago + "周前";
-      });
+      var utilLabels = utilShape.map(function (_, i) { return weekLabel(utilShape.length - 1 - i); });
       drawLine(byId("util-chart"), {
         labels: utilLabels,
-        series: [{ name: "开工率", color: "var(--diesel)", values: utilShape }],
+        series: [{ name: tr("开工率", "Runs"), color: "var(--diesel)", values: utilShape }],
         zero: false,
         yFmt: function (v) { return v.toFixed(0); },
         tip: function (i) {
           return [
             { text: utilLabels[i], strong: true },
             { text: fmt(utilShape[i], 1) + "%", swatch: "var(--diesel)" },
-            { text: i === utilShape.length - 1 ? "跟随当前输入" : "示意周度" }
+            { text: i === utilShape.length - 1 ? tr("跟随当前输入", "Follows the current input") : tr("示意周度", "Illustrative week") }
           ];
         }
       });
       var distSeries = padd.map(function (v) { return BASE_DISTILLATE + (v - BASE_PADD); });
       drawLine(byId("distillate-chart"), {
         labels: paddLabels,
-        series: [{ name: "馏分油", color: "var(--accent)", values: distSeries }],
+        series: [{ name: tr("馏分油", "Distillate"), color: "var(--accent)", values: distSeries }],
         zero: false,
         yFmt: function (v) { return v.toFixed(0); },
         tip: function (i) {
           return [
             { text: paddLabels[i], strong: true },
-            { text: fmt(distSeries[i], 1) + " 百万桶", swatch: "var(--accent)" },
-            { text: "121.6 +（东岸 − 29.4）" }
+            { text: fmt(distSeries[i], 1) + tr(" 百万桶", " million bbl"), swatch: "var(--accent)" },
+            { text: tr("121.6 +（东岸 − 29.4）", "121.6 + (East Coast − 29.4)") }
           ];
         }
       });
@@ -2275,21 +2640,21 @@
         tip: function (i) {
           return [
             { text: paddLabels[i], strong: true },
-            { text: fmt(padd[i], 1) + " 百万桶", swatch: "var(--info)" },
-            { text: "东岸馏分油 · 示意" }
+            { text: fmt(padd[i], 1) + tr(" 百万桶", " million bbl"), swatch: "var(--info)" },
+            { text: tr("东岸馏分油 · 示意", "East Coast distillate · illustrative") }
           ];
         }
       });
       var rows = [
-        ["布伦特", fmt(state.brent, 2) + " 美元/桶", fmt(state.brent, 2), null],
-        ["纽约港超低硫柴油", fmt(state.nyh, 3) + " 美元/加仑", fmt(m.nyhBbl, 2), m.nyhBbl - state.brent],
-        ["美湾超低硫柴油", fmt(state.usgc, 3) + " 美元/加仑", fmt(m.usgcBbl, 2), m.usgcBbl - state.brent],
-        ["鹿特丹柴油", fmt(state.ara, 1) + " 美元/吨", fmt(m.araBbl, 2), m.araBbl - state.brent]
+        [tr("布伦特", "Brent"), fmt(state.brent, 2) + tr(" 美元/桶", " $/bbl"), fmt(state.brent, 2), null],
+        [tr("纽约港超低硫柴油", "NYH ULSD"), fmt(state.nyh, 3) + tr(" 美元/加仑", " $/gal"), fmt(m.nyhBbl, 2), m.nyhBbl - state.brent],
+        [tr("美湾超低硫柴油", "USGC ULSD"), fmt(state.usgc, 3) + tr(" 美元/加仑", " $/gal"), fmt(m.usgcBbl, 2), m.usgcBbl - state.brent],
+        [tr("鹿特丹柴油", "Rotterdam diesel"), fmt(state.ara, 1) + tr(" 美元/吨", " $/t"), fmt(m.araBbl, 2), m.araBbl - state.brent]
       ];
       var body = byId("price-body");
       body.replaceChildren();
       rows.forEach(function (row) {
-        var tr = document.createElement("tr");
+        var rowEl = document.createElement("tr");
         var name = document.createElement("td");
         name.className = "name";
         name.textContent = row[0];
@@ -2306,21 +2671,30 @@
           crack.textContent = signed(row[3], 2);
           crack.className += row[3] >= 0 ? " pos" : " neg";
         }
-        tr.append(name, quote, bbl, crack);
-        body.appendChild(tr);
+        rowEl.append(name, quote, bbl, crack);
+        body.appendChild(rowEl);
       });
       var hhEur = state.hh * MMBTU_PER_MWH / m.eurusd;
       var heatOil = (state.nyh * GAL_PER_BBL * BBL_PER_T / DIESEL_MWH_PER_T) / m.eurusd;
       drawHBars(byId("parity-chart"), [
         { name: "Henry Hub", value: hhEur, color: "var(--info)" },
         { name: "TTF", value: state.ttf, color: "var(--gas)" },
-        { name: "瓦斯油", value: m.dieselEur, color: "var(--diesel)" },
-        { name: "取暖油", value: heatOil, color: "var(--accent)" }
+        { name: tr("瓦斯油", "Gasoil"), value: m.dieselEur, color: "var(--diesel)" },
+        { name: tr("取暖油", "Heat oil"), value: heatOil, color: "var(--accent)" }
       ]);
       var switchText = m.gap > 0
-        ? "TTF 高于瓦斯油热值 " + fmt(m.gap, 2) + " 欧元/兆瓦时，气转油激励出现。"
-        : "TTF 低于瓦斯油热值 " + fmt(-m.gap, 2) + " 欧元/兆瓦时，气转油激励未打开。";
-      setNote("switch-read", "四条都是欧元/兆瓦时。Henry Hub 按 3.412141633 换算，取暖油与瓦斯油按 11.83 兆瓦时/吨。" + switchText);
+        ? tr(
+          "TTF 高于瓦斯油热值 " + fmt(m.gap, 2) + " 欧元/兆瓦时，气转油激励出现。",
+          "TTF is " + fmt(m.gap, 2) + " €/MWh above gasoil heat value, so gas-to-oil switching is on."
+        )
+        : tr(
+          "TTF 低于瓦斯油热值 " + fmt(-m.gap, 2) + " 欧元/兆瓦时，气转油激励未打开。",
+          "TTF is " + fmt(-m.gap, 2) + " €/MWh below gasoil heat value, so gas-to-oil switching is off."
+        );
+      setNote("switch-read", tr(
+        "四条都是欧元/兆瓦时。Henry Hub 按 3.412141633 换算，取暖油与瓦斯油按 11.83 兆瓦时/吨。",
+        "All four bars are €/MWh. Henry Hub uses 3.412141633; heating oil and gasoil use 11.83 MWh/t. "
+      ) + switchText);
     }
 
     function renderLocks() {
@@ -2412,8 +2786,8 @@
     function updateThemeButton() {
       var dark = resolvedTheme() === "dark";
       var btn = byId("theme-toggle");
-      btn.textContent = dark ? "切换为浅色" : "切换为深色";
-      btn.setAttribute("aria-label", dark ? "切换为浅色主题" : "切换为深色主题");
+      btn.textContent = dark ? tr("切换为浅色", "Switch to light") : tr("切换为深色", "Switch to dark");
+      btn.setAttribute("aria-label", dark ? tr("切换为浅色主题", "Switch to the light theme") : tr("切换为深色主题", "Switch to the dark theme"));
     }
 
     function isoDay(d) { return d.toISOString().slice(0, 10); }
@@ -2659,6 +3033,7 @@
     }
 
     function init() {
+      applyStatic();
       auditFormulas();
       bindPositive("in-ttf", "ttf", 1, 400);
       bindPositive("in-hh", "hh", 0.2, 40);
@@ -2754,6 +3129,8 @@
         try { localStorage.setItem("desk-theme", next); } catch (e) {}
         updateThemeButton();
       });
+      byId("lang-zh").addEventListener("click", function () { setLang("zh"); });
+      byId("lang-en").addEventListener("click", function () { setLang("en"); });
       window.matchMedia("(prefers-color-scheme: light)").addEventListener("change", updateThemeButton);
       window.addEventListener("scroll", hideTip, true);
       if (window.ResizeObserver) {
@@ -2786,7 +3163,7 @@
     } catch (err) {
       var fatal = document.getElementById("fatal");
       fatal.hidden = false;
-      fatal.textContent = "看板脚本未能启动：" + (err && err.message ? err.message : err);
+      fatal.textContent = tr("看板脚本未能启动：", "The desk script failed to start: ") + (err && err.message ? err.message : err);
     }
   </script>
 </body>
