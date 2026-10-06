@@ -344,6 +344,7 @@ try {
   .legend b { width: 8px; height: 8px; display: inline-block; }
   .legend .ship { background: var(--ship); }
   .legend .ref { background: var(--ref); }
+  .legend .hdd { background: var(--gas); }
   svg.chart { width: 100%; height: auto; display: block; overflow: visible; }
   .tscroll { overflow-x: auto; max-width: 100%; }
   table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
@@ -493,9 +494,10 @@ try {
         </article>
       </div>
       <article class="panel">
-        <div class="panel-h"><h3 data-i18n="p-hdd">采暖度日</h3><span class="src" data-i18n="src-hdd">月 HDD = round((18 − 月均温) × 月天数)</span></div>
+        <div class="panel-h"><h3 data-i18n="p-hdd">取暖季平均气温与采暖度日（西北欧常年参考）</h3><span class="src" data-i18n="src-hdd">近似气候值 · HDD 基准 18 °C</span></div>
         <svg id="hddChart" class="chart" viewBox="0 0 720 200" role="img"></svg>
-        <p class="note" data-i18n="note-hdd">10–3 月均温 10.9／6.9／4.2／3.4／3.7／6.4℃，天数 31／30／31／31／28／31。纵轴 0–500。</p>
+        <p class="legend"><b class="hdd"></b><span data-i18n="lg-hdd">月度 HDD（柱）. 柱内数字为月均气温 °C，深色为 12–2 月核心期.</span></p>
+        <p class="note" data-i18n="note-hdd">12–2 月贡献全季约 60% 的 HDD，是日均去库速度和峰值负荷的决定窗口。实盘需以 ECMWF / GFS 集合预报的 HDD 偏差替换常年值，再代入上方情景滑块.</p>
       </article>
     </section>
 
@@ -658,9 +660,10 @@ try {
     "src-scen": ["季末 = 起点 − 55 ×（1 + 1.2 × HDD 偏离）", "End = start − 55 × (1 + 1.2 × HDD deviation)"],
     "lab-hdd": ["HDD 偏离", "HDD deviation"],
     "note-scen": ["横条是暖冬 −15%、常年 0%、冷冬 +15%，只随起点变化。滑块改的是上面的季末读数。低于 0 显示 0。低于 15 紧张，15 至 25 警戒，25 及以上宽裕。", "Bars are warm −15%, normal 0%, and cold +15%, and follow only the start. The slider changes the end-winter reading above. Below zero prints as 0. Below 15 is stressed, 15 to 25 is tight, 25 and above is comfortable."],
-    "p-hdd": ["采暖度日", "Heating degree days"],
-    "src-hdd": ["月 HDD = round((18 − 月均温) × 月天数)", "Monthly HDD = round((18 − mean °C) × days)"],
-    "note-hdd": ["10–3 月均温 10.9／6.9／4.2／3.4／3.7／6.4℃，天数 31／30／31／31／28／31。纵轴 0–500。", "October–March means 10.9 / 6.9 / 4.2 / 3.4 / 3.7 / 6.4°C, days 31 / 30 / 31 / 31 / 28 / 31. Axis 0–500."],
+    "p-hdd": ["取暖季平均气温与采暖度日（西北欧常年参考）", "Heating-season mean temperature and heating degree days (Northwest Europe normal-year reference)"],
+    "src-hdd": ["近似气候值 · HDD 基准 18 °C", "Approximate climate values · HDD base 18 °C"],
+    "lg-hdd": ["月度 HDD（柱）. 柱内数字为月均气温 °C，深色为 12–2 月核心期.", "Monthly HDD (bars). Figures inside the bars are the monthly mean °C, and the darker bars are the December–February core."],
+    "note-hdd": ["12–2 月贡献全季约 60% 的 HDD，是日均去库速度和峰值负荷的决定窗口。实盘需以 ECMWF / GFS 集合预报的 HDD 偏差替换常年值，再代入上方情景滑块.", "December–February contribute about 60% of the season's HDD, and that window sets the daily storage draw and peak load. A live book should replace the normal-year value with the HDD deviation from the ECMWF / GFS ensemble, then feed it into the scenario slider above."],
     m2: ["LNG 套利", "LNG arbitrage"],
     m2x: ["计算器默认 TTF 71.2、EUR/USD 1.136、Henry Hub 3.14、Spark25 25,500。快照和参考汇率不覆盖这些输入，除非你自己改。", "Calculator defaults are TTF 71.2, EUR/USD 1.136, Henry Hub 3.14, Spark25 25,500. The snapshot and the reference rate do not overwrite them until you edit an input."],
     "p-calc": ["套利计算器（USG → NWE）", "Arbitrage calculator (USG → NWE)"],
@@ -900,7 +903,7 @@ try {
     var W = 720, H = 200, max = 500;
     svg.setAttribute("viewBox", "0 0 " + W + " " + H);
     svg.replaceChildren();
-    var pad = { l: 40, r: 14, t: 12, b: 22 };
+    var pad = { l: 40, r: 14, t: 22, b: 22 };
     var iw = W - pad.l - pad.r;
     var ih = H - pad.t - pad.b;
     function yAt(v) { return pad.t + (1 - v / max) * ih; }
@@ -913,12 +916,39 @@ try {
     var gap = iw / values.length;
     var items = [];
     values.forEach(function (v, i) {
-      var x = pad.l + i * gap + gap * 0.22;
-      var bw = gap * 0.56;
-      var h = Math.max(0, pad.t + ih - yAt(v));
-      svg.appendChild(svgEl("rect", { x: x.toFixed(2), y: yAt(v).toFixed(2), width: bw.toFixed(2), height: h.toFixed(2), rx: "2", fill: "var(--gas)" }));
+      var x = pad.l + i * gap + gap * 0.18;
+      var bw = gap * 0.64;
+      var top = yAt(v);
+      var h = Math.max(0, pad.t + ih - top);
+      var core = i >= 2 && i <= 4;
+      svg.appendChild(svgEl("rect", {
+        x: x.toFixed(2), y: top.toFixed(2), width: bw.toFixed(2), height: h.toFixed(2), rx: "2",
+        fill: core ? "var(--gas)" : "#8eb6e7"
+      }));
+      var above = svgEl("text", {
+        x: (x + bw / 2).toFixed(1),
+        y: (top - 5).toFixed(1),
+        "text-anchor": "middle",
+        "font-size": "11",
+        "font-weight": "500",
+        fill: "var(--ink)",
+        "font-family": "\"IBM Plex Mono\",ui-monospace,Consolas,monospace"
+      });
+      above.textContent = fmt(v, 0);
+      svg.appendChild(above);
+      var inside = svgEl("text", {
+        x: (x + bw / 2).toFixed(1),
+        y: (top + h / 2 + 3.6).toFixed(1),
+        "text-anchor": "middle",
+        "font-size": "11",
+        fill: "#ffffff",
+        "font-family": "\"IBM Plex Mono\",ui-monospace,Consolas,monospace"
+      });
+      var temp = fmt(TEMP[i], 1) + "°C";
+      inside.textContent = temp;
+      svg.appendChild(inside);
       svgText(svg, x + bw / 2, H - 6, labels[i], "middle", false);
-      items.push({ x: x + bw / 2, text: labels[i] + "  " + fmt(v, 0) });
+      items.push({ x: x + bw / 2, text: labels[i] + "  " + fmt(v, 0) + "  " + temp });
     });
     bindTip(svg, items);
   }
