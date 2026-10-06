@@ -310,7 +310,7 @@ try {
   input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   .calc { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
   .field { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
-  .field label { font-size: 11.5px; color: var(--ink-2); }
+  .field label { font-size: 11.5px; color: var(--ink-3); }
   .field input, .crack-in {
     width: 100%;
     font-size: 14px;
@@ -323,20 +323,23 @@ try {
   input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
   input[type="number"]::-webkit-outer-spin-button,
   input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-  .wf { display: flex; flex-direction: column; gap: 6px; }
+  .wf { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
   .wf-row {
     display: grid;
-    grid-template-columns: minmax(7.5em, 12em) minmax(0, 1fr) auto;
-    gap: 8px;
+    grid-template-columns: 16em minmax(0, 1fr) 4.8em;
+    gap: 8px 12px;
     align-items: center;
-    font-size: 12.5px;
+    font-size: 13px;
   }
-  .wf-row.total { border-top: 1px solid var(--rule); padding-top: 6px; font-weight: 700; }
-  .track { height: 8px; background: var(--grid); border-radius: 4px; overflow: hidden; }
-  .track i { display: block; height: 100%; width: 0; background: var(--gas); }
-  .track i.cost { background: var(--ink-3); }
-  .track i.ok { background: var(--good); }
-  .track i.bad { background: var(--crit); }
+  .wf-row > span:first-child { white-space: nowrap; }
+  .wf-row .num { text-align: right; }
+  .wf-row.total { font-weight: 700; }
+  .track { height: 10px; background: var(--grid); border-radius: 999px; overflow: hidden; }
+  .track i { display: block; height: 100%; width: 0; border-radius: 999px; }
+  .arb-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+  #arb-simple { margin: 0; font-size: 13px; color: var(--ink-2); }
+  #calc-panel > .note { color: var(--ink-3); }
+  #chip-window { font-size: 12px; padding: 2px 8px; }
   .legend { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; font-size: 11.5px; color: var(--ink-2); margin: 0; }
   .legend b { width: 8px; height: 8px; display: inline-block; }
   .legend .ship { background: var(--ship); }
@@ -502,17 +505,20 @@ try {
         <p class="explain" data-i18n="m2x">计算器默认 TTF 71.2、EUR/USD 1.136、Henry Hub 3.14、Spark25 25,500。快照和参考汇率不覆盖这些输入，除非你自己改。</p>
       </div>
       <div class="grid g-wide">
-        <article class="panel">
-          <div class="panel-h"><h3 data-i18n="p-calc">套利计算器</h3><span class="src" data-i18n="src-calc">美元/百万英热</span></div>
+        <article class="panel" id="calc-panel">
+          <div class="panel-h"><h3 data-i18n="p-calc">套利计算器（USG → NWE）</h3><span class="src" data-i18n="src-calc">默认 9/29 快照，可改</span></div>
           <div class="calc">
-            <div class="field"><label for="in-ttf">TTF <span data-i18n="u-ttf">欧元/兆瓦时</span></label><input id="in-ttf" class="num" type="number" min="0" max="400" step="0.1" value="71.2"></div>
+            <div class="field"><label for="in-ttf">TTF €/MWh</label><input id="in-ttf" class="num" type="number" min="0" max="400" step="0.1" value="71.2"></div>
             <div class="field"><label for="in-fx">EUR/USD</label><input id="in-fx" class="num" type="number" min="0.5" max="2" step="0.001" value="1.136"></div>
-            <div class="field"><label for="in-hh">Henry Hub <span data-i18n="u-hh">美元/百万英热</span></label><input id="in-hh" class="num" type="number" min="0" max="40" step="0.01" value="3.14"></div>
-            <div class="field"><label for="in-spark">Spark25 <span data-i18n="u-day">美元/日</span></label><input id="in-spark" class="num" type="number" min="0" max="250000" step="100" value="25500"></div>
+            <div class="field"><label for="in-hh">Henry Hub $/MMBtu</label><input id="in-hh" class="num" type="number" min="0" max="40" step="0.01" value="3.14"></div>
+            <div class="field"><label for="in-spark" data-i18n="lab-spark">Spark25 $/天</label><input id="in-spark" class="num" type="number" min="0" max="250000" step="100" value="25500"></div>
           </div>
-          <p class="big num"><span id="profit-big">—</span><small>$/MMBtu</small> <span class="chip" id="chip-profit"><i></i><span></span></span></p>
           <div class="wf" id="waterfall"></div>
-          <p class="note" data-i18n="note-arb">全成本利润 = TTF×EURUSD/3.412 − 0.40 − (Spark25×30+1,000,000)/3,600,000 − 1.15×HH − 2.50。大于 1 打开，0 到 1 勉强，小于等于 0 关闭。负利润的条子宽度为 0。</p>
+          <div class="arb-foot">
+            <span class="chip" id="chip-window"><span></span></span>
+            <p class="note" id="arb-simple"></p>
+          </div>
+          <p class="note" data-i18n="note-arb">全成本口径：FOB = 1.15×HH + 液化费 $2.50；运费 = 日租金 × 30 天往返 + 燃料港杂费约 $100 万，摊到 3.6 百万 MMBtu 货量；再气化 $0.40。长约承购方的液化费已是沉没成本，短期装船决策只看 1.15×HH 这一可变成本，窗口比全成本口径更宽。</p>
         </article>
         <article class="panel">
           <div class="panel-h"><h3 data-i18n="p-spark">Spark25 日租金</h3><span class="src" data-i18n="src-spark">示意 · 纵轴 0–30,000</span></div>
@@ -657,12 +663,10 @@ try {
     "note-hdd": ["10–3 月均温 10.9／6.9／4.2／3.4／3.7／6.4℃，天数 31／30／31／31／28／31。纵轴 0–500。", "October–March means 10.9 / 6.9 / 4.2 / 3.4 / 3.7 / 6.4°C, days 31 / 30 / 31 / 31 / 28 / 31. Axis 0–500."],
     m2: ["LNG 套利", "LNG arbitrage"],
     m2x: ["计算器默认 TTF 71.2、EUR/USD 1.136、Henry Hub 3.14、Spark25 25,500。快照和参考汇率不覆盖这些输入，除非你自己改。", "Calculator defaults are TTF 71.2, EUR/USD 1.136, Henry Hub 3.14, Spark25 25,500. The snapshot and the reference rate do not overwrite them until you edit an input."],
-    "p-calc": ["套利计算器", "Arbitrage calculator"],
-    "src-calc": ["美元/百万英热", "$/MMBtu"],
-    "u-ttf": ["欧元/兆瓦时", "€/MWh"],
-    "u-hh": ["美元/百万英热", "$/MMBtu"],
-    "u-day": ["美元/日", "$/day"],
-    "note-arb": ["全成本利润 = TTF×EURUSD/3.412 − 0.40 − (Spark25×30+1,000,000)/3,600,000 − 1.15×HH − 2.50。大于 1 打开，0 到 1 勉强，小于等于 0 关闭。负利润的条子宽度为 0。", "Full-cost margin = TTF×EURUSD/3.412 − 0.40 − (Spark25×30+1,000,000)/3,600,000 − 1.15×HH − 2.50. Above 1 is open, above 0 through 1 is thin, at or below 0 is shut. A negative margin draws a bar of width 0."],
+    "p-calc": ["套利计算器（USG → NWE）", "Arbitrage calculator (USG → NWE)"],
+    "src-calc": ["默认 9/29 快照，可改", "Defaults are the 9/29 snapshot and can be edited"],
+    "lab-spark": ["Spark25 $/天", "Spark25 $/day"],
+    "note-arb": ["全成本口径：FOB = 1.15×HH + 液化费 $2.50；运费 = 日租金 × 30 天往返 + 燃料港杂费约 $100 万，摊到 3.6 百万 MMBtu 货量；再气化 $0.40。长约承购方的液化费已是沉没成本，短期装船决策只看 1.15×HH 这一可变成本，窗口比全成本口径更宽。", "Full-cost basis: FOB = 1.15×HH + a $2.50 liquefaction fee; freight = the day rate × a 30-day round trip + about $1 million of port and fuel, spread over 3.6 million MMBtu; regas $0.40. For a term offtaker the liquefaction fee is already sunk, so a prompt loading decision looks only at variable 1.15×HH, and the window is wider than the full-cost basis."],
     "p-spark": ["Spark25 日租金", "Spark25 day rate"],
     "src-spark": ["示意 · 纵轴 0–30,000", "Illustrative · axis 0–30,000"],
     "lg-blng": ["前段 BLNG2 示意点", "Early BLNG2 illustrative dots"],
@@ -993,23 +997,34 @@ try {
     document.getElementById("util-big").innerHTML = fmt(UTIL[UTIL.length - 1], 1) + "<small>%</small>";
     document.getElementById("dist-big").innerHTML = fmt(DIST[DIST.length - 1], 0) + "<small>" + pair(STR["u-kb"]) + "</small>";
     document.getElementById("padd-big").innerHTML = fmt(PADD[PADD.length - 1], 0) + "<small>" + pair(STR["u-kb"]) + "</small>";
-    document.getElementById("profit-big").textContent = fmt(cost.profit, 2);
-    setChip("chip-profit", aTone, arbWord(cost.profit));
-    var rows = [
-      [tr("TTF 美元价格", "TTF in dollars"), cost.ttfUsd, ""],
-      [tr("减再气化", "Less regas"), cost.regas, "cost"],
-      [tr("减海运", "Less freight"), cost.freight, "cost"],
-      [tr("减 1.15×HH 原料气", "Less 1.15×HH feedgas"), cost.feed, "cost"],
-      [tr("减液化费", "Less liquefaction"), cost.liq, "cost"]
-    ];
     var base = Math.max(cost.ttfUsd, 0.0001);
     var wf = document.getElementById("waterfall");
     wf.replaceChildren();
-    rows.forEach(function (row) {
-      wf.appendChild(wfRow(row[0], row[1], row[2], base, false));
+    [
+      [tr("TTF（美元计）", "TTF (USD)"), cost.ttfUsd, "var(--gas)", fmt(cost.ttfUsd, 2)],
+      [tr("−再气化", "−Regas"), cost.regas, "var(--ink-3)", "−" + fmt(cost.regas, 2)],
+      [tr("−海运（Spark25）", "−Freight (Spark25)"), cost.freight, "var(--good)", "−" + fmt(cost.freight, 2)],
+      [tr("−原料气 1.15×HH", "−Feedgas 1.15×HH"), cost.feed, "var(--oil)", "−" + fmt(cost.feed, 2)],
+      [tr("−液化费", "−Liquefaction"), cost.liq, "var(--ref)", "−" + fmt(cost.liq, 2)]
+    ].forEach(function (row) {
+      wf.appendChild(wfRow(row[0], row[1], row[2], base, false, row[3]));
     });
-    var profitClass = cost.profit > 0 ? "ok" : "bad";
-    wf.appendChild(wfRow(tr("全成本利润", "Full-cost margin"), Math.max(cost.profit, 0), profitClass, base, true, fmt(cost.profit, 2)));
+    wf.appendChild(wfRow(tr("全成本套利利润", "Full-cost arbitrage margin"), cost.profit, cost.profit > 0 ? "var(--good)" : "var(--crit)", base, true, fmt(cost.profit, 2)));
+    var win = document.getElementById("chip-window");
+    var winTone = cost.profit > 1 ? "good" : cost.profit > 0 ? "warn" : "crit";
+    var winText = cost.profit > 1
+      ? ["套利窗口打开 · 流向欧洲", "Arbitrage window open · Flowing to Europe"]
+      : cost.profit > 0
+        ? ["套利窗口很窄 · 勉强流向欧洲", "Arbitrage window thin · Barely flowing to Europe"]
+        : ["套利窗口关闭 · 不流向欧洲", "Arbitrage window shut · Not flowing to Europe"];
+    win.className = "chip " + winTone;
+    win.querySelector("span").textContent = pair(winText);
+    var simple = cost.ttfUsd - m.hh - cost.freight;
+    var share = cost.ttfUsd > 0 ? cost.freight / cost.ttfUsd * 100 : 0;
+    document.getElementById("arb-simple").textContent = tr(
+      "简化口径（TTF − HH − 运费）：$" + fmt(simple, 2) + "/MMBtu · 运费占 TTF " + fmt(share, 1) + "%",
+      "Simplified basis (TTF − HH − freight): $" + fmt(simple, 2) + "/MMBtu · Freight is " + fmt(share, 1) + "% of TTF"
+    );
     var lgoBbl = m.ara / 7.45;
     var hoBbl = m.nyh * 42;
     var usgcBbl = m.usgc * 42;
@@ -1067,7 +1082,7 @@ try {
     });
     renderSnap();
   }
-  function wfRow(label, value, kind, base, total, printed) {
+  function wfRow(label, value, color, base, total, printed) {
     var row = document.createElement("div");
     row.className = "wf-row" + (total ? " total" : "");
     var name = document.createElement("span");
@@ -1075,13 +1090,13 @@ try {
     var track = document.createElement("div");
     track.className = "track";
     var bar = document.createElement("i");
-    if (kind) bar.className = kind;
-    var width = total && kind === "bad" ? 0 : Math.max(0, value) / base * 100;
-    bar.style.width = Math.min(100, width) + "%";
+    bar.style.background = color;
+    var width = total && value <= 0 ? 0 : Math.max(0, value) / base * 100;
+    bar.style.width = Math.min(100, Math.max(0, width)) + "%";
     track.appendChild(bar);
     var num = document.createElement("span");
     num.className = "num";
-    num.textContent = printed != null ? printed : (kind === "cost" ? "−" + fmt(value, 2) : fmt(value, 2));
+    num.textContent = printed;
     row.append(name, track, num);
     return row;
   }
