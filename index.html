@@ -707,6 +707,42 @@
       .card h2 { font-size: 16px; }
       .wrap { padding: 14px 12px 32px; }
     }
+    .strip.sheet-strip {
+      grid-template-rows: auto auto auto;
+      align-items: stretch;
+    }
+    .strip.sheet-strip .metric {
+      display: grid;
+      grid-template-rows: subgrid;
+      grid-row: span 3;
+    }
+    .strip.sheet-strip .metric-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-rows: subgrid;
+      grid-row: span 2;
+      gap: 2px 14px;
+      margin-top: 2px;
+    }
+    .strip.sheet-strip .quote {
+      display: grid;
+      grid-template-rows: subgrid;
+      grid-row: span 2;
+      min-width: 0;
+    }
+    .strip.sheet-strip .quote .lbl,
+    .strip.sheet-strip .numline { align-self: end; }
+    .strip.sheet-strip .numline { margin-top: 0; }
+    .triple { grid-template-rows: auto auto auto; align-items: stretch; }
+    .mini {
+      display: grid;
+      grid-template-rows: subgrid;
+      grid-row: span 3;
+    }
+    .mini .slider-top { align-items: last baseline; align-self: end; }
+    .legend { align-items: center; padding-left: 42px; }
+    .chart-svg text { white-space: nowrap; }
+    svg.chart-svg.fx-mini { height: 112px; }
     html[lang="en"] .modal-body[data-lang="zh"] { display: none; }
     html:not([lang="en"]) .modal-body[data-lang="en"] { display: none; }
     .tools .lang-switch { margin-top: 0; }
@@ -1695,9 +1731,61 @@
       var map = { "耗尽": "Exhausted", "紧张": "Tight", "平衡": "Balanced", "宽裕": "Comfortable" };
       return map[label] || label;
     }
-    function weekLabel(ago) {
-      if (ago === 0) return tr("当前", "Now");
-      return ago + tr("周前", "w ago");
+    function axisAnchor() {
+      var d = new Date(dataMeta && dataMeta.asOf);
+      if (!Number.isFinite(d.getTime())) d = new Date("2026-10-05T00:00:00Z");
+      return d;
+    }
+    function formatMD(date) {
+      return (date.getUTCMonth() + 1) + "/" + date.getUTCDate();
+    }
+    function formatISODateMD(iso) {
+      var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso || "");
+      if (!m) return "";
+      return Number(m[2]) + "/" + Number(m[3]);
+    }
+    function seriesDates(count, stepDays) {
+      var end = axisAnchor().getTime();
+      var labels = [];
+      for (var i = 0; i < count; i++) {
+        labels.push(formatMD(new Date(end - (count - 1 - i) * stepDays * 86400000)));
+      }
+      return labels;
+    }
+    function drawXLabels(svg, labels, xAt, y, viewW, gutterLeft) {
+      var placed = [];
+      function widthOf(label) { return Math.max(14, String(label).length * 7.6); }
+      function overlaps(left, right) {
+        for (var i = 0; i < placed.length; i++) {
+          if (left < placed[i].right + 8 && right > placed[i].left - 8) return true;
+        }
+        return false;
+      }
+      function commit(i, anchor, x) {
+        var w = widthOf(labels[i]);
+        var left = anchor === "start" ? x : anchor === "end" ? x - w : x - w / 2;
+        var right = left + w;
+        if (left < gutterLeft || right > viewW - 2) return false;
+        if (overlaps(left, right)) return false;
+        placed.push({ i: i, anchor: anchor, x: x, left: left, right: right });
+        return true;
+      }
+      var n = labels.length;
+      if (!n) return;
+      var lastX = xAt(n - 1);
+      if (!commit(n - 1, "middle", lastX)) commit(n - 1, "end", Math.min(lastX, viewW - 2));
+      if (n > 1) {
+        var firstX = xAt(0);
+        if (!commit(0, "middle", firstX)) commit(0, "start", Math.max(firstX, gutterLeft));
+      }
+      var room = Math.max(1, Math.floor((viewW - gutterLeft) / 48));
+      var step = Math.max(1, Math.ceil((n - 1) / room));
+      for (var i = step; i < n - 1; i += step) commit(i, "middle", xAt(i));
+      placed.sort(function (a, b) { return a.i - b.i; });
+      placed.forEach(function (p) {
+        var node = svgText(svg, p.x, y, labels[p.i], "muted tick", p.anchor);
+        node.setAttribute("xml:space", "preserve");
+      });
     }
     function fxErr(msg) {
       if (document.documentElement.lang !== "en") return msg;
@@ -2144,8 +2232,8 @@
       bindChart(svg);
       var box = chartSize(svg);
       clearSvg(svg);
-      var compact = box.h < 120;
-      var pad = compact ? { l: 8, r: 8, t: 10, b: 8 } : { l: 52, r: 14, t: 16, b: 28 };
+      var compact = box.h < 100;
+      var pad = { l: 52, r: 28, t: 12, b: 28 };
       var innerW = box.w - pad.l - pad.r;
       var innerH = box.h - pad.t - pad.b;
       var labels = modelSpec.labels;
@@ -2178,12 +2266,8 @@
           svg.appendChild(el("line", { x1: pad.l, x2: box.w - pad.r, y1: yy, y2: yy, "class": "grid" }));
           svgText(svg, pad.l - 8, yy + 4, modelSpec.yFmt(v), "num", "end");
         }
-        var step = Math.max(1, Math.ceil(labels.length / Math.max(2, Math.floor(innerW / 64))));
-        labels.forEach(function (lb, i) {
-          if (i % step && i !== labels.length - 1) return;
-          svgText(svg, xAt(i), box.h - 8, lb, "muted", "middle");
-        });
       }
+      drawXLabels(svg, labels, xAt, box.h - 6, box.w, 2);
       modelSpec.series.forEach(function (s) {
         var d = "";
         s.values.forEach(function (v, i) {
@@ -2237,7 +2321,7 @@
       bindChart(svg);
       var box = chartSize(svg);
       clearSvg(svg);
-      var pad = { l: 42, r: 8, t: modelSpec.valueLabels ? 18 : 12, b: 26 };
+      var pad = { l: 42, r: 22, t: modelSpec.valueLabels ? 18 : 12, b: 28 };
       var innerW = box.w - pad.l - pad.r;
       var innerH = box.h - pad.t - pad.b;
       var labels = modelSpec.labels;
@@ -2281,8 +2365,8 @@
             svgText(svg, gx + 6 + si * barW + Math.max(2, barW - 2) / 2, labY, Math.round(val).toString(), "barlab", "middle");
           }
         });
-        svgText(svg, gx + groupW / 2, box.h - 8, lb, "muted", "middle");
       });
+      drawXLabels(svg, labels, function (i) { return xs[i]; }, box.h - 6, box.w, 2);
       var guide = el("line", { y1: pad.t, y2: pad.t + innerH, "class": "guide", visibility: "hidden" });
       guide.style.pointerEvents = "none";
       svg.appendChild(guide);
@@ -2524,8 +2608,9 @@
       byId("fx-usdeur").setAttribute("aria-pressed", state.fxMode === "USDEUR" ? "true" : "false");
       byId("btn-use-fx").hidden = !(state.pinned.eurusd && fx.rate);
       var series = fx.series;
+      var fxLabels = seriesDates(series.length, 1);
       drawLine(byId("fx-chart"), {
-        labels: series.map(function (p) { return p.date.slice(5); }),
+        labels: fxLabels,
         series: series.length ? [{ name: "EURUSD", color: "var(--info)", values: series.map(function (p) { return p.rate; }), fill: "color-mix(in srgb, var(--info) 22%, transparent)" }] : [],
         zero: false,
         empty: fx.status === "error" ? tr("汇率曲线暂无数据", "No FX series yet") : tr("正在读取汇率", "Reading the rate"),
@@ -2533,7 +2618,7 @@
         tip: function (i) {
           if (!series[i]) return [{ text: tr("无数据", "No data") }];
           return [
-            { text: series[i].date, strong: true },
+            { text: fxLabels[i] || formatISODateMD(series[i].date), strong: true },
             { text: "EURUSD " + fmt(series[i].rate, 4), swatch: "var(--info)" },
             { text: tr("ECB 参考价 · Frankfurter", "ECB reference · Frankfurter") }
           ];
@@ -2571,9 +2656,7 @@
       byId("voyage-warn").hidden = state.ladenDays <= state.roundTripDays;
       var spark = SPARK_HIST.slice();
       spark[spark.length - 1] = state.freight;
-      var sparkLabels = spark.map(function (_, i) {
-        return weekLabel(spark.length - 1 - i);
-      });
+      var sparkLabels = seriesDates(spark.length, 7);
       drawLine(byId("spark-chart"), {
         labels: sparkLabels,
         series: [{ name: "Spark25", color: "var(--accent)", values: spark, callout: fmt(spark[spark.length - 1], 0) }],
@@ -2601,10 +2684,10 @@
       setText("padd-out", fmt(state.padd1, 1) + tr(" 百万桶", " million bbl"));
       var padd = PADD_HIST.slice();
       padd[padd.length - 1] = state.padd1;
-      var paddLabels = padd.map(function (_, i) { return weekLabel(padd.length - 1 - i); });
+      var paddLabels = seriesDates(padd.length, 7);
       var utilShape = [94.1, 93.8, 93.4, 93.0, 92.6, 92.2, 91.9, 91.6, 91.2, 90.9, 91.1, 91.5, 91.8, 92.1, 91.7, 91.4];
       utilShape[utilShape.length - 1] = state.utilPct;
-      var utilLabels = utilShape.map(function (_, i) { return weekLabel(utilShape.length - 1 - i); });
+      var utilLabels = seriesDates(utilShape.length, 7);
       drawLine(byId("util-chart"), {
         labels: utilLabels,
         series: [{ name: tr("开工率", "Runs"), color: "var(--diesel)", values: utilShape }],
