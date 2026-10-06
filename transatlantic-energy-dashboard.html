@@ -287,7 +287,7 @@
       padding: 8px 10px;
       font-size: 12px;
       box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
-      max-width: 260px;
+      max-width: 480px;
     }
     #tip[hidden] { display: none; }
     #tip .tip-strong { font-weight: 650; }
@@ -772,6 +772,71 @@
     html[lang="en"] .modal-body[data-lang="zh"] { display: none; }
     html:not([lang="en"]) .modal-body[data-lang="en"] { display: none; }
     .tools .lang-switch { margin-top: 0; }
+    .mini-foot { min-width: 0; }
+    .zoom {
+      position: relative;
+      height: 22px;
+      margin-top: 6px;
+      --za: 0%;
+      --zb: 100%;
+    }
+    .zoom::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 9px;
+      height: 4px;
+      border-radius: 999px;
+      background: linear-gradient(to right, var(--line) var(--za), var(--accent) var(--za), var(--accent) var(--zb), var(--line) var(--zb));
+    }
+    .zoom input[type="range"] {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 22px;
+      margin: 0;
+      pointer-events: none;
+      background: none;
+      appearance: none;
+      -webkit-appearance: none;
+      accent-color: var(--accent);
+    }
+    .zoom input[type="range"]::-webkit-slider-runnable-track {
+      height: 4px;
+      background: transparent;
+      border: 0;
+    }
+    .zoom input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      pointer-events: auto;
+      width: 14px;
+      height: 14px;
+      margin-top: -5px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid var(--elev);
+      cursor: grab;
+    }
+    .zoom input[type="range"]::-moz-range-track {
+      height: 4px;
+      background: transparent;
+      border: 0;
+    }
+    .zoom input[type="range"]::-moz-range-thumb {
+      pointer-events: auto;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid var(--elev);
+      cursor: grab;
+    }
+    .zoom-read { margin-top: 2px; font-variant-numeric: tabular-nums; }
+    #parity-compare:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
   </style>
 </head>
 <body>
@@ -990,6 +1055,11 @@
         <div>
           <p class="stat-k" data-i18n="k-spark">Spark25 日租金</p>
           <svg id="spark-chart" class="chart-svg spark" role="img" data-i18n-aria="aria-spark" aria-label="Spark25 日租金示意轨迹"></svg>
+          <div class="zoom" data-zoom="spark">
+            <input id="zoom-spark-a" type="range" min="0" max="1" step="1" value="0" aria-label="窗口起点" />
+            <input id="zoom-spark-b" type="range" min="0" max="1" step="1" value="1" aria-label="窗口终点" />
+          </div>
+          <p class="note zoom-read mono" id="zoom-spark-read"></p>
           <p class="note" data-i18n="spark-note" data-i18n-mode="html">右端点标出当前日租金。左侧是示意形状，不是 Spark Commodities 的正式<span class="keep">估价。</span></p>
         </div>
       </div>
@@ -1007,7 +1077,14 @@
             <p class="stat-v mono" id="util-out">—</p>
           </div>
           <svg id="util-chart" class="chart-svg compact" role="img" data-i18n-aria="aria-util" aria-label="美国炼厂开工率示意曲线"></svg>
-          <input id="in-util" type="range" min="70" max="100" step="0.1" data-i18n-aria="aria-util" aria-label="美国炼厂开工率" />
+          <div class="mini-foot">
+            <div class="zoom" data-zoom="util">
+              <input id="zoom-util-a" type="range" min="0" max="1" step="1" value="0" aria-label="窗口起点" />
+              <input id="zoom-util-b" type="range" min="0" max="1" step="1" value="1" aria-label="窗口终点" />
+            </div>
+            <p class="note zoom-read mono" id="zoom-util-read"></p>
+            <input id="in-util" type="range" min="70" max="100" step="0.1" data-i18n-aria="aria-util" aria-label="美国炼厂开工率" />
+          </div>
         </div>
         <div class="mini">
           <div class="slider-top">
@@ -1015,7 +1092,14 @@
             <p class="stat-v mono" id="distillate-out">—</p>
           </div>
           <svg id="distillate-chart" class="chart-svg compact" role="img" data-i18n-aria="aria-dist" aria-label="美国馏分油总库存示意曲线"></svg>
-          <p class="note" id="distillate-note">121.6 +（PADD 1 − 29.4）</p>
+          <div class="mini-foot">
+            <div class="zoom" data-zoom="distillate">
+              <input id="zoom-distillate-a" type="range" min="0" max="1" step="1" value="0" aria-label="窗口起点" />
+              <input id="zoom-distillate-b" type="range" min="0" max="1" step="1" value="1" aria-label="窗口终点" />
+            </div>
+            <p class="note zoom-read mono" id="zoom-distillate-read"></p>
+            <p class="note" id="distillate-note">121.6 +（PADD 1 − 29.4）</p>
+          </div>
         </div>
         <div class="mini">
           <div class="slider-top">
@@ -1023,7 +1107,14 @@
             <p class="stat-v mono" id="padd-out">—</p>
           </div>
           <svg id="padd-chart" class="chart-svg compact" role="img" data-i18n-aria="aria-padd" aria-label="PADD 1 东岸馏分油库存示意曲线"></svg>
-          <input id="in-padd" type="range" min="12" max="55" step="0.1" data-i18n-aria="aria-padd" aria-label="PADD 1 东岸馏分油库存" />
+          <div class="mini-foot">
+            <div class="zoom" data-zoom="padd">
+              <input id="zoom-padd-a" type="range" min="0" max="1" step="1" value="0" aria-label="窗口起点" />
+              <input id="zoom-padd-b" type="range" min="0" max="1" step="1" value="1" aria-label="窗口终点" />
+            </div>
+            <p class="note zoom-read mono" id="zoom-padd-read"></p>
+            <input id="in-padd" type="range" min="12" max="55" step="0.1" data-i18n-aria="aria-padd" aria-label="PADD 1 东岸馏分油库存" />
+          </div>
         </div>
       </div>
       <div class="ref-split">
@@ -1062,7 +1153,7 @@
           </div>
           <p class="note" data-i18n="crack-note" data-i18n-mode="html">裂解 = 成品美元/桶 − 布伦特。加仑按 42，吨按 7.45。示意<span class="keep">口径。</span></p>
         </div>
-        <div>
+        <div id="parity-compare" tabindex="0">
           <h3 data-i18n="h-parity">热值横比</h3>
           <svg id="parity-chart" class="chart-svg hbars" role="img" data-i18n-aria="aria-parity" aria-label="Henry Hub、TTF、瓦斯油与取暖油的欧元每兆瓦时横比"></svg>
           <p class="note" id="switch-read">—</p>
@@ -1741,6 +1832,7 @@
     };
 
     var pointer = { over: null, x: 0, y: 0 };
+    var zoomWin = {};
     var lastChartSize = {};
 
 
@@ -1945,7 +2037,7 @@
       "aria-util": ["美国炼厂开工率示意曲线", "Illustrative US refinery utilization"],
       "aria-dist": ["美国馏分油总库存示意曲线", "Illustrative US distillate stocks"],
       "aria-padd": ["PADD 1 东岸馏分油库存示意曲线", "Illustrative PADD 1 East Coast distillate stocks"],
-      "aria-parity": ["Henry Hub、TTF、瓦斯油与取暖油的欧元每兆瓦时横比", "Henry Hub, TTF, gasoil, and heating oil in euro per MWh"]
+      "aria-parity": ["Henry Hub、TTF、瓦斯油与取暖油的欧元每兆瓦时横比", "Henry Hub, TTF, ICE GO, and NYMEX HO in euro per MWh"]
     };
     function applyStatic() {
       var en = document.documentElement.lang === "en";
@@ -2170,6 +2262,74 @@
       };
     }
 
+    function zoomEnds(id, n) {
+      var last = Math.max(0, n - 1);
+      var z = zoomWin[id];
+      var start = z ? z.start : 0;
+      var end = z ? z.end : last;
+      start = clamp(start, 0, last);
+      end = clamp(end, 0, last);
+      if (start > end) {
+        var swap = start;
+        start = end;
+        end = swap;
+      }
+      return { start: start, end: end };
+    }
+
+    function syncZoom(id, labels) {
+      var n = labels.length;
+      var ends = zoomEnds(id, n);
+      var a = byId("zoom-" + id + "-a");
+      var b = byId("zoom-" + id + "-b");
+      if (a && b) {
+        var max = String(Math.max(0, n - 1));
+        a.max = max;
+        b.max = max;
+        if (document.activeElement !== a) a.value = String(ends.start);
+        if (document.activeElement !== b) b.value = String(ends.end);
+        a.setAttribute("aria-label", tr("窗口起点", "Window start"));
+        b.setAttribute("aria-label", tr("窗口终点", "Window end"));
+        a.setAttribute("aria-valuetext", labels[ends.start] || "");
+        b.setAttribute("aria-valuetext", labels[ends.end] || "");
+        var box = a.parentElement;
+        if (box) {
+          var denom = Math.max(1, n - 1);
+          box.style.setProperty("--za", (ends.start / denom * 100) + "%");
+          box.style.setProperty("--zb", (ends.end / denom * 100) + "%");
+        }
+      }
+      var read = byId("zoom-" + id + "-read");
+      if (read) read.textContent = (labels[ends.start] || "") + " – " + (labels[ends.end] || "");
+      return ends;
+    }
+
+    function zoomSlice(id, labels, values) {
+      var ends = syncZoom(id, labels);
+      return {
+        start: ends.start,
+        end: ends.end,
+        labels: labels.slice(ends.start, ends.end + 1),
+        values: values.slice(ends.start, ends.end + 1)
+      };
+    }
+
+    function parityTip(rows) {
+      var unit = tr(" 欧元/兆瓦时", " €/MWh");
+      var vs = tr("较 ", "vs ");
+      var lines = [];
+      rows.forEach(function (r) {
+        lines.push({ text: r.name + "  " + fmt(r.value, 2) + unit, strong: true, swatch: r.color });
+        var bits = [];
+        rows.forEach(function (o) {
+          if (o === r) return;
+          bits.push(vs + o.name + " " + signed(r.value - o.value, 2));
+        });
+        lines.push({ text: bits.join(" · ") });
+      });
+      return lines;
+    }
+
     function chartSize(svg) {
       var rect = svg.getBoundingClientRect();
       var w = Math.max(280, Math.round(rect.width || 640));
@@ -2182,8 +2342,19 @@
       if (svg.dataset.bound) return;
       svg.dataset.bound = "1";
       svg.addEventListener("mousemove", onChartMove);
-      svg.addEventListener("mouseleave", function () {
+      svg.addEventListener("mouseleave", function (ev) {
         if (svg._hit && svg._hit.guide) svg._hit.guide.setAttribute("visibility", "hidden");
+        var box = document.getElementById("parity-compare");
+        var stay = svg._hit && svg._hit.sticky && box && ev.relatedTarget && box.contains(ev.relatedTarget);
+        if (stay) return;
+        if (svg._hit && svg._hit.sticky && box && document.activeElement === box) {
+          var rect = svg.getBoundingClientRect();
+          pointer.over = svg.id;
+          pointer.x = rect.left + 16;
+          pointer.y = rect.top + 16;
+          showTip(pointer.x, pointer.y, svg._hit.tip(0));
+          return;
+        }
         if (pointer.over === svg.id) pointer.over = null;
         hideTip();
       });
@@ -2217,7 +2388,7 @@
         var d = Math.abs(p.x - hit.xs[i]);
         if (d < bestD) { bestD = d; best = i; }
       }
-      if (hit.guide) {
+      if (hit.guide && !hit.sticky) {
         hit.guide.setAttribute("x1", hit.xs[best]);
         hit.guide.setAttribute("x2", hit.xs[best]);
         hit.guide.setAttribute("visibility", "visible");
@@ -2421,22 +2592,13 @@
         svg.appendChild(rect);
         svgText(svg, pad.l - 6, y + bh * 0.75, r.name, "muted", "end");
         svgText(svg, pad.l + w + 5, y + bh * 0.75, fmt(r.value, 1), "num", "start");
-        xs.push(pad.l + w / 2);
+        xs.push(pad.l + innerW / 2);
       });
-      var guide = el("line", { y1: pad.t, y2: box.h - pad.b, "class": "guide", visibility: "hidden" });
-      guide.style.pointerEvents = "none";
-      svg.appendChild(guide);
       svg._hit = {
         xs: xs,
-        guide: guide,
-        tip: function (i) {
-          var r = rows[i];
-          if (!r) return [{ text: tr("无数据", "No data") }];
-          return [
-            { text: r.name, strong: true },
-            { text: fmt(r.value, 2) + tr(" 欧元/兆瓦时", " €/MWh"), swatch: r.color }
-          ];
-        }
+        guide: null,
+        sticky: true,
+        tip: function () { return parityTip(rows); }
       };
     }
 
@@ -2683,18 +2845,25 @@
       var spark = SPARK_HIST.slice();
       spark[spark.length - 1] = state.freight;
       var sparkLabels = seriesDates(spark.length, 7);
+      var sparkView = zoomSlice("spark", sparkLabels, spark);
       drawLine(byId("spark-chart"), {
-        labels: sparkLabels,
-        series: [{ name: "Spark25", color: "var(--accent)", values: spark, callout: fmt(spark[spark.length - 1], 0) }],
+        labels: sparkView.labels,
+        series: [{
+          name: "Spark25",
+          color: "var(--accent)",
+          values: sparkView.values,
+          callout: sparkView.end === spark.length - 1 ? fmt(spark[spark.length - 1], 0) : ""
+        }],
         zero: false,
         yFmt: function (v) {
           return document.documentElement.lang === "en" ? (v / 1000).toFixed(0) + "k" : (v / 10000).toFixed(1) + "万";
         },
         tip: function (i) {
+          var gi = sparkView.start + i;
           return [
-            { text: sparkLabels[i], strong: true },
-            { text: tr("日租金 ", "Day rate ") + fmt(spark[i], 0) + tr(" 美元/日", " $/day"), swatch: "var(--accent)" },
-            { text: i === spark.length - 1 ? tr("跟随当前输入", "Follows the current input") : tr("示意轨迹", "Illustrative path") }
+            { text: sparkLabels[gi], strong: true },
+            { text: tr("日租金 ", "Day rate ") + fmt(spark[gi], 0) + tr(" 美元/日", " $/day"), swatch: "var(--accent)" },
+            { text: gi === spark.length - 1 ? tr("跟随当前输入", "Follows the current input") : tr("示意轨迹", "Illustrative path") }
           ];
         }
       });
@@ -2714,42 +2883,48 @@
       var utilShape = [94.1, 93.8, 93.4, 93.0, 92.6, 92.2, 91.9, 91.6, 91.2, 90.9, 91.1, 91.5, 91.8, 92.1, 91.7, 91.4];
       utilShape[utilShape.length - 1] = state.utilPct;
       var utilLabels = seriesDates(utilShape.length, 7);
+      var utilView = zoomSlice("util", utilLabels, utilShape);
       drawLine(byId("util-chart"), {
-        labels: utilLabels,
-        series: [{ name: tr("开工率", "Runs"), color: "var(--diesel)", values: utilShape }],
+        labels: utilView.labels,
+        series: [{ name: tr("开工率", "Runs"), color: "var(--diesel)", values: utilView.values }],
         zero: false,
         yFmt: function (v) { return v.toFixed(0); },
         tip: function (i) {
+          var gi = utilView.start + i;
           return [
-            { text: utilLabels[i], strong: true },
-            { text: fmt(utilShape[i], 1) + "%", swatch: "var(--diesel)" },
-            { text: i === utilShape.length - 1 ? tr("跟随当前输入", "Follows the current input") : tr("示意周度", "Illustrative week") }
+            { text: utilLabels[gi], strong: true },
+            { text: fmt(utilShape[gi], 1) + "%", swatch: "var(--diesel)" },
+            { text: gi === utilShape.length - 1 ? tr("跟随当前输入", "Follows the current input") : tr("示意周度", "Illustrative week") }
           ];
         }
       });
       var distSeries = padd.map(function (v) { return BASE_DISTILLATE + (v - BASE_PADD); });
+      var distView = zoomSlice("distillate", paddLabels, distSeries);
       drawLine(byId("distillate-chart"), {
-        labels: paddLabels,
-        series: [{ name: tr("馏分油", "Distillate"), color: "var(--accent)", values: distSeries }],
+        labels: distView.labels,
+        series: [{ name: tr("馏分油", "Distillate"), color: "var(--accent)", values: distView.values }],
         zero: false,
         yFmt: function (v) { return v.toFixed(0); },
         tip: function (i) {
+          var gi = distView.start + i;
           return [
-            { text: paddLabels[i], strong: true },
-            { text: fmt(distSeries[i], 1) + tr(" 百万桶", " million bbl"), swatch: "var(--accent)" },
+            { text: paddLabels[gi], strong: true },
+            { text: fmt(distSeries[gi], 1) + tr(" 百万桶", " million bbl"), swatch: "var(--accent)" },
             { text: tr("121.6 +（东岸 − 29.4）", "121.6 + (East Coast − 29.4)") }
           ];
         }
       });
+      var paddView = zoomSlice("padd", paddLabels, padd);
       drawLine(byId("padd-chart"), {
-        labels: paddLabels,
-        series: [{ name: "PADD 1", color: "var(--info)", values: padd }],
+        labels: paddView.labels,
+        series: [{ name: "PADD 1", color: "var(--info)", values: paddView.values }],
         zero: false,
         yFmt: function (v) { return v.toFixed(0); },
         tip: function (i) {
+          var gi = paddView.start + i;
           return [
-            { text: paddLabels[i], strong: true },
-            { text: fmt(padd[i], 1) + tr(" 百万桶", " million bbl"), swatch: "var(--info)" },
+            { text: paddLabels[gi], strong: true },
+            { text: fmt(padd[gi], 1) + tr(" 百万桶", " million bbl"), swatch: "var(--info)" },
             { text: tr("东岸馏分油 · 示意", "East Coast distillate · illustrative") }
           ];
         }
@@ -2788,21 +2963,21 @@
       drawHBars(byId("parity-chart"), [
         { name: "Henry Hub", value: hhEur, color: "var(--info)" },
         { name: "TTF", value: state.ttf, color: "var(--gas)" },
-        { name: tr("瓦斯油", "Gasoil"), value: m.dieselEur, color: "var(--diesel)" },
-        { name: tr("取暖油", "Heat oil"), value: heatOil, color: "var(--accent)" }
+        { name: tr("瓦斯油", "ICE GO"), value: m.dieselEur, color: "var(--diesel)" },
+        { name: tr("取暖油", "NYMEX HO"), value: heatOil, color: "var(--accent)" }
       ]);
       var switchText = m.gap > 0
         ? tr(
           "TTF 高于瓦斯油热值 " + fmt(m.gap, 2) + " 欧元/兆瓦时，气转油激励出现。",
-          "TTF is " + fmt(m.gap, 2) + " €/MWh above gasoil heat value, so gas-to-oil switching is on."
+          "TTF is " + fmt(m.gap, 2) + " €/MWh above ICE GO heat value, so gas-to-oil switching is on."
         )
         : tr(
           "TTF 低于瓦斯油热值 " + fmt(-m.gap, 2) + " 欧元/兆瓦时，气转油激励未打开。",
-          "TTF is " + fmt(-m.gap, 2) + " €/MWh below gasoil heat value, so gas-to-oil switching is off."
+          "TTF is " + fmt(-m.gap, 2) + " €/MWh below ICE GO heat value, so gas-to-oil switching is off."
         );
       setNote("switch-read", tr(
         "四条都是欧元/兆瓦时。Henry Hub 按 3.412141633 换算，取暖油与瓦斯油按 11.83 兆瓦时/吨。",
-        "All four bars are €/MWh. Henry Hub uses 3.412141633; heating oil and gasoil use 11.83 MWh/t. "
+        "All four bars are €/MWh. Henry Hub uses 3.412141633; NYMEX HO and ICE GO use 11.83 MWh/t. "
       ) + switchText);
     }
 
@@ -2836,7 +3011,10 @@
       renderLocks();
       if (pointer.over) {
         var svg = byId(pointer.over);
-        if (svg && svg.matches(":hover") && svg._hit) {
+        var parityBox = byId("parity-compare");
+        var stickyOn = svg && svg._hit && svg._hit.sticky && parityBox && (parityBox.matches(":hover") || document.activeElement === parityBox);
+        if (stickyOn) showTip(pointer.x, pointer.y, svg._hit.tip(0));
+        else if (svg && svg.matches(":hover") && svg._hit) {
           onChartMove({ currentTarget: svg, clientX: pointer.x, clientY: pointer.y });
         }
       }
@@ -3221,6 +3399,62 @@
         state.padd1 = clamp(v, 12, 55);
         state.pinned.padd1 = true;
         changed();
+      });
+      ["spark", "util", "distillate", "padd"].forEach(function (id) {
+        var a = byId("zoom-" + id + "-a");
+        var b = byId("zoom-" + id + "-b");
+        function commitZoom() {
+          var av = Number(a.value);
+          var bv = Number(b.value);
+          if (!Number.isFinite(av) || !Number.isFinite(bv)) return;
+          zoomWin[id] = { start: Math.min(av, bv), end: Math.max(av, bv) };
+          recompute();
+        }
+        a.addEventListener("input", commitZoom);
+        b.addEventListener("input", commitZoom);
+        a.parentElement.addEventListener("pointermove", function (ev) {
+          var rect = a.parentElement.getBoundingClientRect();
+          var max = Number(a.max);
+          if (!Number.isFinite(max) || max <= 0) return;
+          var pos = ((ev.clientX - rect.left) / Math.max(1, rect.width)) * max;
+          if (Math.abs(pos - Number(a.value)) <= Math.abs(pos - Number(b.value))) {
+            a.style.zIndex = "2";
+            b.style.zIndex = "1";
+          } else {
+            a.style.zIndex = "1";
+            b.style.zIndex = "2";
+          }
+        });
+      });
+      var parityBox = byId("parity-compare");
+      var paritySvg = byId("parity-chart");
+      function placeParityTip(x, y) {
+        if (!paritySvg._hit) return;
+        pointer.over = paritySvg.id;
+        pointer.x = x;
+        pointer.y = y;
+        showTip(x, y, paritySvg._hit.tip(0));
+      }
+      parityBox.addEventListener("mousemove", function (ev) {
+        placeParityTip(ev.clientX, ev.clientY);
+      });
+      parityBox.addEventListener("mouseleave", function () {
+        if (document.activeElement === parityBox) {
+          var rect = paritySvg.getBoundingClientRect();
+          placeParityTip(rect.left + 16, rect.top + 16);
+          return;
+        }
+        if (pointer.over === paritySvg.id) pointer.over = null;
+        hideTip();
+      });
+      parityBox.addEventListener("focus", function () {
+        var rect = paritySvg.getBoundingClientRect();
+        placeParityTip(rect.left + 16, rect.top + 16);
+      });
+      parityBox.addEventListener("blur", function () {
+        if (parityBox.matches(":hover")) return;
+        if (pointer.over === paritySvg.id) pointer.over = null;
+        hideTip();
       });
       byId("btn-reset").addEventListener("click", resetAll);
       byId("btn-glossary").addEventListener("click", openGlossary);
