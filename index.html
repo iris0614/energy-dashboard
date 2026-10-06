@@ -837,6 +837,121 @@
       outline: 2px solid var(--accent);
       outline-offset: 3px;
     }
+    #refining .ref-head {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 6px 16px;
+      align-items: center;
+    }
+    #refining .ref-note {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    #refining .ref-badges { display: flex; gap: 6px; align-items: center; justify-content: flex-end; }
+    #refining .ref-cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    #refining .ref-card {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px 12px 10px;
+      background: var(--elev);
+    }
+    #refining .ref-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+    }
+    #refining .ref-card-top .stat-k { margin: 0; }
+    #refining .ref-val {
+      margin: 6px 0 0;
+      font-size: 28px;
+      font-weight: 650;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      font-variant-numeric: tabular-nums;
+    }
+    #refining .ref-val input {
+      font: inherit;
+      color: inherit;
+      background: transparent;
+      border: 0;
+      width: 5.4ch;
+      padding: 0;
+      font-variant-numeric: tabular-nums;
+    }
+    #refining .ref-card-top .stat-k { min-width: 0; }
+    #refining .ref-val .u {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      margin-left: 4px;
+    }
+    #refining .ref-asof { margin: 2px 0 4px; color: var(--muted); font-size: 12px; }
+    #refining .ref-card .chart-svg.compact { height: 132px; }
+    #refining .ref-foot { margin-top: 4px; }
+    #refining .ref-split { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+    #refining .heat-head, #refining .crack-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+    }
+    #refining .heat-unit { color: var(--muted); font-size: 12px; }
+    #refining .crack-table { min-width: 0; width: 100%; }
+    #refining .crack-table td.name { white-space: normal; }
+    #refining .crack-quote {
+      display: flex;
+      justify-content: flex-end;
+      align-items: baseline;
+      gap: 4px;
+    }
+    #refining .crack-in {
+      width: 8ch;
+      text-align: right;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      font-variant-numeric: tabular-nums;
+      padding: 0;
+    }
+    #refining input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
+    #refining input[type="number"]::-webkit-outer-spin-button,
+    #refining input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .parity-card {
+      position: fixed;
+      z-index: 40;
+      pointer-events: none;
+      background: var(--elev);
+      color: var(--text);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 12px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.16);
+      max-width: min(520px, calc(100vw - 16px));
+    }
+    .parity-card[hidden] { display: none; }
+    .parity-card .heat-unit { display: block; margin: 0 0 6px; }
+    .parity-card table { min-width: 0; width: auto; font-size: 12px; }
+    .parity-card th, .parity-card td { padding: 3px 6px; white-space: nowrap; border: 0; }
+    .parity-card th { color: var(--muted); font-weight: 500; }
+    .parity-card td.num, .parity-card th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .parity-card .swatch { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 6px; }
+    @media (max-width: 1100px) {
+      #refining .ref-head,
+      #refining .ref-cards,
+      #refining .ref-split { grid-template-columns: 1fr; }
+      #refining .ref-badges { justify-content: flex-start; }
+    }
   </style>
 </head>
 <body>
@@ -1066,96 +1181,110 @@
     </section>
 
     <section class="card band" id="refining" aria-labelledby="ref-title">
-      <div class="card-head">
+      <div class="card-head ref-head">
         <h2 id="ref-title"><span class="idx mono">03</span><span data-i18n="mod-ref">炼厂与中间馏分油</span></h2>
-        <span class="badge" data-i18n="badge-week">周度示意</span>
+        <p class="ref-note" data-i18n="ref-note">WTI 是原料成本，开工率是产出上限，HO 与 LGO 是两岸成品，PADD 1 是美东净进口。</p>
+        <div class="ref-badges">
+          <span class="badge mono" id="ref-chip">截至 · EIA WPSR</span>
+          <span class="badge" data-i18n="badge-week">周度示意</span>
+        </div>
       </div>
-      <div class="triple">
-        <div class="mini">
-          <div class="slider-top">
+      <div class="ref-cards">
+        <article class="ref-card">
+          <div class="ref-card-top">
             <p class="stat-k"><span data-i18n="k-util">美国炼厂开工率</span> <span class="lock" id="lock-util" hidden data-i18n="locked">已锁定</span></p>
-            <p class="stat-v mono" id="util-out">—</p>
+            <span class="badge">EIA</span>
           </div>
+          <p class="ref-val mono"><input id="in-util" type="number" min="70" max="100" step="0.1" inputmode="decimal" data-i18n-aria="aria-util" aria-label="美国炼厂开工率" /><span class="u">%</span></p>
+          <p class="ref-asof mono" id="util-asof">—</p>
           <svg id="util-chart" class="chart-svg compact" role="img" data-i18n-aria="aria-util" aria-label="美国炼厂开工率示意曲线"></svg>
-          <div class="mini-foot">
-            <div class="zoom" data-zoom="util">
-              <input id="zoom-util-a" type="range" min="0" max="1" step="1" value="0" aria-label="窗口起点" />
-              <input id="zoom-util-b" type="range" min="0" max="1" step="1" value="1" aria-label="窗口终点" />
-            </div>
-            <p class="note zoom-read mono" id="zoom-util-read"></p>
-            <input id="in-util" type="range" min="70" max="100" step="0.1" data-i18n-aria="aria-util" aria-label="美国炼厂开工率" />
+          <div class="zoom" data-zoom="util">
+            <input id="zoom-util-a" type="range" min="0" max="1" step="1" value="0" aria-label="窗口起点" />
+            <input id="zoom-util-b" type="range" min="0" max="1" step="1" value="1" aria-label="窗口终点" />
           </div>
-        </div>
-        <div class="mini">
-          <div class="slider-top">
-            <p class="stat-k" data-i18n="k-dist">馏分油总库存</p>
-            <p class="stat-v mono" id="distillate-out">—</p>
+          <p class="note zoom-read mono" id="zoom-util-read"></p>
+          <p class="note ref-foot" id="util-foot"></p>
+        </article>
+        <article class="ref-card">
+          <div class="ref-card-top">
+            <p class="stat-k" data-i18n="k-dist">美国馏分油总库存</p>
+            <span class="badge">EIA</span>
           </div>
+          <p class="ref-val mono"><span id="distillate-out">—</span><span class="u" data-i18n="u-mbbl">百万桶</span></p>
+          <p class="ref-asof mono" id="dist-asof">—</p>
           <svg id="distillate-chart" class="chart-svg compact" role="img" data-i18n-aria="aria-dist" aria-label="美国馏分油总库存示意曲线"></svg>
-          <div class="mini-foot">
-            <div class="zoom" data-zoom="distillate">
-              <input id="zoom-distillate-a" type="range" min="0" max="1" step="1" value="0" aria-label="窗口起点" />
-              <input id="zoom-distillate-b" type="range" min="0" max="1" step="1" value="1" aria-label="窗口终点" />
-            </div>
-            <p class="note zoom-read mono" id="zoom-distillate-read"></p>
-            <p class="note" id="distillate-note">121.6 +（PADD 1 − 29.4）</p>
+          <div class="zoom" data-zoom="distillate">
+            <input id="zoom-distillate-a" type="range" min="0" max="1" step="1" value="0" aria-label="窗口起点" />
+            <input id="zoom-distillate-b" type="range" min="0" max="1" step="1" value="1" aria-label="窗口终点" />
           </div>
-        </div>
-        <div class="mini">
-          <div class="slider-top">
-            <p class="stat-k"><span data-i18n="k-padd">PADD 1 东岸</span> <span class="lock" id="lock-padd" hidden data-i18n="locked">已锁定</span></p>
-            <p class="stat-v mono" id="padd-out">—</p>
+          <p class="note zoom-read mono" id="zoom-distillate-read"></p>
+          <p class="note ref-foot" id="distillate-note"></p>
+        </article>
+        <article class="ref-card">
+          <div class="ref-card-top">
+            <p class="stat-k"><span data-i18n="k-padd">PADD 1 馏分油库存</span> <span class="lock" id="lock-padd" hidden data-i18n="locked">已锁定</span></p>
+            <span class="badge">EIA</span>
           </div>
+          <p class="ref-val mono"><input id="in-padd" type="number" min="12" max="55" step="0.1" inputmode="decimal" data-i18n-aria="aria-padd" aria-label="PADD 1 馏分油库存" /><span class="u" data-i18n="u-mbbl">百万桶</span></p>
+          <p class="ref-asof mono" id="padd-asof">—</p>
           <svg id="padd-chart" class="chart-svg compact" role="img" data-i18n-aria="aria-padd" aria-label="PADD 1 东岸馏分油库存示意曲线"></svg>
-          <div class="mini-foot">
-            <div class="zoom" data-zoom="padd">
-              <input id="zoom-padd-a" type="range" min="0" max="1" step="1" value="0" aria-label="窗口起点" />
-              <input id="zoom-padd-b" type="range" min="0" max="1" step="1" value="1" aria-label="窗口终点" />
-            </div>
-            <p class="note zoom-read mono" id="zoom-padd-read"></p>
-            <input id="in-padd" type="range" min="12" max="55" step="0.1" data-i18n-aria="aria-padd" aria-label="PADD 1 东岸馏分油库存" />
+          <div class="zoom" data-zoom="padd">
+            <input id="zoom-padd-a" type="range" min="0" max="1" step="1" value="0" aria-label="窗口起点" />
+            <input id="zoom-padd-b" type="range" min="0" max="1" step="1" value="1" aria-label="窗口终点" />
           </div>
-        </div>
+          <p class="note zoom-read mono" id="zoom-padd-read"></p>
+          <p class="note ref-foot" id="padd-foot"></p>
+        </article>
       </div>
       <div class="ref-split">
         <div>
-          <h3 data-i18n="h-crack">裂解</h3>
-          <div class="form-grid four">
-            <div class="field">
-              <label for="in-brent"><span data-i18n="lbl-in-brent">布伦特（美元/桶）</span> <span class="lock" id="lock-brent" hidden data-i18n="locked">已锁定</span></label>
-              <input id="in-brent" class="mono" type="number" min="20" max="200" step="0.1" inputmode="decimal" />
-            </div>
-            <div class="field">
-              <label for="in-nyh"><span data-i18n="lbl-in-nyh">纽约港柴油（美元/加仑）</span> <span class="lock" id="lock-nyh" hidden data-i18n="locked">已锁定</span></label>
-              <input id="in-nyh" class="mono" type="number" min="0.5" max="8" step="0.001" inputmode="decimal" />
-            </div>
-            <div class="field">
-              <label for="in-usgc"><span data-i18n="lbl-in-usgc">美湾柴油（美元/加仑）</span> <span class="lock" id="lock-usgc" hidden data-i18n="locked">已锁定</span></label>
-              <input id="in-usgc" class="mono" type="number" min="0.5" max="8" step="0.001" inputmode="decimal" />
-            </div>
-            <div class="field">
-              <label for="in-ara"><span data-i18n="lbl-in-ara">鹿特丹柴油（美元/吨）</span> <span class="lock" id="lock-ara" hidden data-i18n="locked">已锁定</span></label>
-              <input id="in-ara" class="mono" type="number" min="200" max="2000" step="0.5" inputmode="decimal" />
-            </div>
+          <div class="crack-head">
+            <h3 data-i18n="h-crack">价格与裂解</h3>
           </div>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th data-i18n="th-name">基准</th>
-                  <th class="num" data-i18n="th-quote">报价</th>
-                  <th class="num" data-i18n="th-bbl">美元/桶</th>
-                  <th class="num" data-i18n="th-crack">对布伦特裂解</th>
-                </tr>
-              </thead>
-              <tbody id="price-body"></tbody>
-            </table>
-          </div>
+          <table class="crack-table">
+            <thead>
+              <tr>
+                <th data-i18n="th-name">品种</th>
+                <th class="num" data-i18n="th-quote">报价</th>
+                <th class="num" data-i18n="th-bbl">美元/桶</th>
+                <th class="num" data-i18n="th-crack">对原油裂解</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="name"><span data-i18n="row-brent">布伦特</span> <span class="lock" id="lock-brent" hidden data-i18n="locked">已锁定</span></td>
+                <td class="num"><span class="crack-quote"><input id="in-brent" class="mono crack-in" type="number" min="20" max="200" step="0.1" inputmode="decimal" data-i18n-aria="aria-brent" aria-label="布伦特" /><span>$/bbl</span></span></td>
+                <td class="num mono" id="brent-bbl">—</td>
+                <td class="num mono">—</td>
+              </tr>
+              <tr>
+                <td class="name"><span data-i18n="row-nyh">纽约港超低硫柴油</span> <span class="lock" id="lock-nyh" hidden data-i18n="locked">已锁定</span></td>
+                <td class="num"><span class="crack-quote"><input id="in-nyh" class="mono crack-in" type="number" min="0.5" max="8" step="0.001" inputmode="decimal" data-i18n-aria="aria-nyh" aria-label="纽约港柴油" /><span>$/gal</span></span></td>
+                <td class="num mono" id="nyh-bbl">—</td>
+                <td class="num mono" id="nyh-crack">—</td>
+              </tr>
+              <tr>
+                <td class="name"><span data-i18n="row-usgc">美湾超低硫柴油</span> <span class="lock" id="lock-usgc" hidden data-i18n="locked">已锁定</span></td>
+                <td class="num"><span class="crack-quote"><input id="in-usgc" class="mono crack-in" type="number" min="0.5" max="8" step="0.001" inputmode="decimal" data-i18n-aria="aria-usgc" aria-label="美湾柴油" /><span>$/gal</span></span></td>
+                <td class="num mono" id="usgc-bbl">—</td>
+                <td class="num mono" id="usgc-crack">—</td>
+              </tr>
+              <tr>
+                <td class="name"><span data-i18n="row-ara">鹿特丹柴油</span> <span class="lock" id="lock-ara" hidden data-i18n="locked">已锁定</span></td>
+                <td class="num"><span class="crack-quote"><input id="in-ara" class="mono crack-in" type="number" min="200" max="2000" step="0.5" inputmode="decimal" data-i18n-aria="aria-ara" aria-label="鹿特丹柴油" /><span>$/t</span></span></td>
+                <td class="num mono" id="ara-bbl">—</td>
+                <td class="num mono" id="ara-crack">—</td>
+              </tr>
+            </tbody>
+          </table>
           <p class="note" data-i18n="crack-note" data-i18n-mode="html">裂解 = 成品美元/桶 − 布伦特。加仑按 42，吨按 7.45。示意<span class="keep">口径。</span></p>
         </div>
         <div id="parity-compare" tabindex="0">
-          <h3 data-i18n="h-parity">热值横比</h3>
-          <svg id="parity-chart" class="chart-svg hbars" role="img" data-i18n-aria="aria-parity" aria-label="Henry Hub、TTF、瓦斯油与取暖油的欧元每兆瓦时横比"></svg>
+          <div class="heat-head">
+            <h3 data-i18n="h-parity">热值横比</h3>
+            <span class="mono heat-unit">$/MMBtu</span>
+          </div>
+          <svg id="parity-chart" class="chart-svg hbars" role="img" data-i18n-aria="aria-parity" aria-label="Henry Hub、TTF、瓦斯油与取暖油的美元每百万英热横比"></svg>
           <p class="note" id="switch-read">—</p>
         </div>
       </div>
@@ -1551,6 +1680,7 @@
     </div>
   </div>
   <div id="tip" role="tooltip" hidden></div>
+  <div id="parity-card" class="parity-card" role="tooltip" hidden></div>
 
   <script>
     var CONFIG = {
@@ -1988,17 +2118,26 @@
       "mod-ref": ["炼厂与中间馏分油", "Refining and middle distillate"],
       "badge-week": ["周度示意", "Weekly illustrative"],
       "k-util": ["美国炼厂开工率", "US refinery utilization"],
-      "k-dist": ["馏分油总库存", "Total distillate stocks"],
-      "k-padd": ["PADD 1 东岸", "PADD 1 East Coast"],
-      "h-crack": ["裂解", "Cracks"],
+      "ref-note": [
+        "WTI 是原料成本，开工率是产出上限，HO 与 LGO 是两岸成品，PADD 1 是美东净进口。",
+        "WTI is crude cost, utilization the supply cap, HO vs LGO the two shores, PADD 1 the East Coast import."
+      ],
+      "u-mbbl": ["百万桶", "million bbl"],
+      "k-dist": ["美国馏分油总库存", "US distillate stocks"],
+      "k-padd": ["PADD 1 馏分油库存", "PADD 1 stocks"],
+      "h-crack": ["价格与裂解", "Prices and cracks"],
+      "row-brent": ["布伦特", "Brent"],
+      "row-nyh": ["纽约港超低硫柴油", "NYH ULSD"],
+      "row-usgc": ["美湾超低硫柴油", "USGC ULSD"],
+      "row-ara": ["鹿特丹柴油", "Rotterdam"],
       "lbl-in-brent": ["布伦特（美元/桶）", "Brent ($/bbl)"],
       "lbl-in-nyh": ["纽约港柴油（美元/加仑）", "NYH diesel ($/gallon)"],
       "lbl-in-usgc": ["美湾柴油（美元/加仑）", "USGC diesel ($/gallon)"],
       "lbl-in-ara": ["鹿特丹柴油（美元/吨）", "Rotterdam diesel ($/tonne)"],
-      "th-name": ["基准", "Benchmark"],
+      "th-name": ["品种", "Product"],
       "th-quote": ["报价", "Quote"],
       "th-bbl": ["美元/桶", "$/bbl"],
-      "th-crack": ["对布伦特裂解", "Crack vs Brent"],
+      "th-crack": ["对原油裂解", "Crack vs crude"],
       "crack-note": [
         '裂解 = 成品美元/桶 − 布伦特。加仑按 42，吨按 7.45。示意<span class="keep">口径。</span>',
         'Crack = product $/bbl − Brent. Gallons × 42, tonnes / 7.45. Illustrative <span class="keep">basis.</span>'
@@ -2037,7 +2176,11 @@
       "aria-util": ["美国炼厂开工率示意曲线", "Illustrative US refinery utilization"],
       "aria-dist": ["美国馏分油总库存示意曲线", "Illustrative US distillate stocks"],
       "aria-padd": ["PADD 1 东岸馏分油库存示意曲线", "Illustrative PADD 1 East Coast distillate stocks"],
-      "aria-parity": ["Henry Hub、TTF、瓦斯油与取暖油的欧元每兆瓦时横比", "Henry Hub, TTF, ICE GO, and NYMEX HO in euro per MWh"]
+      "aria-brent": ["布伦特，美元/桶", "Brent, dollars per barrel"],
+      "aria-nyh": ["纽约港柴油，美元/加仑", "NYH diesel, dollars per gallon"],
+      "aria-usgc": ["美湾柴油，美元/加仑", "USGC diesel, dollars per gallon"],
+      "aria-ara": ["鹿特丹柴油，美元/吨", "Rotterdam diesel, dollars per tonne"],
+      "aria-parity": ["Henry Hub、TTF、瓦斯油与取暖油的美元每百万英热横比", "Henry Hub, TTF, ICE GO, and NYMEX HO in dollars per MMBtu"]
     };
     function applyStatic() {
       var en = document.documentElement.lang === "en";
@@ -2314,20 +2457,75 @@
       };
     }
 
-    function parityTip(rows) {
-      var unit = tr(" 欧元/兆瓦时", " €/MWh");
-      var vs = tr("较 ", "vs ");
-      var lines = [];
-      rows.forEach(function (r) {
-        lines.push({ text: r.name + "  " + fmt(r.value, 2) + unit, strong: true, swatch: r.color });
-        var bits = [];
-        rows.forEach(function (o) {
-          if (o === r) return;
-          bits.push(vs + o.name + " " + signed(r.value - o.value, 2));
-        });
-        lines.push({ text: bits.join(" · ") });
+    function hideParityCard() {
+      var card = byId("parity-card");
+      if (card) card.hidden = true;
+    }
+
+    function renderParityCard(rows) {
+      var card = byId("parity-card");
+      if (!card || !rows || !rows.length) return;
+      hideTip();
+      card.replaceChildren();
+      var unit = document.createElement("p");
+      unit.className = "mono heat-unit";
+      unit.textContent = "$/MMBtu";
+      card.appendChild(unit);
+      var table = document.createElement("table");
+      var head = document.createElement("thead");
+      var headRow = document.createElement("tr");
+      [tr("品种", "Product"), "$/MMBtu", tr("较 Henry Hub", "vs Henry Hub"), tr("较 TTF", "vs TTF"), tr("较 瓦斯油", "vs ICE GO"), tr("较 取暖油", "vs NYMEX HO")].forEach(function (label, i) {
+        var th = document.createElement("th");
+        if (i) th.className = "num";
+        th.textContent = label;
+        headRow.appendChild(th);
       });
-      return lines;
+      head.appendChild(headRow);
+      table.appendChild(head);
+      var body = document.createElement("tbody");
+      rows.forEach(function (r) {
+        var trEl = document.createElement("tr");
+        var name = document.createElement("td");
+        var mark = document.createElement("i");
+        mark.className = "swatch";
+        mark.style.background = r.color;
+        name.appendChild(mark);
+        name.appendChild(document.createTextNode(r.name));
+        trEl.appendChild(name);
+        var value = document.createElement("td");
+        value.className = "num mono";
+        value.textContent = fmt(r.value, 2);
+        trEl.appendChild(value);
+        rows.forEach(function (o) {
+          var cell = document.createElement("td");
+          cell.className = "num mono";
+          if (o === r) cell.textContent = "—";
+          else {
+            var spread = r.value - o.value;
+            cell.textContent = signed(spread, 2);
+            cell.className += spread > 0 ? " pos" : spread < 0 ? " neg" : "";
+          }
+          trEl.appendChild(cell);
+        });
+        body.appendChild(trEl);
+      });
+      table.appendChild(body);
+      card.appendChild(table);
+      card.hidden = false;
+      var chart = byId("parity-chart").getBoundingClientRect();
+      var w = card.offsetWidth;
+      var h = card.offsetHeight;
+      var left = chart.left - w - 10;
+      var top = chart.top + Math.max(0, (chart.height - h) / 2);
+      if (left < 8) {
+        left = Math.max(8, Math.min(chart.left, window.innerWidth - w - 8));
+        top = chart.bottom + 8;
+        if (top + h > window.innerHeight - 8) top = Math.max(8, chart.top - h - 8);
+      }
+      if (top < 8) top = 8;
+      if (top + h > window.innerHeight - 8) top = Math.max(8, window.innerHeight - h - 8);
+      card.style.left = Math.round(left) + "px";
+      card.style.top = Math.round(top) + "px";
     }
 
     function chartSize(svg) {
@@ -2348,15 +2546,13 @@
         var stay = svg._hit && svg._hit.sticky && box && ev.relatedTarget && box.contains(ev.relatedTarget);
         if (stay) return;
         if (svg._hit && svg._hit.sticky && box && document.activeElement === box) {
-          var rect = svg.getBoundingClientRect();
           pointer.over = svg.id;
-          pointer.x = rect.left + 16;
-          pointer.y = rect.top + 16;
-          showTip(pointer.x, pointer.y, svg._hit.tip(0));
+          renderParityCard(svg._hit.rows);
           return;
         }
         if (pointer.over === svg.id) pointer.over = null;
         hideTip();
+        if (svg._hit && svg._hit.sticky) hideParityCard();
       });
       svg.addEventListener("touchstart", function (ev) {
         if (!ev.touches || !ev.touches[0]) return;
@@ -2388,11 +2584,17 @@
         var d = Math.abs(p.x - hit.xs[i]);
         if (d < bestD) { bestD = d; best = i; }
       }
-      if (hit.guide && !hit.sticky) {
+      if (hit.sticky) {
+        hideTip();
+        renderParityCard(hit.rows);
+        return;
+      }
+      if (hit.guide) {
         hit.guide.setAttribute("x1", hit.xs[best]);
         hit.guide.setAttribute("x2", hit.xs[best]);
         hit.guide.setAttribute("visibility", "visible");
       }
+      hideParityCard();
       showTip(ev.clientX, ev.clientY, hit.tip(best));
     }
 
@@ -2578,7 +2780,7 @@
         svg._hit = null;
         return;
       }
-      var pad = { l: 96, r: 52, t: 8, b: 8 };
+      var pad = { l: 112, r: 58, t: 8, b: 8 };
       var max = Math.max.apply(null, rows.map(function (r) { return r.value; }).concat([1])) * 1.08;
       var rowH = (box.h - pad.t - pad.b) / rows.length;
       var innerW = Math.max(40, box.w - pad.l - pad.r);
@@ -2591,14 +2793,14 @@
         rect.style.fill = r.color;
         svg.appendChild(rect);
         svgText(svg, pad.l - 6, y + bh * 0.75, r.name, "muted", "end");
-        svgText(svg, pad.l + w + 5, y + bh * 0.75, fmt(r.value, 1), "num", "start");
+        svgText(svg, pad.l + w + 5, y + bh * 0.75, fmt(r.value, 2), "num", "start");
         xs.push(pad.l + innerW / 2);
       });
       svg._hit = {
         xs: xs,
         guide: null,
         sticky: true,
-        tip: function () { return parityTip(rows); }
+        rows: rows
       };
     }
 
@@ -2870,19 +3072,34 @@
     }
 
     function renderRefining(m) {
-      setText("util-out", fmt(state.utilPct, 1) + "%");
-      setText("distillate-out", fmt(m.distillate, 1) + tr(" 百万桶", " million bbl"));
-      setNote("distillate-note", tr(
-        "随东岸库存同量增减，起点 " + fmt(BASE_DISTILLATE, 1) + " 百万桶。",
-        "Moves one-for-one with East Coast stocks, from " + fmt(BASE_DISTILLATE, 1) + " million bbl."
+      var anchor = axisAnchor();
+      var monthEn = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      setText("ref-chip", tr(
+        "截至 " + (anchor.getUTCMonth() + 1) + "月" + anchor.getUTCDate() + "日 · EIA WPSR",
+        "As of " + monthEn[anchor.getUTCMonth()] + " " + anchor.getUTCDate() + " · EIA WPSR"
       ));
-      setText("padd-out", fmt(state.padd1, 1) + tr(" 百万桶", " million bbl"));
+      setText("distillate-out", fmt(m.distillate, 1));
+      setNote("util-foot", tr(
+        "末端跟随当前开工率，检修压在取暖油备货窗口。",
+        "The last point follows the run rate; maintenance sits on the stocking window."
+      ));
+      setNote("distillate-note", tr(
+        "全美库存随东岸同量变动，起点 " + fmt(BASE_DISTILLATE, 1) + " 百万桶。",
+        "US stocks move with the East Coast, from " + fmt(BASE_DISTILLATE, 1) + " million bbl."
+      ));
+      setNote("padd-foot", tr(
+        "东岸净进口，库存紧会推高取暖油升水。",
+        "East Coast import; tight stocks lift the heating-oil premium."
+      ));
       var padd = PADD_HIST.slice();
       padd[padd.length - 1] = state.padd1;
       var paddLabels = seriesDates(padd.length, 7);
       var utilShape = [94.1, 93.8, 93.4, 93.0, 92.6, 92.2, 91.9, 91.6, 91.2, 90.9, 91.1, 91.5, 91.8, 92.1, 91.7, 91.4];
       utilShape[utilShape.length - 1] = state.utilPct;
       var utilLabels = seriesDates(utilShape.length, 7);
+      setText("util-asof", tr("截至 " + utilLabels[utilLabels.length - 1], "As of " + utilLabels[utilLabels.length - 1]));
+      setText("dist-asof", tr("截至 " + paddLabels[paddLabels.length - 1], "As of " + paddLabels[paddLabels.length - 1]));
+      setText("padd-asof", tr("截至 " + paddLabels[paddLabels.length - 1], "As of " + paddLabels[paddLabels.length - 1]));
       var utilView = zoomSlice("util", utilLabels, utilShape);
       drawLine(byId("util-chart"), {
         labels: utilView.labels,
@@ -2929,55 +3146,41 @@
           ];
         }
       });
-      var rows = [
-        [tr("布伦特", "Brent"), fmt(state.brent, 2) + tr(" 美元/桶", " $/bbl"), fmt(state.brent, 2), null],
-        [tr("纽约港超低硫柴油", "NYH ULSD"), fmt(state.nyh, 3) + tr(" 美元/加仑", " $/gal"), fmt(m.nyhBbl, 2), m.nyhBbl - state.brent],
-        [tr("美湾超低硫柴油", "USGC ULSD"), fmt(state.usgc, 3) + tr(" 美元/加仑", " $/gal"), fmt(m.usgcBbl, 2), m.usgcBbl - state.brent],
-        [tr("鹿特丹柴油", "Rotterdam diesel"), fmt(state.ara, 1) + tr(" 美元/吨", " $/t"), fmt(m.araBbl, 2), m.araBbl - state.brent]
-      ];
-      var body = byId("price-body");
-      body.replaceChildren();
-      rows.forEach(function (row) {
-        var rowEl = document.createElement("tr");
-        var name = document.createElement("td");
-        name.className = "name";
-        name.textContent = row[0];
-        var quote = document.createElement("td");
-        quote.className = "num mono";
-        quote.textContent = row[1];
-        var bbl = document.createElement("td");
-        bbl.className = "num mono";
-        bbl.textContent = row[2];
-        var crack = document.createElement("td");
-        crack.className = "num mono";
-        if (row[3] == null) crack.textContent = "—";
-        else {
-          crack.textContent = signed(row[3], 2);
-          crack.className += row[3] >= 0 ? " pos" : " neg";
-        }
-        rowEl.append(name, quote, bbl, crack);
-        body.appendChild(rowEl);
-      });
-      var hhEur = state.hh * MMBTU_PER_MWH / m.eurusd;
-      var heatOil = (state.nyh * GAL_PER_BBL * BBL_PER_T / DIESEL_MWH_PER_T) / m.eurusd;
+      setText("brent-bbl", fmt(state.brent, 2));
+      setText("nyh-bbl", fmt(m.nyhBbl, 2));
+      setText("usgc-bbl", fmt(m.usgcBbl, 2));
+      setText("ara-bbl", fmt(m.araBbl, 2));
+      function paintCrack(id, value) {
+        var node = byId(id);
+        node.textContent = signed(value, 2);
+        node.className = "num mono " + (value >= 0 ? "pos" : "neg");
+      }
+      paintCrack("nyh-crack", m.nyhBbl - state.brent);
+      paintCrack("usgc-crack", m.usgcBbl - state.brent);
+      paintCrack("ara-crack", m.araBbl - state.brent);
+      var hhBtu = state.hh;
+      var ttfBtu = state.ttf * m.eurusd / MMBTU_PER_MWH;
+      var goBtu = m.dieselEur * m.eurusd / MMBTU_PER_MWH;
+      var hoBtu = (state.nyh * GAL_PER_BBL * BBL_PER_T / DIESEL_MWH_PER_T) / MMBTU_PER_MWH;
       drawHBars(byId("parity-chart"), [
-        { name: "Henry Hub", value: hhEur, color: "var(--info)" },
-        { name: "TTF", value: state.ttf, color: "var(--gas)" },
-        { name: tr("瓦斯油", "ICE GO"), value: m.dieselEur, color: "var(--diesel)" },
-        { name: tr("取暖油", "NYMEX HO"), value: heatOil, color: "var(--accent)" }
+        { name: "Henry Hub", value: hhBtu, color: "var(--info)" },
+        { name: "TTF", value: ttfBtu, color: "var(--gas)" },
+        { name: tr("瓦斯油", "ICE GO"), value: goBtu, color: "var(--diesel)" },
+        { name: tr("取暖油", "NYMEX HO"), value: hoBtu, color: "var(--accent)" }
       ]);
-      var switchText = m.gap > 0
+      var gapBtu = ttfBtu - goBtu;
+      var switchText = gapBtu > 0
         ? tr(
-          "TTF 高于瓦斯油热值 " + fmt(m.gap, 2) + " 欧元/兆瓦时，气转油激励出现。",
-          "TTF is " + fmt(m.gap, 2) + " €/MWh above ICE GO heat value, so gas-to-oil switching is on."
+          "TTF 高于瓦斯油 " + fmt(gapBtu, 2) + " $/MMBtu，气转油激励出现。",
+          "TTF is " + fmt(gapBtu, 2) + " $/MMBtu above ICE GO, so gas-to-oil switching is on."
         )
         : tr(
-          "TTF 低于瓦斯油热值 " + fmt(-m.gap, 2) + " 欧元/兆瓦时，气转油激励未打开。",
-          "TTF is " + fmt(-m.gap, 2) + " €/MWh below ICE GO heat value, so gas-to-oil switching is off."
+          "TTF 低于瓦斯油 " + fmt(-gapBtu, 2) + " $/MMBtu，气转油激励未打开。",
+          "TTF is " + fmt(-gapBtu, 2) + " $/MMBtu below ICE GO, so gas-to-oil switching is off."
         );
       setNote("switch-read", tr(
-        "四条都是欧元/兆瓦时。Henry Hub 按 3.412141633 换算，取暖油与瓦斯油按 11.83 兆瓦时/吨。",
-        "All four bars are €/MWh. Henry Hub uses 3.412141633; NYMEX HO and ICE GO use 11.83 MWh/t. "
+        "单位 $/MMBtu。Henry Hub 是气价，其余按 3.412141633 与 11.83 兆瓦时/吨折算。",
+        "Unit $/MMBtu. Henry Hub is the gas price; the others use 3.412141633 and 11.83 MWh/t. "
       ) + switchText);
     }
 
@@ -3013,7 +3216,7 @@
         var svg = byId(pointer.over);
         var parityBox = byId("parity-compare");
         var stickyOn = svg && svg._hit && svg._hit.sticky && parityBox && (parityBox.matches(":hover") || document.activeElement === parityBox);
-        if (stickyOn) showTip(pointer.x, pointer.y, svg._hit.tip(0));
+        if (stickyOn) renderParityCard(svg._hit.rows);
         else if (svg && svg.matches(":hover") && svg._hit) {
           onChartMove({ currentTarget: svg, clientX: pointer.x, clientY: pointer.y });
         }
@@ -3041,8 +3244,8 @@
       writeIfIdle("storage-num", state.storagePct.toFixed(1));
       writeIfIdle("storage-range", String(state.storagePct));
       writeIfIdle("hdd-range", String(state.hddDevPct));
-      writeIfIdle("in-util", String(state.utilPct));
-      writeIfIdle("in-padd", String(state.padd1));
+      writeIfIdle("in-util", state.utilPct.toFixed(1));
+      writeIfIdle("in-padd", state.padd1.toFixed(1));
       var fxShown = state.fxMode === "EURUSD" ? state.eurusd : 1 / state.eurusd;
       writeIfIdle("in-fx", fxShown.toFixed(4));
     }
@@ -3388,15 +3591,15 @@
       });
       byId("in-util").addEventListener("input", function () {
         var v = Number(this.value);
-        if (!Number.isFinite(v)) return;
-        state.utilPct = clamp(v, 70, 100);
+        if (!Number.isFinite(v) || v < 70 || v > 100) return;
+        state.utilPct = v;
         state.pinned.utilPct = true;
         changed();
       });
       byId("in-padd").addEventListener("input", function () {
         var v = Number(this.value);
-        if (!Number.isFinite(v)) return;
-        state.padd1 = clamp(v, 12, 55);
+        if (!Number.isFinite(v) || v < 12 || v > 55) return;
+        state.padd1 = v;
         state.pinned.padd1 = true;
         changed();
       });
@@ -3428,33 +3631,31 @@
       });
       var parityBox = byId("parity-compare");
       var paritySvg = byId("parity-chart");
-      function placeParityTip(x, y) {
+      function placeParityTip() {
         if (!paritySvg._hit) return;
         pointer.over = paritySvg.id;
-        pointer.x = x;
-        pointer.y = y;
-        showTip(x, y, paritySvg._hit.tip(0));
+        renderParityCard(paritySvg._hit.rows);
       }
-      parityBox.addEventListener("mousemove", function (ev) {
-        placeParityTip(ev.clientX, ev.clientY);
+      parityBox.addEventListener("mousemove", function () {
+        placeParityTip();
       });
       parityBox.addEventListener("mouseleave", function () {
         if (document.activeElement === parityBox) {
-          var rect = paritySvg.getBoundingClientRect();
-          placeParityTip(rect.left + 16, rect.top + 16);
+          placeParityTip();
           return;
         }
         if (pointer.over === paritySvg.id) pointer.over = null;
         hideTip();
+        hideParityCard();
       });
       parityBox.addEventListener("focus", function () {
-        var rect = paritySvg.getBoundingClientRect();
-        placeParityTip(rect.left + 16, rect.top + 16);
+        placeParityTip();
       });
       parityBox.addEventListener("blur", function () {
         if (parityBox.matches(":hover")) return;
         if (pointer.over === paritySvg.id) pointer.over = null;
         hideTip();
+        hideParityCard();
       });
       byId("btn-reset").addEventListener("click", resetAll);
       byId("btn-glossary").addEventListener("click", openGlossary);
@@ -3475,7 +3676,10 @@
       byId("lang-zh").addEventListener("click", function () { setLang("zh"); });
       byId("lang-en").addEventListener("click", function () { setLang("en"); });
       window.matchMedia("(prefers-color-scheme: light)").addEventListener("change", updateThemeButton);
-      window.addEventListener("scroll", hideTip, true);
+      window.addEventListener("scroll", function () {
+        hideTip();
+        hideParityCard();
+      }, true);
       if (window.ResizeObserver) {
         var observer = new ResizeObserver(function (entries) {
           var dirty = false;
