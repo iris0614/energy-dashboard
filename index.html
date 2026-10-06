@@ -707,32 +707,58 @@
       .card h2 { font-size: 16px; }
       .wrap { padding: 14px 12px 32px; }
     }
-    .strip.sheet-strip {
-      grid-template-rows: auto auto auto;
-      align-items: stretch;
+    .strip.sheet-strip { align-items: stretch; }
+    .strip.sheet-strip .metric,
+    .strip.sheet-strip .metric:first-child,
+    .strip.sheet-strip .metric:nth-child(odd),
+    .strip.sheet-strip .metric:nth-child(even),
+    .strip.sheet-strip .metric:nth-child(3) {
+      display: block;
+      margin-left: 0;
+      min-width: 0;
+      box-sizing: border-box;
+      grid-row: auto;
     }
-    .strip.sheet-strip .metric {
-      display: grid;
-      grid-template-rows: subgrid;
-      grid-row: span 3;
+    .strip.sheet-strip .metric-k {
+      margin: 0;
+      min-height: calc(13px * 1.5);
+      line-height: 1.5;
+      white-space: nowrap;
     }
     .strip.sheet-strip .metric-row {
       display: grid;
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      grid-template-rows: subgrid;
-      grid-row: span 2;
-      gap: 2px 14px;
+      grid-template-rows: auto;
+      gap: 0 14px;
       margin-top: 2px;
+      align-items: start;
     }
     .strip.sheet-strip .quote {
       display: grid;
-      grid-template-rows: subgrid;
-      grid-row: span 2;
+      grid-template-rows: calc(13px * 1.5 * 2) auto;
+      grid-row: auto;
+      align-content: start;
       min-width: 0;
     }
-    .strip.sheet-strip .quote .lbl,
-    .strip.sheet-strip .numline { align-self: end; }
-    .strip.sheet-strip .numline { margin-top: 0; }
+    .strip.sheet-strip .quote .lbl {
+      align-self: start;
+      margin: 0;
+      padding: 0;
+      min-width: 0;
+      font-size: 13px;
+      line-height: 1.5;
+      overflow: visible;
+    }
+    .strip.sheet-strip .numline {
+      align-self: start;
+      align-items: baseline;
+      margin-top: 0;
+      min-width: 0;
+    }
+    .strip.sheet-strip .numline b,
+    .strip.sheet-strip .delta {
+      line-height: 1.1;
+    }
     .triple { grid-template-rows: auto auto auto; align-items: stretch; }
     .mini {
       display: grid;
