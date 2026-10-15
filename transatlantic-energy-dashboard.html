@@ -169,6 +169,7 @@ try {
     color: var(--ink-3);
   }
   .lang button[aria-pressed="true"] { color: var(--accent); font-weight: 700; }
+  .lang a { font-size: 12px; }
   .snap-k, .snap-note { font-size: 12px; color: var(--ink-3); margin: 0; }
   .snap-d { display: block; font-size: 15px; font-weight: 500; color: var(--ink); }
   .chain {
@@ -414,6 +415,7 @@ try {
       </div>
       <div class="snap">
         <div class="lang" role="group" aria-label="Language">
+          <a href="explain.html" data-i18n="nav-x">重要解释</a>
           <button type="button" id="lang-zh" aria-pressed="true">中文</button>
           <button type="button" id="lang-en" aria-pressed="false">English</button>
         </div>
@@ -628,6 +630,7 @@ try {
 (function () {
   var STR = {
     title: ["跨大西洋冬季能源平衡与套利看板", "Transatlantic winter energy balance and arbitrage"],
+    "nav-x": ["重要解释", "Framework"],
     lead: ["沿上游原料、加工／液化、跨大西洋海运、终端需求，读欧洲气库、LNG 套利和柴油炼能。示意序列在卡片上标明。", "Read European storage, LNG arbitrage, and diesel refining along feedstock, liquefaction, Atlantic freight, and end use. Illustrative series are labeled on the cards."],
     "snap-k": ["数据快照", "Snapshot"],
     "st-1": ["原料定价", "Feedstock"],

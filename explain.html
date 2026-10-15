@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>重要解释</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet">
+<script>
+try {
+  var saved = localStorage.getItem("desk-lang");
+  document.documentElement.lang = saved === "en" ? "en" : "zh-CN";
+} catch (e) {}
+</script>
+<style>
+  * { box-sizing: border-box; }
+  :root {
+    color-scheme: light;
+    --bg: #f3f5f7;
+    --panel: #ffffff;
+    --ink: #14212e;
+    --ink-2: #4b5968;
+    --ink-3: #7c8896;
+    --rule: #dde3e9;
+    --accent: #0f5c8c;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #0f161d;
+      --panel: #16202a;
+      --ink: #e8edf2;
+      --ink-2: #aab6c2;
+      --ink-3: #7d8a97;
+      --rule: #263340;
+      --accent: #5fb0e0;
+    }
+  }
+  html[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #0f161d;
+    --panel: #16202a;
+    --ink: #e8edf2;
+    --ink-2: #aab6c2;
+    --ink-3: #7d8a97;
+    --rule: #263340;
+    --accent: #5fb0e0;
+  }
+  html[data-theme="light"] {
+    color-scheme: light;
+    --bg: #f3f5f7;
+    --panel: #ffffff;
+    --ink: #14212e;
+    --ink-2: #4b5968;
+    --ink-3: #7c8896;
+    --rule: #dde3e9;
+    --accent: #0f5c8c;
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.6;
+  }
+  .mono, .num, .eyebrow, .src, td.code, td.unit {
+    font-family: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  }
+  .num { font-variant-numeric: tabular-nums; }
+  h1, h2 {
+    font-family: "Noto Serif SC", "Songti SC", serif;
+    font-weight: 700;
+    letter-spacing: .01em;
+    text-wrap: balance;
+    margin: 0;
+  }
+  h1 { font-size: clamp(24px, 3.4vw, 34px); line-height: 1.25; }
+  h2 { font-size: 20px; line-height: 1.6; }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  a { color: var(--accent); text-decoration: underline; }
+  .wrap {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding-inline: 20px;
+    padding-block: 28px 56px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+  .top {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    row-gap: 16px;
+    column-gap: 32px;
+    align-items: end;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .eyebrow {
+    font-family: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0;
+  }
+  .lead { margin: 8px 0 0; max-width: 68ch; }
+  .snap { text-align: right; }
+  .lang { display: flex; gap: 10px; justify-content: flex-end; margin-bottom: 8px; align-items: baseline; }
+  .lang button, .lang a { background: none; border: 0; padding: 0; font-size: 12px; }
+  .lang button { color: var(--ink-3); }
+  .lang button[aria-pressed="true"] { color: var(--accent); font-weight: 700; }
+  .back { font-size: 12px; color: var(--ink-3); margin: 0; }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 16px;
+    min-width: 0;
+  }
+  .tscroll { overflow-x: auto; max-width: 100%; }
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; min-width: 760px; }
+  th, td { padding: 7px 8px; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; }
+  th { font-size: 11px; font-weight: 500; color: var(--ink-3); letter-spacing: .04em; }
+  td.mod {
+    font-weight: 700;
+    white-space: nowrap;
+    border-right: 1px solid var(--rule);
+    width: 8.5em;
+  }
+  td.code, td.unit { font-size: 12px; color: var(--ink-2); }
+  td.role { color: var(--ink-2); }
+  .paths { display: flex; flex-direction: column; gap: 16px; }
+  .call { border-left: 3px solid var(--accent); padding: 2px 0 2px 12px; margin: 0; }
+  @media (max-width: 720px) {
+    .top { grid-template-columns: 1fr; }
+    .snap, .lang { text-align: left; justify-content: flex-start; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div>
+        <p class="eyebrow">Winter energy</p>
+        <h1 id="title" data-i18n="title">重要解释</h1>
+        <p class="lead" data-i18n="lead">这是一个完整的跨大西洋冬季能源套利与供需平衡框架（Transatlantic Winter Energy Balance &amp; Arbitrage）。从上游原料（原油、天然气）、炼厂加工与海运，到终端消费（供暖、发电、柴油替代）的完整基本面链条，把数据链条观察得更细致一些。</p>
+      </div>
+      <div class="snap">
+        <div class="lang" role="group" aria-label="Language">
+          <button type="button" id="lang-zh" aria-pressed="true">中文</button>
+          <button type="button" id="lang-en" aria-pressed="false">English</button>
+        </div>
+        <p class="back"><a href="index.html" data-i18n="back">返回看板</a></p>
+      </div>
+    </header>
+
+    <article class="panel">
+      <div class="tscroll">
+        <table>
+          <thead>
+            <tr>
+              <th data-i18n="h-mod">模块</th>
+              <th data-i18n="h-ind">核心指标</th>
+              <th data-i18n="h-code">标准代码 / 数据源</th>
+              <th data-i18n="h-unit">关键单位</th>
+              <th data-i18n="h-role">角色与分析意义</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="mod" rowspan="3" data-i18n="m-gas">欧洲天然气</td>
+              <td data-i18n="i-store">储气库注入/抽采</td>
+              <td class="code" data-i18n="c-store">GIE AGSI+（欧洲天然气基础设施）</td>
+              <td class="unit" data-i18n="u-store">%（库存率），TWh 或 bcm（注入/抽采）</td>
+              <td class="role" data-i18n="r-store">欧洲冬季供需的核心缓冲器。11 月至次年 3 月由净注入转向净抽采。</td>
+            </tr>
+            <tr>
+              <td data-i18n="i-ttf">荷兰 TTF</td>
+              <td class="code" data-i18n="c-ttf">ICE TTF（荷兰产权转让设施）</td>
+              <td class="unit">€/MWh</td>
+              <td class="role" data-i18n="r-ttf">欧洲天然气的绝对定价锚。决定气改油的盈亏平衡，以及吸引美湾 LNG 货源的溢价。</td>
+            </tr>
+            <tr>
+              <td data-i18n="i-hdd">取暖季平均气温</td>
+              <td class="code" data-i18n="c-hdd">ECMWF / GFS 气象模型，ERA5 再分析</td>
+              <td class="unit" data-i18n="u-hdd">HDD（18 °C 基准），°C</td>
+              <td class="role" data-i18n="r-hdd">核心外生变量，直接决定日均去库速度与冬季峰值负荷。</td>
+            </tr>
+            <tr>
+              <td class="mod" rowspan="2" data-i18n="m-ship">跨大西洋航运</td>
+              <td>Spark25</td>
+              <td class="code" data-i18n="c-spark">Spark Commodities / Baltic Exchange（波罗的海交易所）</td>
+              <td class="unit" data-i18n="u-day">美元/天</td>
+              <td class="role" data-i18n="r-spark">美湾至欧洲的 174,000 m³ 二冲程 LNG 船即期日租金。反映跨大西洋运力松紧。</td>
+            </tr>
+            <tr>
+              <td>BLNG2</td>
+              <td class="code" data-i18n="c-blng">Baltic Exchange（波罗的海交易所）</td>
+              <td class="unit" data-i18n="u-day">美元/天</td>
+              <td class="role" data-i18n="r-blng">波罗的海 174,000 m³ 二冲程 LNG 船跨大西洋往返租金。</td>
+            </tr>
+            <tr>
+              <td class="mod" rowspan="2" data-i18n="m-arb">欧美天然气套利</td>
+              <td>Henry Hub</td>
+              <td class="code" data-i18n="c-hh">NYMEX NG（路易斯安那亨利中心）</td>
+              <td class="unit">$/MMBtu</td>
+              <td class="role" data-i18n="r-hh">全球最廉价的边际出口气源基准，也是美国气液化出口的利润中心。</td>
+            </tr>
+            <tr>
+              <td data-i18n="i-spread">跨洋套利价差</td>
+              <td class="code" data-i18n="c-spread">TTF −（Henry Hub + 运费 + 液化）</td>
+              <td class="unit">$/MMBtu</td>
+              <td class="role" data-i18n="r-spread">决定美湾 LNG 船流向欧洲还是亚洲的关键套利窗口。</td>
+            </tr>
+            <tr>
+              <td class="mod" rowspan="5" data-i18n="m-oil">炼厂与中间馏分油</td>
+              <td>WTI</td>
+              <td class="code" data-i18n="c-wti">NYMEX CL（俄克拉荷马库欣）</td>
+              <td class="unit" data-i18n="u-bbl">美元/桶</td>
+              <td class="role" data-i18n="r-wti">美国炼厂的原料成本基准。裂解价差的原油端。</td>
+            </tr>
+            <tr>
+              <td data-i18n="i-util">开工率</td>
+              <td class="code" data-i18n="c-util">EIA Weekly Petroleum Status Report（WPSR）</td>
+              <td class="unit" data-i18n="u-util">%（开工率）</td>
+              <td class="role" data-i18n="r-util">供给端瓶颈指标，直接决定成品油与馏分油的产出上限。</td>
+            </tr>
+            <tr>
+              <td>NYMEX HO</td>
+              <td class="code" data-i18n="c-ho">NYMEX HO（纽约港超低硫柴油）</td>
+              <td class="unit" data-i18n="u-ho">美分/加仑，或美元/桶</td>
+              <td class="role" data-i18n="r-ho">美国取暖油与柴油的基准期货。裂解价差的成品端。</td>
+            </tr>
+            <tr>
+              <td>PADD 1</td>
+              <td class="code" data-i18n="c-padd">EIA：库存 / 净进口 / 出口</td>
+              <td class="unit" data-i18n="u-kb">千桶</td>
+              <td class="role" data-i18n="r-padd">美东是极度缺油的净调入区，常从 PADD 3 管道调入，或自欧洲进口。</td>
+            </tr>
+            <tr>
+              <td data-i18n="i-lgo">欧洲柴油</td>
+              <td class="code" data-i18n="c-lgo">ICE LGO（低硫柴油）</td>
+              <td class="unit" data-i18n="u-t">美元/吨</td>
+              <td class="role" data-i18n="r-lgo">欧洲航运、工业和气改油的核心成本。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </article>
+
+    <section class="paths" aria-label="paths">
+      <h2 data-i18n="h-path">极端路径</h2>
+      <p class="call" data-i18n="p1">极寒路径：欧洲冬季 11 月至次年 3 月 HDD 飙升，储气库从净注入转向净抽采。</p>
+      <p class="call" data-i18n="p2">欧洲气荒与套利：TTF 对 Henry Hub 溢价过大，锁船与运费，Spark25 和 BLNG2 暴涨，气改油，欧洲柴油裂解走强。</p>
+      <p class="call" data-i18n="p3">美洲联动：寒潮打到美东，PADD 1 极低，从美湾调拨，炼厂开工率和中间馏分油收率上升，需求传回 WTI。</p>
+    </section>
+  </div>
+<script>
+(function () {
+  var STR = {
+    title: ["重要解释", "Framework"],
+    lead: [
+      "这是一个完整的跨大西洋冬季能源套利与供需平衡框架（Transatlantic Winter Energy Balance & Arbitrage）。从上游原料（原油、天然气）、炼厂加工与海运，到终端消费（供暖、发电、柴油替代）的完整基本面链条，把数据链条观察得更细致一些。",
+      "This is the full transatlantic winter energy balance and arbitrage. It runs from upstream feedstock, crude and gas, through refining and seaborne freight, to end use in heat, power, and diesel substitution. The table reads that chain one indicator at a time."
+    ],
+    back: ["返回看板", "Back to the desk"],
+    "h-mod": ["模块", "Module"],
+    "h-ind": ["核心指标", "Indicator"],
+    "h-code": ["标准代码 / 数据源", "Code / source"],
+    "h-unit": ["关键单位", "Unit"],
+    "h-role": ["角色与分析意义", "Role in the analysis"],
+    "m-gas": ["欧洲天然气", "European gas"],
+    "i-store": ["储气库注入/抽采", "Storage injection / withdrawal"],
+    "c-store": ["GIE AGSI+（欧洲天然气基础设施）", "GIE AGSI+"],
+    "u-store": ["%（库存率），TWh 或 bcm（注入/抽采）", "% fill, TWh or bcm (injection / withdrawal)"],
+    "r-store": ["欧洲冬季供需的核心缓冲器。11 月至次年 3 月由净注入转向净抽采。", "The winter buffer for European gas. From November through March the balance flips from net injection to net withdrawal."],
+    "i-ttf": ["荷兰 TTF", "Dutch TTF"],
+    "c-ttf": ["ICE TTF（荷兰产权转让设施）", "ICE TTF (Title Transfer Facility)"],
+    "r-ttf": ["欧洲天然气的绝对定价锚。决定气改油的盈亏平衡，以及吸引美湾 LNG 货源的溢价。", "The European gas price anchor. It sets the gas-to-oil breakeven and the premium that pulls US Gulf LNG."],
+    "i-hdd": ["取暖季平均气温", "Heating-season temperature"],
+    "c-hdd": ["ECMWF / GFS 气象模型，ERA5 再分析", "ECMWF / GFS models, ERA5 reanalysis"],
+    "u-hdd": ["HDD（18 °C 基准），°C", "HDD (18 °C base), °C"],
+    "r-hdd": ["核心外生变量，直接决定日均去库速度与冬季峰值负荷。", "The outside driver. It sets the daily storage draw and peak winter load."],
+    "m-ship": ["跨大西洋航运", "Atlantic freight"],
+    "c-spark": ["Spark Commodities / Baltic Exchange（波罗的海交易所）", "Spark Commodities / Baltic Exchange"],
+    "u-day": ["美元/天", "USD/day"],
+    "r-spark": ["美湾至欧洲的 174,000 m³ 二冲程 LNG 船即期日租金。反映跨大西洋运力松紧。", "Spot day rate for a 174,000 m³ two-stroke LNG carrier, US Gulf to Europe. It shows how tight Atlantic tonnage is."],
+    "c-blng": ["Baltic Exchange（波罗的海交易所）", "Baltic Exchange"],
+    "r-blng": ["波罗的海 174,000 m³ 二冲程 LNG 船跨大西洋往返租金。", "Baltic assessment of the 174,000 m³ two-stroke round voyage across the Atlantic."],
+    "m-arb": ["欧美天然气套利", "Europe–US gas arbitrage"],
+    "c-hh": ["NYMEX NG（路易斯安那亨利中心）", "NYMEX NG (Louisiana Henry Hub)"],
+    "r-hh": ["全球最廉价的边际出口气源基准，也是美国气液化出口的利润中心。", "The cheap marginal export-gas benchmark, and the feedgas leg of US liquefaction margin."],
+    "i-spread": ["跨洋套利价差", "Transatlantic arb spread"],
+    "c-spread": ["TTF −（Henry Hub + 运费 + 液化）", "TTF − (Henry Hub + freight + liquefaction)"],
+    "r-spread": ["决定美湾 LNG 船流向欧洲还是亚洲的关键套利窗口。", "The window that sends US Gulf LNG to Europe or to Asia."],
+    "m-oil": ["炼厂与中间馏分油", "Refining and middle distillate"],
+    "c-wti": ["NYMEX CL（俄克拉荷马库欣）", "NYMEX CL (Cushing, Oklahoma)"],
+    "u-bbl": ["美元/桶", "$/bbl"],
+    "r-wti": ["美国炼厂的原料成本基准。裂解价差的原油端。", "The US refinery feedstock benchmark. The crude leg of the crack."],
+    "i-util": ["开工率", "Refinery utilization"],
+    "c-util": ["EIA Weekly Petroleum Status Report（WPSR）", "EIA Weekly Petroleum Status Report (WPSR)"],
+    "u-util": ["%（开工率）", "% utilization"],
+    "r-util": ["供给端瓶颈指标，直接决定成品油与馏分油的产出上限。", "The supply bottleneck. It caps product and distillate output."],
+    "c-ho": ["NYMEX HO（纽约港超低硫柴油）", "NYMEX HO (New York Harbor ULSD)"],
+    "u-ho": ["美分/加仑，或美元/桶", "¢/gal, or $/bbl"],
+    "r-ho": ["美国取暖油与柴油的基准期货。裂解价差的成品端。", "The US heating-oil and diesel future. The product leg of the crack."],
+    "c-padd": ["EIA：库存 / 净进口 / 出口", "EIA stocks / net imports / exports"],
+    "u-kb": ["千桶", "kbbl"],
+    "r-padd": ["美东是极度缺油的净调入区，常从 PADD 3 管道调入，或自欧洲进口。", "The East Coast is a structural short. Barrels come up from PADD 3, or in from Europe."],
+    "i-lgo": ["欧洲柴油", "European diesel"],
+    "c-lgo": ["ICE LGO（低硫柴油）", "ICE LGO (low sulphur gasoil)"],
+    "u-t": ["美元/吨", "$/t"],
+    "r-lgo": ["欧洲航运、工业和气改油的核心成本。", "The cost of European bunker, industrial, and gas-to-oil switching."],
+    "h-path": ["极端路径", "The extreme path"],
+    p1: ["极寒路径：欧洲冬季 11 月至次年 3 月 HDD 飙升，储气库从净注入转向净抽采。", "Cold path: from November through March, European HDD jumps and storage flips from net injection to net withdrawal."],
+    p2: ["欧洲气荒与套利：TTF 对 Henry Hub 溢价过大，锁船与运费，Spark25 和 BLNG2 暴涨，气改油，欧洲柴油裂解走强。", "European tightness and the arb: a wide TTF premium over Henry Hub locks ships and freight. Spark25 and BLNG2 spike, gas switches to oil, and the European diesel crack firms."],
+    p3: ["美洲联动：寒潮打到美东，PADD 1 极低，从美湾调拨，炼厂开工率和中间馏分油收率上升，需求传回 WTI。", "The American link: a cold shot hits the US East Coast and PADD 1 runs extremely low. Barrels are pulled from the US Gulf, refinery runs and middle-distillate yield rise, and the demand feeds back into WTI."]
+  };
+  function en() { return document.documentElement.lang === "en"; }
+  function applyStatic() {
+    var lang = en();
+    document.documentElement.lang = lang ? "en" : "zh-CN";
+    document.querySelectorAll("[data-i18n]").forEach(function (el) {
+      var row = STR[el.getAttribute("data-i18n")];
+      if (!row) return;
+      el.textContent = lang ? row[1] : row[0];
+    });
+    document.title = lang ? STR.title[1] : STR.title[0];
+    document.getElementById("lang-zh").setAttribute("aria-pressed", lang ? "false" : "true");
+    document.getElementById("lang-en").setAttribute("aria-pressed", lang ? "true" : "false");
+  }
+  function setLang(code) {
+    document.documentElement.lang = code === "en" ? "en" : "zh-CN";
+    try { localStorage.setItem("desk-lang", code === "en" ? "en" : "zh"); } catch (e) {}
+    applyStatic();
+  }
+  document.getElementById("lang-zh").addEventListener("click", function () { setLang("zh"); });
+  document.getElementById("lang-en").addEventListener("click", function () { setLang("en"); });
+  applyStatic();
+})();
+</script>
+</body>
+</html>
