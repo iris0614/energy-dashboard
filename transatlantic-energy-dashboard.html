@@ -498,10 +498,10 @@ try {
         </article>
       </div>
       <article class="panel">
-        <div class="panel-h"><h3 data-i18n="p-hdd">取暖度日与月均气温（西北欧代理）</h3><span class="src" id="src-hdd"></span></div>
+        <div class="panel-h"><h3 data-i18n="p-hdd">取暖季平均气温与采暖度日（西北欧常年参考）</h3><span class="src" data-i18n="src-hdd">近似气候值 · HDD 基准 18 °C</span></div>
         <svg id="hddChart" class="chart" viewBox="0 0 720 200" role="img"></svg>
-        <p class="legend"><b class="hdd"></b><span id="lg-hdd"></span></p>
-        <p class="note" id="note-hdd"></p>
+        <p class="legend"><b class="hdd"></b><span data-i18n="lg-hdd">月度 HDD（柱）. 柱内数字为月均气温 °C，深色为 12–2 月核心期.</span></p>
+        <p class="note" data-i18n="note-hdd">12–2 月贡献全季约 60% 的 HDD，是日均去库速度和峰值负荷的决定窗口。实盘需以 ECMWF / GFS 集合预报的 HDD 偏差替换常年值，再代入上方情景滑块.</p>
       </article>
     </section>
 
@@ -622,7 +622,6 @@ try {
         <li><a href="https://www.ice.com/products/27996665/Dutch-TTF-Gas-Futures">ICE Dutch TTF</a></li>
         <li><a href="https://agsi.gie.eu/">GIE AGSI+</a></li>
         <li><a href="https://voltstack.energy/gas-storage-map/countries.csv">AGSI via Voltstack</a></li>
-        <li><a href="https://open-meteo.com/">Open-Meteo</a></li>
         <li><a href="https://ec.europa.eu/eurostat/cache/metadata/en/nrg_chdd_esms.htm">Eurostat HDD</a></li>
         <li><a href="https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-usd.en.html">ECB EURUSD</a></li>
         <li><a href="https://frankfurter.dev/">Frankfurter</a></li>
@@ -667,10 +666,10 @@ try {
     "src-scen": ["季末 = 起点 − 55 ×（1 + 1.2 × HDD 偏离）", "End = start − 55 × (1 + 1.2 × HDD deviation)"],
     "lab-hdd": ["HDD 偏离", "HDD deviation"],
     "note-scen": ["横条是暖冬 −15%、常年 0%、冷冬 +15%，只随起点变化。滑块改的是上面的季末读数。低于 0 显示 0。低于 15 紧张，15 至 25 警戒，25 及以上宽裕。", "Bars are warm −15%, normal 0%, and cold +15%, and follow only the start. The slider changes the end-winter reading above. Below zero prints as 0. Below 15 is stressed, 15 to 25 is tight, 25 and above is comfortable."],
-    "p-hdd": ["取暖度日与月均气温（西北欧代理）", "Heating degree days and monthly mean temperature (Northwest Europe proxy)"],
-    "src-hdd": ["Open-Meteo 代理 · HDD 基准 18 °C", "Open-Meteo proxy · HDD base 18 °C"],
-    "lg-hdd": ["月度 HDD（柱）。柱内或柱上数字为月均气温 °C。深色为 12–2 月。", "Monthly HDD (bars). Figures in or above the bars are the monthly mean °C. Darker bars are December–February."],
-    "note-hdd": ["横轴画到最近一个有观测的月份。带星号的月份只到该月已发布的最后一天。这是气温代理，不是 ECMWF 业务预报。上方滑块仍是情景偏离，不由这条曲线自动改写。", "The axis runs through the latest month with observations. A starred month stops on its last published day. This is a temperature proxy, not an ECMWF operational forecast. The slider above stays a scenario deviation and is not overwritten by this curve."],
+    "p-hdd": ["取暖季平均气温与采暖度日（西北欧常年参考）", "Heating-season mean temperature and heating degree days (Northwest Europe normal-year reference)"],
+    "src-hdd": ["近似气候值 · HDD 基准 18 °C", "Approximate climate values · HDD base 18 °C"],
+    "lg-hdd": ["月度 HDD（柱）. 柱内数字为月均气温 °C，深色为 12–2 月核心期.", "Monthly HDD (bars). Figures inside the bars are the monthly mean °C, and the darker bars are the December–February core."],
+    "note-hdd": ["12–2 月贡献全季约 60% 的 HDD，是日均去库速度和峰值负荷的决定窗口。实盘需以 ECMWF / GFS 集合预报的 HDD 偏差替换常年值，再代入上方情景滑块.", "December–February contribute about 60% of the season's HDD, and that window sets the daily storage draw and peak load. A live book should replace the normal-year value with the HDD deviation from the ECMWF / GFS ensemble, then feed it into the scenario slider above."],
     m2: ["LNG 套利", "LNG arbitrage"],
     m2x: ["TTF 与 Spark25 停在 2026-09-29 的手工快照，ICE 与 Spark 没有免密钥行情。Henry Hub 从 EIA 载入，欧元美元参考不改写输入，除非你自己改。", "TTF and Spark25 stay on the 2026-09-29 manual snapshot. ICE and Spark have no keyless feed. Henry Hub loads from EIA. The euro-dollar reference does not replace an input until you edit it."],
     "p-calc": ["套利计算器（USG → NWE）", "Arbitrage calculator (USG → NWE)"],
@@ -700,7 +699,7 @@ try {
     "note-crack": ["LGO 美元/桶 = 美元/吨 ÷ 7.45。HO 美元/桶 = 美元/加仑 × 42。报价改完，右边热值条一起变。", "LGO $/bbl = $/t ÷ 7.45. HO $/bbl = $/gal × 42. Editing a quote updates the heat-value bars."],
     "p-heat": ["燃料热值比价", "Fuel heat parity"],
     "note-heat": ["柴油美元/百万英热 = 美元/桶 ÷ 5.8。Henry Hub 与 TTF 用气蓝，LGO 与 HO 用油橙。纵轴最大 40。", "Diesel $/MMBtu = $/bbl ÷ 5.8. Henry Hub and TTF are gas blue. LGO and HO are oil orange. Axis max 40."],
-    foot: ["口径：欧洲气库是转载的 AGSI 气日，不是 agsi.gie.eu 直连。EIA 价格与周报、Open-Meteo 气温代理、Frankfurter 欧元美元按各自观测日。TTF、Spark25、BLNG2、欧洲瓦斯油没有免密钥自动源，只保留手工快照，不补点。套利恒等式不变。裂解的原油腿是布伦特。", "Scope: European storage is a republished AGSI gas day, not a direct agsi.gie.eu call. EIA prices and weekly reports, the Open-Meteo temperature proxy, and the Frankfurter euro-dollar rate each keep their own observation date. TTF, Spark25, BLNG2, and European gasoil have no keyless feed. They stay on a manual snapshot and are not backfilled. The arbitrage identity is unchanged. The crack crude leg is Brent."]
+    foot: ["口径：欧洲气库是转载的 AGSI 气日，不是 agsi.gie.eu 直连。EIA 价格与周报、Frankfurter 欧元美元按各自观测日。取暖度日图是西北欧 10 月至 3 月常年参考，不是逐月实况。TTF、Spark25、BLNG2、欧洲瓦斯油没有免密钥自动源，只保留手工快照，不补点。套利恒等式不变。裂解的原油腿是布伦特。", "Scope: European storage is a republished AGSI gas day, not a direct agsi.gie.eu call. EIA prices and weekly reports and the Frankfurter euro-dollar rate each keep their own observation date. The heating-degree chart is the Northwest Europe October–March normal, not a live monthly series. TTF, Spark25, BLNG2, and European gasoil have no keyless feed. They stay on a manual snapshot and are not backfilled. The arbitrage identity is unchanged. The crack crude leg is Brent."]
   };
   var TONE = {
     good: ["宽裕", "Comfortable"],
@@ -712,8 +711,9 @@ try {
   };
   var SCEN_NAME = [["暖冬", "Warm"], ["常年", "Normal"], ["冷冬", "Cold"]];
   var COUNTRY_NAME = { DE: ["德国", "Germany"], FR: ["法国", "France"], IT: ["意大利", "Italy"], NL: ["荷兰", "Netherlands"], AT: ["奥地利", "Austria"] };
-  var ZH_M = ["", "1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
-  var EN_M = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  var MONTHS = [["10月", "Oct"], ["11月", "Nov"], ["12月", "Dec"], ["1月", "Jan"], ["2月", "Feb"], ["3月", "Mar"]];
+  var TEMP = [10.9, 6.9, 4.2, 3.4, 3.7, 6.4];
+  var DAYS = [31, 30, 31, 31, 28, 31];
   var desk = { asOf: "2026-10-15T00:00:00Z", fxRef: null, fxDate: "", crackEdited: false, hhEdited: false, s0Edited: false, public: null, manual: null, hdd: null, storage: null };
   var last = { ttf: 71.2, eurusd: 1.136, hh: 3.03, spark: 25500, s0: 74.13, hdd: 0, brent: 125.44, nyh: 4.713, usgc: 4.565, ara: 780 };
 
@@ -803,15 +803,8 @@ try {
     var node = document.getElementById(id);
     if (node) node.textContent = text;
   }
-  function monthTick(ym, i, n, partial) {
-    var y = ym.slice(0, 4);
-    var m = Number(ym.slice(5, 7));
-    var star = partial ? "*" : "";
-    var short = (en() ? EN_M[m] : ZH_M[m]) + star;
-    var full = short;
-    if (i === n - 1) full = en() ? EN_M[m] + " " + y + star : y + "年" + ZH_M[m] + star;
-    else if (i === 0) full = en() ? EN_M[m] + " " + y.slice(2) : y.slice(2) + "年" + ZH_M[m];
-    return { full: full, short: short };
+  function hddSeries() {
+    return TEMP.map(function (t, i) { return Math.round((18 - t) * DAYS[i]); });
   }
   function svgEl(name, attrs) {
     var node = document.createElementNS("http://www.w3.org/2000/svg", name);
@@ -995,7 +988,7 @@ try {
     svg.replaceChildren();
     if (!values.length) return;
     var maxV = Math.max.apply(null, values.concat([1]));
-    var max = Math.max(50, Math.ceil(maxV / 50) * 50);
+    var max = opt.max || Math.max(50, Math.ceil(maxV / 50) * 50);
     var pad = { l: 36, r: 8, t: 22, b: 26 };
     var iw = W - pad.l - pad.r;
     var ih = H - pad.t - pad.b;
@@ -1057,24 +1050,30 @@ try {
       var full = opt.labels[i] || "";
       var short = (opt.shortLabels && opt.shortLabels[i]) || full;
       slots.push({ text: full, short: short, x: x + bw / 2, right: x + bw });
-      items.push({ x: x + bw / 2, text: (opt.tips[i] || full) + "  HDD " + fmt(v, 0) + "  " + temp });
+      items.push({ x: x + bw / 2, text: ((opt.tips && opt.tips[i]) || full) + "  HDD " + fmt(v, 0) + "  " + temp });
     });
     if (slots.length) {
       var specs = [];
-      var last = slots[slots.length - 1];
-      specs.push({
-        text: last.text, short: last.short,
-        x: Math.min(W - 2, Math.max(last.right, W - 2)),
-        anchor: "end", primary: true
-      });
-      if (slots.length > 1) {
-        specs.push({
-          text: slots[0].text, short: slots[0].short,
-          x: slots[0].x, anchor: "middle", keep: true
+      if (opt.centerTicks) {
+        slots.forEach(function (slot) {
+          specs.push({ text: slot.text, short: slot.short, x: slot.x, anchor: "middle" });
         });
-      }
-      for (var s = 1; s < slots.length - 1; s++) {
-        specs.push({ text: slots[s].short, short: slots[s].short, x: slots[s].x, anchor: "middle" });
+      } else {
+        var last = slots[slots.length - 1];
+        specs.push({
+          text: last.text, short: last.short,
+          x: Math.min(W - 2, Math.max(last.right, W - 2)),
+          anchor: "end", primary: true
+        });
+        if (slots.length > 1) {
+          specs.push({
+            text: slots[0].text, short: slots[0].short,
+            x: slots[0].x, anchor: "middle", keep: true
+          });
+        }
+        for (var s = 1; s < slots.length - 1; s++) {
+          specs.push({ text: slots[s].short, short: slots[s].short, x: slots[s].x, anchor: "middle" });
+        }
       }
       placeAxisLabels(svg, specs, H - 8, pad.l - 4);
     }
@@ -1242,28 +1241,16 @@ try {
       }),
       tip: function (v) { return fmt(v, 1) + "%"; }
     });
-    var months = (desk.hdd && desk.hdd.months) || [];
-    if (months.length) {
-      drawCols(document.getElementById("hddChart"), {
-        values: months.map(function (row) { return row.hdd; }),
-        temps: months.map(function (row) { return row.meanC; }),
-        core: months.map(function (row) {
-          var mm = Number(row.d.slice(5, 7));
-          return mm === 12 || mm === 1 || mm === 2;
-        }),
-        labels: months.map(function (row, i) { return monthTick(row.d, i, months.length, row.partial).full; }),
-        shortLabels: months.map(function (row, i) { return monthTick(row.d, i, months.length, row.partial).short; }),
-        tips: months.map(function (row) {
-          return row.d + (row.partial ? " " + tr("截至 ", "through ") + row.through : "") + "  " + row.days + tr(" 天", " days");
-        })
-      });
-      setText("src-hdd", tr(
-        "Open-Meteo 鹿特丹附近代理 · 截至 " + desk.hdd.asOf + " · 基准 18 °C · 不是 ECMWF 预报",
-        "Open-Meteo proxy near Rotterdam · through " + desk.hdd.asOf + " · base 18 °C · not an ECMWF forecast"
-      ));
-    }
-    setText("lg-hdd", pair(STR["lg-hdd"]));
-    setText("note-hdd", pair(STR["note-hdd"]));
+    var hddLabels = MONTHS.map(pair);
+    drawCols(document.getElementById("hddChart"), {
+      max: 500,
+      centerTicks: true,
+      values: hddSeries(),
+      temps: TEMP,
+      core: [false, false, true, true, true, false],
+      labels: hddLabels,
+      shortLabels: hddLabels
+    });
     var sparkPts = ((sparkManual && sparkManual.points) || []).filter(function (p) { return Number.isFinite(p.v); });
     if (sparkPts.length) {
       var sparkMax = Math.max.apply(null, sparkPts.map(function (p) { return p.v; }));

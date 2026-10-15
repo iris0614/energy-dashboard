@@ -343,6 +343,8 @@ async function main() {
   ];
   for (const [name, fn] of jobs) publicSeries[name] = await guarded(name, prev, fn);
   const storage = await guarded("storage", prev, fetchStorage);
+  // `hdd` is the Open-Meteo archive kept in data.json. The desk chart reads the
+  // in-page October–March normal and must not be pointed at this series.
   const hdd = await guarded("hdd", prev, fetchHdd);
   const eurusd = await guarded("eurusd", prev, fetchFx);
   const manual = keepManual(prev);
@@ -378,6 +380,7 @@ async function main() {
       liq: 2.5,
     },
   };
+  if (prev.hddClimo) doc.hddClimo = structuredClone(prev.hddClimo);
   writeFileSync(DATA_PATH, JSON.stringify(doc, null, 2) + "\n");
   const line = (name, block) => `${name} ${block.asOf || block.date} ${block.latest ?? block.rate ?? block.eu?.fillPct}`;
   console.log(line("henryHub", publicSeries.henryHub));
