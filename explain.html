@@ -107,7 +107,8 @@ try {
     color: var(--accent);
     margin: 0;
   }
-  .lead { margin: 8px 0 0; max-width: 68ch; }
+  .lead { margin: 8px 0 0; max-width: 68ch; text-wrap: pretty; }
+  .lead .nowrap { white-space: nowrap; }
   .snap { text-align: right; }
   .lang { display: flex; gap: 10px; justify-content: flex-end; margin-bottom: 8px; align-items: baseline; }
   .lang button, .lang a { background: none; border: 0; padding: 0; font-size: 12px; }
@@ -147,7 +148,7 @@ try {
       <div>
         <p class="eyebrow">Winter energy</p>
         <h1 id="title" data-i18n="title">重要解释</h1>
-        <p class="lead" data-i18n="lead">这是一个完整的跨大西洋冬季能源套利与供需平衡框架（Transatlantic Winter Energy Balance &amp; Arbitrage）。从上游原料（原油、天然气）、炼厂加工与海运，到终端消费（供暖、发电、柴油替代）的完整基本面链条，把数据链条观察得更细致一些。</p>
+        <p class="lead" data-i18n="lead">这是一个完整的跨大西洋冬季能源套利与供需平衡框架（Transatlantic Winter Energy Balance &amp; Arbitrage）。从上游原料（原油、天然气）、炼厂加工与海运，到终端消费（供暖、发电、柴油替代）的完整基本面链条，把数据链条观察得更细致<span class="nowrap">一些。</span></p>
       </div>
       <div class="snap">
         <div class="lang" role="group" aria-label="Language">
@@ -264,8 +265,8 @@ try {
   var STR = {
     title: ["重要解释", "Framework"],
     lead: [
-      "这是一个完整的跨大西洋冬季能源套利与供需平衡框架（Transatlantic Winter Energy Balance & Arbitrage）。从上游原料（原油、天然气）、炼厂加工与海运，到终端消费（供暖、发电、柴油替代）的完整基本面链条，把数据链条观察得更细致一些。",
-      "This is the full transatlantic winter energy balance and arbitrage. It runs from upstream feedstock, crude and gas, through refining and seaborne freight, to end use in heat, power, and diesel substitution. The table reads that chain one indicator at a time."
+      "这是一个完整的跨大西洋冬季能源套利与供需平衡框架（Transatlantic Winter Energy Balance &amp; Arbitrage）。从上游原料（原油、天然气）、炼厂加工与海运，到终端消费（供暖、发电、柴油替代）的完整基本面链条，把数据链条观察得更细致<span class=\"nowrap\">一些。</span>",
+      "This is the full transatlantic winter energy balance and arbitrage. It runs from upstream feedstock, crude and gas, through refining and seaborne freight, to end use in heat, power, and diesel substitution. The table reads that chain one indicator at <span class=\"nowrap\">a time.</span>"
     ],
     back: ["返回看板", "Back to the desk"],
     "h-mod": ["模块", "Module"],
@@ -325,9 +326,12 @@ try {
     var lang = en();
     document.documentElement.lang = lang ? "en" : "zh-CN";
     document.querySelectorAll("[data-i18n]").forEach(function (el) {
-      var row = STR[el.getAttribute("data-i18n")];
+      var key = el.getAttribute("data-i18n");
+      var row = STR[key];
       if (!row) return;
-      el.textContent = lang ? row[1] : row[0];
+      var text = lang ? row[1] : row[0];
+      if (key === "lead") el.innerHTML = text;
+      else el.textContent = text;
     });
     document.title = lang ? STR.title[1] : STR.title[0];
     document.getElementById("lang-zh").setAttribute("aria-pressed", lang ? "false" : "true");
