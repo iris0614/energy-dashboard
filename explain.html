@@ -176,76 +176,76 @@ try {
               <td class="mod" rowspan="3" data-i18n="m-gas">欧洲天然气</td>
               <td data-i18n="i-store">储气库注入/抽采</td>
               <td class="code" data-i18n="c-store">GIE AGSI+（欧洲天然气基础设施）</td>
-              <td class="unit" data-i18n="u-store">%（库存率），TWh 或 bcm（注入/抽采）</td>
+              <td class="unit" data-i18n="u-store">GWh/d, % Full</td>
               <td class="role" data-i18n="r-store">欧洲冬季供需的核心缓冲器。11 月至次年 3 月由净注入转向净抽采。</td>
             </tr>
             <tr>
               <td data-i18n="i-ttf">荷兰 TTF</td>
               <td class="code" data-i18n="c-ttf">ICE TTF（荷兰产权转让设施）</td>
-              <td class="unit">€/MWh</td>
+              <td class="unit" data-i18n="u-ttf">EUR/MWh, $/MMBtu</td>
               <td class="role" data-i18n="r-ttf">欧洲天然气的绝对定价锚。决定气改油的盈亏平衡，以及吸引美湾 LNG 货源的溢价。</td>
             </tr>
             <tr>
               <td data-i18n="i-hdd">取暖季平均气温</td>
               <td class="code" data-i18n="c-hdd">ECMWF / GFS 气象模型，ERA5 再分析</td>
-              <td class="unit" data-i18n="u-hdd">HDD（18 °C 基准），°C</td>
+              <td class="unit" data-i18n="u-hdd">采暖度日数 (HDD), °C</td>
               <td class="role" data-i18n="r-hdd">核心外生变量，直接决定日均去库速度与冬季峰值负荷。</td>
             </tr>
             <tr>
               <td class="mod" rowspan="2" data-i18n="m-ship">跨大西洋航运</td>
               <td>Spark25</td>
               <td class="code" data-i18n="c-spark">Spark Commodities / Baltic Exchange（波罗的海交易所）</td>
-              <td class="unit" data-i18n="u-day">美元/天</td>
+              <td class="unit" data-i18n="u-day">USD/Day</td>
               <td class="role" data-i18n="r-spark">美湾至欧洲的 174,000 m³ 二冲程 LNG 船即期日租金。反映跨大西洋运力松紧。</td>
             </tr>
             <tr>
               <td>BLNG2</td>
               <td class="code" data-i18n="c-blng">Baltic Exchange（波罗的海交易所）</td>
-              <td class="unit" data-i18n="u-day">美元/天</td>
+              <td class="unit" data-i18n="u-day">USD/Day</td>
               <td class="role" data-i18n="r-blng">波罗的海 174,000 m³ 二冲程 LNG 船跨大西洋往返租金。</td>
             </tr>
             <tr>
               <td class="mod" rowspan="2" data-i18n="m-arb">欧美天然气套利</td>
               <td>Henry Hub</td>
               <td class="code" data-i18n="c-hh">NYMEX NG（路易斯安那亨利中心）</td>
-              <td class="unit">$/MMBtu</td>
+              <td class="unit" data-i18n="u-hh">$/MMBtu</td>
               <td class="role" data-i18n="r-hh">全球最廉价的边际出口气源基准，也是美国气液化出口的利润中心。</td>
             </tr>
             <tr>
               <td data-i18n="i-spread">跨洋套利价差</td>
               <td class="code" data-i18n="c-spread">TTF −（Henry Hub + 运费 + 液化）</td>
-              <td class="unit">$/MMBtu</td>
+              <td class="unit" data-i18n="u-spread">决定美湾 LNG 船流向欧洲还是亚洲的关键套利窗口</td>
               <td class="role" data-i18n="r-spread">决定美湾 LNG 船流向欧洲还是亚洲的关键套利窗口。</td>
             </tr>
             <tr>
               <td class="mod" rowspan="5" data-i18n="m-oil">炼厂与中间馏分油</td>
               <td>WTI</td>
               <td class="code" data-i18n="c-wti">NYMEX CL（俄克拉荷马库欣）</td>
-              <td class="unit" data-i18n="u-bbl">美元/桶</td>
+              <td class="unit" data-i18n="u-bbl">$/bbl</td>
               <td class="role" data-i18n="r-wti">美国炼厂的原料成本基准。裂解价差的原油端。</td>
             </tr>
             <tr>
               <td data-i18n="i-util">开工率</td>
               <td class="code" data-i18n="c-util">EIA Weekly Petroleum Status Report（WPSR）</td>
-              <td class="unit" data-i18n="u-util">%（开工率）</td>
+              <td class="unit" data-i18n="u-util">% (Utilization Rate)</td>
               <td class="role" data-i18n="r-util">供给端瓶颈指标，直接决定成品油与馏分油的产出上限。</td>
             </tr>
             <tr>
               <td>NYMEX HO</td>
               <td class="code" data-i18n="c-ho">NYMEX HO（纽约港超低硫柴油）</td>
-              <td class="unit" data-i18n="u-ho">美分/加仑，或美元/桶</td>
+              <td class="unit" data-i18n="u-ho">$/gal</td>
               <td class="role" data-i18n="r-ho">美国取暖油与柴油的基准期货。裂解价差的成品端。</td>
             </tr>
             <tr>
               <td>PADD 1</td>
               <td class="code" data-i18n="c-padd">EIA：库存 / 净进口 / 出口</td>
-              <td class="unit" data-i18n="u-kb">千桶</td>
+              <td class="unit" data-i18n="u-kb">kbbl, kbpd</td>
               <td class="role" data-i18n="r-padd">美东是极度缺油的净调入区，常从 PADD 3 管道调入，或自欧洲进口。</td>
             </tr>
             <tr>
               <td data-i18n="i-lgo">欧洲柴油</td>
               <td class="code" data-i18n="c-lgo">ICE LGO（低硫柴油）</td>
-              <td class="unit" data-i18n="u-t">美元/吨</td>
+              <td class="unit" data-i18n="u-t">$/mt</td>
               <td class="role" data-i18n="r-lgo">欧洲航运、工业和气改油的核心成本。</td>
             </tr>
           </tbody>
@@ -278,44 +278,47 @@ try {
     "m-gas": ["欧洲天然气", "European gas"],
     "i-store": ["储气库注入/抽采", "Storage injection / withdrawal"],
     "c-store": ["GIE AGSI+（欧洲天然气基础设施）", "GIE AGSI+"],
-    "u-store": ["%（库存率），TWh 或 bcm（注入/抽采）", "% fill, TWh or bcm (injection / withdrawal)"],
+    "u-store": ["GWh/d, % Full", "GWh/d, % Full"],
     "r-store": ["欧洲冬季供需的核心缓冲器。11 月至次年 3 月由净注入转向净抽采。", "The winter buffer for European gas. From November through March the balance flips from net injection to net withdrawal."],
     "i-ttf": ["荷兰 TTF", "Dutch TTF"],
     "c-ttf": ["ICE TTF（荷兰产权转让设施）", "ICE TTF (Title Transfer Facility)"],
+    "u-ttf": ["EUR/MWh, $/MMBtu", "EUR/MWh, $/MMBtu"],
     "r-ttf": ["欧洲天然气的绝对定价锚。决定气改油的盈亏平衡，以及吸引美湾 LNG 货源的溢价。", "The European gas price anchor. It sets the gas-to-oil breakeven and the premium that pulls US Gulf LNG."],
     "i-hdd": ["取暖季平均气温", "Heating-season temperature"],
     "c-hdd": ["ECMWF / GFS 气象模型，ERA5 再分析", "ECMWF / GFS models, ERA5 reanalysis"],
-    "u-hdd": ["HDD（18 °C 基准），°C", "HDD (18 °C base), °C"],
+    "u-hdd": ["采暖度日数 (HDD), °C", "HDD, °C"],
     "r-hdd": ["核心外生变量，直接决定日均去库速度与冬季峰值负荷。", "The outside driver. It sets the daily storage draw and peak winter load."],
     "m-ship": ["跨大西洋航运", "Atlantic freight"],
     "c-spark": ["Spark Commodities / Baltic Exchange（波罗的海交易所）", "Spark Commodities / Baltic Exchange"],
-    "u-day": ["美元/天", "USD/day"],
+    "u-day": ["USD/Day", "USD/Day"],
     "r-spark": ["美湾至欧洲的 174,000 m³ 二冲程 LNG 船即期日租金。反映跨大西洋运力松紧。", "Spot day rate for a 174,000 m³ two-stroke LNG carrier, US Gulf to Europe. It shows how tight Atlantic tonnage is."],
     "c-blng": ["Baltic Exchange（波罗的海交易所）", "Baltic Exchange"],
     "r-blng": ["波罗的海 174,000 m³ 二冲程 LNG 船跨大西洋往返租金。", "Baltic assessment of the 174,000 m³ two-stroke round voyage across the Atlantic."],
     "m-arb": ["欧美天然气套利", "Europe–US gas arbitrage"],
     "c-hh": ["NYMEX NG（路易斯安那亨利中心）", "NYMEX NG (Louisiana Henry Hub)"],
+    "u-hh": ["$/MMBtu", "$/MMBtu"],
     "r-hh": ["全球最廉价的边际出口气源基准，也是美国气液化出口的利润中心。", "The cheap marginal export-gas benchmark, and the feedgas leg of US liquefaction margin."],
     "i-spread": ["跨洋套利价差", "Transatlantic arb spread"],
     "c-spread": ["TTF −（Henry Hub + 运费 + 液化）", "TTF − (Henry Hub + freight + liquefaction)"],
+    "u-spread": ["决定美湾 LNG 船流向欧洲还是亚洲的关键套利窗口", "The window that sends US Gulf LNG to Europe or to Asia"],
     "r-spread": ["决定美湾 LNG 船流向欧洲还是亚洲的关键套利窗口。", "The window that sends US Gulf LNG to Europe or to Asia."],
     "m-oil": ["炼厂与中间馏分油", "Refining and middle distillate"],
     "c-wti": ["NYMEX CL（俄克拉荷马库欣）", "NYMEX CL (Cushing, Oklahoma)"],
-    "u-bbl": ["美元/桶", "$/bbl"],
+    "u-bbl": ["$/bbl", "$/bbl"],
     "r-wti": ["美国炼厂的原料成本基准。裂解价差的原油端。", "The US refinery feedstock benchmark. The crude leg of the crack."],
     "i-util": ["开工率", "Refinery utilization"],
     "c-util": ["EIA Weekly Petroleum Status Report（WPSR）", "EIA Weekly Petroleum Status Report (WPSR)"],
-    "u-util": ["%（开工率）", "% utilization"],
+    "u-util": ["% (Utilization Rate)", "% (Utilization Rate)"],
     "r-util": ["供给端瓶颈指标，直接决定成品油与馏分油的产出上限。", "The supply bottleneck. It caps product and distillate output."],
     "c-ho": ["NYMEX HO（纽约港超低硫柴油）", "NYMEX HO (New York Harbor ULSD)"],
-    "u-ho": ["美分/加仑，或美元/桶", "¢/gal, or $/bbl"],
+    "u-ho": ["$/gal", "$/gal"],
     "r-ho": ["美国取暖油与柴油的基准期货。裂解价差的成品端。", "The US heating-oil and diesel future. The product leg of the crack."],
     "c-padd": ["EIA：库存 / 净进口 / 出口", "EIA stocks / net imports / exports"],
-    "u-kb": ["千桶", "kbbl"],
+    "u-kb": ["kbbl, kbpd", "kbbl, kbpd"],
     "r-padd": ["美东是极度缺油的净调入区，常从 PADD 3 管道调入，或自欧洲进口。", "The East Coast is a structural short. Barrels come up from PADD 3, or in from Europe."],
     "i-lgo": ["欧洲柴油", "European diesel"],
     "c-lgo": ["ICE LGO（低硫柴油）", "ICE LGO (low sulphur gasoil)"],
-    "u-t": ["美元/吨", "$/t"],
+    "u-t": ["$/mt", "$/mt"],
     "r-lgo": ["欧洲航运、工业和气改油的核心成本。", "The cost of European bunker, industrial, and gas-to-oil switching."],
     "h-path": ["极端路径", "The extreme path"],
     p1: [
