@@ -803,12 +803,15 @@ try {
     var node = document.getElementById(id);
     if (node) node.textContent = text;
   }
-  function monthAxis(ym, i, n) {
+  function monthTick(ym, i, n, partial) {
     var y = ym.slice(0, 4);
     var m = Number(ym.slice(5, 7));
-    if (i === n - 1) return en() ? EN_M[m] + " " + y : y + "年" + ZH_M[m];
-    if (i === 0) return en() ? EN_M[m] + " " + y.slice(2) : y.slice(2) + "年" + m + "月";
-    return en() ? EN_M[m] : ZH_M[m];
+    var star = partial ? "*" : "";
+    var short = (en() ? EN_M[m] : ZH_M[m]) + star;
+    var full = short;
+    if (i === n - 1) full = en() ? EN_M[m] + " " + y + star : y + "年" + ZH_M[m] + star;
+    else if (i === 0) full = en() ? EN_M[m] + " " + y.slice(2) : y.slice(2) + "年" + ZH_M[m];
+    return { full: full, short: short };
   }
   function svgEl(name, attrs) {
     var node = document.createElementNS("http://www.w3.org/2000/svg", name);
@@ -828,6 +831,63 @@ try {
     });
     t.textContent = str;
     svg.appendChild(t);
+    return t;
+  }
+  function axisText(svg, x, y, str, anchor) {
+    var t = svgEl("text", {
+      x: x.toFixed(1),
+      y: y.toFixed(1),
+      "text-anchor": anchor || "middle",
+      "font-size": "10",
+      fill: "var(--ink-3)",
+      "font-family": "\"IBM Plex Mono\",ui-monospace,Consolas,monospace"
+    });
+    t.textContent = str;
+    svg.appendChild(t);
+    return t;
+  }
+  function axisBox(node) {
+    var size = Number(node.getAttribute("font-size")) || 10;
+    var str = node.textContent || "";
+    var est = 0;
+    for (var i = 0; i < str.length; i++) est += str.charCodeAt(i) > 255 ? size : size * 0.62;
+    var x = Number(node.getAttribute("x"));
+    var anchor = node.getAttribute("text-anchor") || "start";
+    var left = anchor === "end" ? x - est : anchor === "middle" ? x - est / 2 : x;
+    var box = { left: left, right: left + est };
+    try {
+      var b = node.getBBox();
+      if (b && b.width > 1) box = { left: b.x, right: b.x + b.width };
+    } catch (e) {}
+    return box;
+  }
+  function axisHits(box, placed, gap) {
+    return placed.some(function (p) {
+      return box.left < p.right + gap && box.right > p.left - gap;
+    });
+  }
+  function placeAxisLabels(svg, specs, y, gutterRight) {
+    var placed = [];
+    var gap = 6;
+    function crowded(box) {
+      if (gutterRight != null && box.left < gutterRight + 2) return true;
+      return axisHits(box, placed, gap);
+    }
+    specs.forEach(function (spec) {
+      if (!spec.text) return;
+      var node = axisText(svg, spec.x, y, spec.text, spec.anchor);
+      var box = axisBox(node);
+      if (crowded(box) && spec.short && spec.short !== spec.text) {
+        node.textContent = spec.short;
+        box = axisBox(node);
+      }
+      if (crowded(box)) {
+        if (spec.primary) placed.push(box);
+        else node.remove();
+        return;
+      }
+      placed.push(box);
+    });
   }
   function bindTip(svg, items) {
     svg.onmousemove = function (ev) {
@@ -872,13 +932,23 @@ try {
       svg.appendChild(svgEl("line", { x1: pad.l, x2: W - pad.r, y1: y, y2: y, stroke: "var(--grid)", "stroke-width": "1" }));
       svgText(svg, pad.l - 4, y + 3, opt.yFmt(val), "end", false);
     }
-    [0, Math.floor((n - 1) / 2), n - 1].forEach(function (i, idx, arr) {
-      if (arr.indexOf(i) !== idx) return;
-      var text = opt.labels[i] || "";
-      if (i !== 0 && i !== n - 1 && text.length > 7) text = text.slice(5);
-      var anchor = n === 1 ? "middle" : i === 0 ? "start" : i === n - 1 ? "end" : "middle";
-      svgText(svg, xAt(i), H - 6, text, anchor, false);
+    var tickIdx = [];
+    [n - 1, 0, Math.floor((n - 1) / 2)].forEach(function (i) {
+      if (i < 0 || tickIdx.indexOf(i) !== -1) return;
+      tickIdx.push(i);
     });
+    placeAxisLabels(svg, tickIdx.map(function (i) {
+      var full = opt.labels[i] || "";
+      var short = full.length > 7 ? full.slice(5) : full;
+      return {
+        text: i === 0 || i === n - 1 ? full : short,
+        short: i === n - 1 ? full : short,
+        x: i === n - 1 ? Math.min(W - 2, xAt(i)) : xAt(i),
+        anchor: n === 1 ? "middle" : i === 0 ? "start" : i === n - 1 ? "end" : "middle",
+        keep: i === 0 || i === n - 1,
+        primary: i === n - 1
+      };
+    }), H - 6, pad.l - 4);
     var d = "";
     opt.values.forEach(function (v, i) {
       d += (i ? "L" : "M") + xAt(i).toFixed(2) + " " + yAt(v).toFixed(2) + " ";
@@ -938,6 +1008,7 @@ try {
     }
     var gap = iw / values.length;
     var items = [];
+    var slots = [];
     values.forEach(function (v, i) {
       var x = pad.l + i * gap + gap * 0.16;
       var bw = gap * 0.68;
@@ -983,11 +1054,30 @@ try {
         above.textContent = temp;
         svg.appendChild(above);
       }
-      var anchor = i === values.length - 1 ? "end" : "middle";
-      var lx = i === values.length - 1 ? x + bw : x + bw / 2;
-      svgText(svg, lx, H - 8, opt.labels[i], anchor, false);
-      items.push({ x: x + bw / 2, text: (opt.tips[i] || opt.labels[i]) + "  HDD " + fmt(v, 0) + "  " + temp });
+      var full = opt.labels[i] || "";
+      var short = (opt.shortLabels && opt.shortLabels[i]) || full;
+      slots.push({ text: full, short: short, x: x + bw / 2, right: x + bw });
+      items.push({ x: x + bw / 2, text: (opt.tips[i] || full) + "  HDD " + fmt(v, 0) + "  " + temp });
     });
+    if (slots.length) {
+      var specs = [];
+      var last = slots[slots.length - 1];
+      specs.push({
+        text: last.text, short: last.short,
+        x: Math.min(W - 2, Math.max(last.right, W - 2)),
+        anchor: "end", primary: true
+      });
+      if (slots.length > 1) {
+        specs.push({
+          text: slots[0].text, short: slots[0].short,
+          x: slots[0].x, anchor: "middle", keep: true
+        });
+      }
+      for (var s = 1; s < slots.length - 1; s++) {
+        specs.push({ text: slots[s].short, short: slots[s].short, x: slots[s].x, anchor: "middle" });
+      }
+      placeAxisLabels(svg, specs, H - 8, pad.l - 4);
+    }
     bindTip(svg, items);
   }
   function renderSnap() {
@@ -1161,7 +1251,8 @@ try {
           var mm = Number(row.d.slice(5, 7));
           return mm === 12 || mm === 1 || mm === 2;
         }),
-        labels: months.map(function (row, i) { return monthAxis(row.d, i, months.length) + (row.partial ? "*" : ""); }),
+        labels: months.map(function (row, i) { return monthTick(row.d, i, months.length, row.partial).full; }),
+        shortLabels: months.map(function (row, i) { return monthTick(row.d, i, months.length, row.partial).short; }),
         tips: months.map(function (row) {
           return row.d + (row.partial ? " " + tr("截至 ", "through ") + row.through : "") + "  " + row.days + tr(" 天", " days");
         })
@@ -1325,6 +1416,7 @@ try {
   applyStatic();
   render();
   loadData();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(render);
   pollFx();
   setInterval(pollFx, 60000);
 })();
