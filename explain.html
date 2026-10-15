@@ -108,7 +108,7 @@ try {
     margin: 0;
   }
   .lead { margin: 8px 0 0; max-width: 68ch; text-wrap: pretty; }
-  .lead .nowrap { white-space: nowrap; }
+  .lead .nowrap, .call .nowrap { white-space: nowrap; }
   .snap { text-align: right; }
   .lang { display: flex; gap: 10px; justify-content: flex-end; margin-bottom: 8px; align-items: baseline; }
   .lang button, .lang a { background: none; border: 0; padding: 0; font-size: 12px; }
@@ -135,7 +135,7 @@ try {
   td.code, td.unit { font-size: 12px; color: var(--ink-2); }
   td.role { color: var(--ink-2); }
   .paths { display: flex; flex-direction: column; gap: 16px; }
-  .call { border-left: 3px solid var(--accent); padding: 2px 0 2px 12px; margin: 0; }
+  .call { border-left: 3px solid var(--accent); padding: 2px 0 2px 12px; margin: 0; text-wrap: pretty; }
   @media (max-width: 720px) {
     .top { grid-template-columns: 1fr; }
     .snap, .lang { text-align: left; justify-content: flex-start; }
@@ -255,9 +255,10 @@ try {
 
     <section class="paths" aria-label="paths">
       <h2 data-i18n="h-path">极端路径</h2>
-      <p class="call" data-i18n="p1">极端路径：严寒冬季（11 月至次年 3 月）：如果欧洲气温持续偏低（HDD 飙升），欧洲储气库将被迫从净注入转向净抽采。这会直接导致 TTF 天然气价格暴涨。</p>
-      <p class="call" data-i18n="p2">欧洲气荒与套利：TTF 价格对 Henry Hub 的溢价过大，美湾 LNG 货船会被吸引改道前往欧洲（运费与锁船成本随之飙升，Spark25 与 BLNG2 运费暴涨）。此时欧洲天然气极其紧缺，发电厂被迫切换至燃油发电（气改油），从而带动欧洲柴油裂解价差走强。</p>
-      <p class="call" data-i18n="p3">美洲联动：寒潮袭击美国本土，导致美国东北部（PADD 1）柴油库存极低。美国国内炼厂会优先保供本土，从而调降开工率，中间馏分油收率下降。美国本土柴油需求缺口最终会通过跨大西洋套利传导，需求回传到 WTI 原油价格上。</p>
+      <p class="call" data-i18n="p1">大胆的假设的极端路径：欧洲冬季 11 月至次年 3 月，采暖度日数 (<strong>HDD</strong>) 飙升，触发储气库从“净注入 (<strong>Injection</strong>)”转向“净<span class="nowrap">抽采 (<strong>Withdrawal</strong>)”。</span></p>
+      <p class="call" data-i18n="p2">假设今年冬季取暖季遭遇“寒潮 (<strong>Cold Snap</strong>)”或平均气温偏离 5 年均值下方，欧洲库存消耗速度加快。当欧洲储气率下滑触及临界安全线时，荷兰<strong>TTF</strong>价格会继续走高以压制工业需求并提高对全球 LNG 货源的吸引力。若荷兰<strong>TTF</strong>价格相对美国<strong>Henry Hub</strong>溢价过大，欧洲抢运美气，大量 LNG 船被锁定在跨大西洋航线上，推动 <strong>Spark25</strong> 和 <strong>BLNG2</strong> 现货日租金<span class="nowrap">暴涨；</span></p>
+      <p class="call" data-i18n="p3">欧洲工业部门与供热锅炉会启动“<strong>气改油</strong>”，即用轻循环油、低硫柴油 (<strong>ICE Gasoil</strong>) 和取暖油替代天然气，直接推高欧洲柴油裂解价差 (<strong>Crack Spread</strong>)。欧洲柴油走强会拉开欧美柴油价差，吸纳<strong>美湾 (PADD 3区)</strong> 成品油出口，<strong>美国东海岸 (PADD 1区)</strong> 本身炼油产能较小，取暖油是结构性<span class="nowrap">短缺，</span></p>
+      <p class="call" data-i18n="p4">如果同样的“寒潮 (<strong>Cold Snap</strong>)”袭击美国东海岸，极寒天气下<strong>美国东海岸 (PADD 1区)</strong> 库存极低，则必须要靠 <strong>Colonial</strong>管道从<strong>美湾 (PADD 3区)</strong> 调拨甚至从跨大西洋逆向进口，这会推高 <strong>NYMEX HO</strong> (取暖油/<strong>ULSD</strong>) 期货价格，这进一步刺激美国原油炼厂将开工率提升至高位，加速加工 <strong>WTI</strong> 原油以最大化中间馏分油 (<strong>Distillate</strong>) 收率，从而将冬季取暖需求反向传导至上游<span class="nowrap">原油 (<strong>WTI</strong>) 端。</span></p>
     </section>
   </div>
 <script>
@@ -317,9 +318,22 @@ try {
     "u-t": ["美元/吨", "$/t"],
     "r-lgo": ["欧洲航运、工业和气改油的核心成本。", "The cost of European bunker, industrial, and gas-to-oil switching."],
     "h-path": ["极端路径", "The extreme path"],
-    p1: ["极端路径：严寒冬季（11 月至次年 3 月）：如果欧洲气温持续偏低（HDD 飙升），欧洲储气库将被迫从净注入转向净抽采。这会直接导致 TTF 天然气价格暴涨。", "Extreme path, a hard winter from November through March: if Europe stays cold and HDD jumps, storage is forced from net injection to net withdrawal. That sends the TTF gas price sharply higher."],
-    p2: ["欧洲气荒与套利：TTF 价格对 Henry Hub 的溢价过大，美湾 LNG 货船会被吸引改道前往欧洲（运费与锁船成本随之飙升，Spark25 与 BLNG2 运费暴涨）。此时欧洲天然气极其紧缺，发电厂被迫切换至燃油发电（气改油），从而带动欧洲柴油裂解价差走强。", "European tightness and the arb: when the TTF premium over Henry Hub is too wide, US Gulf LNG cargoes are pulled toward Europe. Freight and ship-fixing costs jump, and Spark25 and BLNG2 spike. With European gas that short, power plants switch to oil, and the European diesel crack firms."],
-    p3: ["美洲联动：寒潮袭击美国本土，导致美国东北部（PADD 1）柴油库存极低。美国国内炼厂会优先保供本土，从而调降开工率，中间馏分油收率下降。美国本土柴油需求缺口最终会通过跨大西洋套利传导，需求回传到 WTI 原油价格上。", "The American link: a cold shot hits the United States and PADD 1 diesel stocks run extremely low. Domestic refineries cover the home market first, so runs are cut and middle-distillate yield falls. The US diesel short then travels back across the Atlantic arb and into the WTI crude price."]
+    p1: [
+      "大胆的假设的极端路径：欧洲冬季 11 月至次年 3 月，采暖度日数 (<strong>HDD</strong>) 飙升，触发储气库从“净注入 (<strong>Injection</strong>)”转向“净<span class=\"nowrap\">抽采 (<strong>Withdrawal</strong>)”。</span>",
+      "The extreme path of a bold hypothesis: in the European winter, from November through March of the following year, heating degree days (<strong>HDD</strong>) surge, triggering storage to switch from “net injection (<strong>Injection</strong>)” to “net withdrawal (<strong>Withdrawal</strong>).”"
+    ],
+    p2: [
+      "假设今年冬季取暖季遭遇“寒潮 (<strong>Cold Snap</strong>)”或平均气温偏离 5 年均值下方，欧洲库存消耗速度加快。当欧洲储气率下滑触及临界安全线时，荷兰<strong>TTF</strong>价格会继续走高以压制工业需求并提高对全球 LNG 货源的吸引力。若荷兰<strong>TTF</strong>价格相对美国<strong>Henry Hub</strong>溢价过大，欧洲抢运美气，大量 LNG 船被锁定在跨大西洋航线上，推动 <strong>Spark25</strong> 和 <strong>BLNG2</strong> 现货日租金<span class=\"nowrap\">暴涨；</span>",
+      "Suppose this winter heating season meets a “cold snap (<strong>Cold Snap</strong>)” or average temperatures deviate below the five-year average. European inventories are then consumed faster. When the European storage rate falls to the critical safety line, the Dutch <strong>TTF</strong> price keeps rising, suppressing industrial demand and increasing the pull on global LNG supply. If the Dutch <strong>TTF</strong> premium over US <strong>Henry Hub</strong> is too wide, Europe rushes to take US gas, a large number of LNG ships are locked onto the transatlantic route, and <strong>Spark25</strong> and <strong>BLNG2</strong> spot day rates surge;"
+    ],
+    p3: [
+      "欧洲工业部门与供热锅炉会启动“<strong>气改油</strong>”，即用轻循环油、低硫柴油 (<strong>ICE Gasoil</strong>) 和取暖油替代天然气，直接推高欧洲柴油裂解价差 (<strong>Crack Spread</strong>)。欧洲柴油走强会拉开欧美柴油价差，吸纳<strong>美湾 (PADD 3区)</strong> 成品油出口，<strong>美国东海岸 (PADD 1区)</strong> 本身炼油产能较小，取暖油是结构性<span class=\"nowrap\">短缺，</span>",
+      "European industry and heating boilers start “<strong>气改油</strong>,” replacing natural gas with light cycle oil, low-sulphur diesel (<strong>ICE Gasoil</strong>) and heating oil, which directly pushes the European diesel crack spread (<strong>Crack Spread</strong>) higher. Stronger European diesel widens the Europe–US diesel spread and draws in product exports from the <strong>US Gulf (PADD 3)</strong>. The <strong>US East Coast (PADD 1)</strong> itself has smaller refining capacity, and heating oil is structurally short,"
+    ],
+    p4: [
+      "如果同样的“寒潮 (<strong>Cold Snap</strong>)”袭击美国东海岸，极寒天气下<strong>美国东海岸 (PADD 1区)</strong> 库存极低，则必须要靠 <strong>Colonial</strong>管道从<strong>美湾 (PADD 3区)</strong> 调拨甚至从跨大西洋逆向进口，这会推高 <strong>NYMEX HO</strong> (取暖油/<strong>ULSD</strong>) 期货价格，这进一步刺激美国原油炼厂将开工率提升至高位，加速加工 <strong>WTI</strong> 原油以最大化中间馏分油 (<strong>Distillate</strong>) 收率，从而将冬季取暖需求反向传导至上游<span class=\"nowrap\">原油 (<strong>WTI</strong>) 端。</span>",
+      "If the same “cold snap (<strong>Cold Snap</strong>)” hits the US East Coast, and under extreme cold <strong>US East Coast (PADD 1)</strong> stocks are extremely low, then barrels must move on the <strong>Colonial</strong> pipeline from the <strong>US Gulf (PADD 3)</strong> and even by reverse imports across the Atlantic. That pushes the <strong>NYMEX HO</strong> (heating oil/<strong>ULSD</strong>) futures price higher, which further spurs US crude refineries so that runs rise, accelerating the processing of <strong>WTI</strong> crude so that middle-distillate (<strong>Distillate</strong>) yield is maximized, and thus transmits winter heating demand in reverse back upstream to crude (<strong>WTI</strong>)."
+    ]
   };
   function en() { return document.documentElement.lang === "en"; }
   function applyStatic() {
@@ -330,7 +344,7 @@ try {
       var row = STR[key];
       if (!row) return;
       var text = lang ? row[1] : row[0];
-      if (key === "lead") el.innerHTML = text;
+      if (key === "lead" || key === "p1" || key === "p2" || key === "p3" || key === "p4") el.innerHTML = text;
       else el.textContent = text;
     });
     document.title = lang ? STR.title[1] : STR.title[0];
