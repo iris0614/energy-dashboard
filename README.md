@@ -1,6 +1,6 @@
 [https://iris0614.github.io/energy-dashboard/](https://iris0614.github.io/energy-dashboard/)
 
-跨大西洋冬季能源平衡与套利看板 reads European gas storage, LNG arbitrage, and distillate from feedstock through Atlantic freight. The header switches between 中文 and English. Each card shows its observation date. Public series live in [`data.json`](data.json). TTF, Spark25, BLNG2, and European gasoil stay on the 2026-09-29 manual snapshot because ICE, Spark, and Baltic need a paid key.
+跨大西洋冬季能源平衡与套利看板 reads European gas storage, LNG arbitrage, and distillate from feedstock through Atlantic freight. The header switches between 中文 and English. Each card shows its observation date. Public series live in [`data.json`](data.json). TTF, BLNG2, and European gasoil stay on the 2026-09-29 manual snapshot because ICE, Spark, and Baltic need a paid key. The Spark25 chart is the retained desk path ending at that 25,500 $/day snapshot, not a live Spark assessment. BLNG2 is not drawn.
 
 Refresh the public fields (EIA HTML tables, Open-Meteo, Frankfurter, and the AGSI cross-section republished by Voltstack) with:
 

@@ -678,9 +678,9 @@ try {
     "lab-spark": ["Spark25 $/天", "Spark25 $/day"],
     "note-arb": ["全成本口径：FOB = 1.15×HH + 液化费 $2.50；运费 = 日租金 × 30 天往返 + 燃料港杂费约 $100 万，摊到 3.6 百万 MMBtu 货量；再气化 $0.40。长约承购方的液化费已是沉没成本，短期装船决策只看 1.15×HH 这一可变成本，窗口比全成本口径更宽。", "Full-cost basis: FOB = 1.15×HH + a $2.50 liquefaction fee; freight = the day rate × a 30-day round trip + about $1 million of port and fuel, spread over 3.6 million MMBtu; regas $0.40. For a term offtaker the liquefaction fee is already sunk, so a prompt loading decision looks only at variable 1.15×HH, and the window is wider than the full-cost basis."],
     "p-spark": ["Spark25 日租金", "Spark25 day rate"],
-    "src-spark": ["手工快照 · 非自动源", "Manual snapshot · not an automatic feed"],
+    "src-spark": ["看板保留轨迹 · 末端 2026-09-29 · 不是 Spark 评估", "Retained desk path · through 2026-09-29 · not a Spark assessment"],
     "lg-blng": ["BLNG2 没有已存的日期点", "BLNG2 has no stored dated print"],
-    "note-spark": ["只画已保存的 Spark25 快照，不把曲线补到今天。波罗的海 BLNG2 没有免密钥行情，也不补点。", "Only the stored Spark25 snapshot is drawn. The line is not extended to today. Baltic BLNG2 has no keyless feed, and no points are added for it."],
+    "note-spark": ["左段是看板原先的示意轨迹，按周等距，不是 Spark 的逐日评估。末端是 2026-09-29 的 25,500 美元/日快照，不补到今天。BLNG2 没有免密钥行情，图上不画。", "The path is the desk's retained illustrative history, spaced weekly, not a Spark daily assessment. The last point is the 2026-09-29 snapshot at 25,500 $/day and is not extended to today. BLNG2 has no keyless print and is not drawn."],
     m3: ["炼厂与中间馏分油", "Refining and middle distillate"],
     m3x: ["开工率、全美馏分油和 PADD 1 是 EIA 周报。有公开源的报价跟着 EIA，欧洲瓦斯油仍是手工快照。热值条跟着计算器和这张表走。", "Utilization, U.S. distillate, and PADD 1 are the EIA weekly report. Quotes with a public source follow EIA. European gasoil stays a manual snapshot. Heat-value bars follow the calculator and this table."],
     "p-util": ["炼厂开工率", "Refinery utilization"],
@@ -1275,7 +1275,8 @@ try {
         tip: function (v) { return fmt(v, 0) + " $/d"; }
       });
     }
-    setText("src-spark", sparkManual ? tr("手工快照 " + sparkManual.asOf + " · 非自动源", "Manual snapshot " + sparkManual.asOf + " · not an automatic feed") : pair(STR["src-spark"]));
+    var sparkLast = sparkPts.length ? sparkPts[sparkPts.length - 1].d : (sparkManual && sparkManual.asOf);
+    setText("src-spark", sparkLast ? tr("看板保留轨迹 · 末端 " + sparkLast + " · 不是 Spark 评估", "Retained desk path · through " + sparkLast + " · not a Spark assessment") : pair(STR["src-spark"]));
     setText("lg-blng", pair(STR["lg-blng"]));
     setText("note-spark", pair(STR["note-spark"]));
     function drawWeek(id, name, color, tip) {
