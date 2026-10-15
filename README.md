@@ -1,6 +1,14 @@
 [https://iris0614.github.io/energy-dashboard/](https://iris0614.github.io/energy-dashboard/)
 
-跨大西洋冬季能源平衡与套利看板 reads European gas storage, LNG arbitrage, and distillate from feedstock through Atlantic freight. The header switches between 中文 and English. Illustrative series are labeled on the cards. Snapshot numbers are in [`data.json`](data.json).
+跨大西洋冬季能源平衡与套利看板 reads European gas storage, LNG arbitrage, and distillate from feedstock through Atlantic freight. The header switches between 中文 and English. Each card shows its observation date. Public series live in [`data.json`](data.json). TTF, Spark25, BLNG2, and European gasoil stay on the 2026-09-29 manual snapshot because ICE, Spark, and Baltic need a paid key.
+
+Refresh the public fields (EIA HTML tables, Open-Meteo, Frankfurter, and the AGSI cross-section republished by Voltstack) with:
+
+```bash
+node scripts/refresh-data.mjs
+```
+
+The script does not call `agsi.gie.eu` directly. That API needs an `x-key`, so the weekday GitHub Action skips it too.
 
 ## Demo
 

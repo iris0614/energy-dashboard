@@ -1,0 +1,29 @@
+name: Refresh public energy series
+
+on:
+  schedule:
+    # Weekdays after the EIA weekly release window. No repository secret.
+    - cron: "30 16 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Refresh public fields in data.json
+        run: node scripts/refresh-data.mjs
+      - name: Commit data.json when a public series changed
+        run: |
+          git diff --quiet -- data.json && exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data.json
+          git commit -m "Refresh public energy series"
+          git push
