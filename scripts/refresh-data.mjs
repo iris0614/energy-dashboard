@@ -344,7 +344,7 @@ async function main() {
   for (const [name, fn] of jobs) publicSeries[name] = await guarded(name, prev, fn);
   const storage = await guarded("storage", prev, fetchStorage);
   // `hdd` is the Open-Meteo archive kept in data.json. The desk chart reads the
-  // in-page October–March normal and must not be pointed at this series.
+  // in-page January–December climatology and must not be pointed at this series.
   const hdd = await guarded("hdd", prev, fetchHdd);
   const eurusd = await guarded("eurusd", prev, fetchFx);
   const manual = keepManual(prev);
