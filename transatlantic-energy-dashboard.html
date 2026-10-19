@@ -430,7 +430,7 @@ try {
         <div class="stage-h"><span class="idx">01</span><span class="name" data-i18n="st-1">原料定价</span></div>
         <div class="kv"><span class="k">Henry Hub</span><span class="v num" id="c-hh">—</span><span class="sub" id="sub-hh" data-i18n="sub-hh">计算器输入 · 美元/百万英热</span></div>
         <div class="kv"><span class="k">WTI</span><span class="v num" id="c-wti">—</span><span class="sub" id="sub-wti">EIA</span></div>
-        <div class="kv"><span class="k" data-i18n="k-brent">布伦特</span><span class="v num" id="c-brent">—</span><span class="sub" id="sub-brent" data-i18n="sub-brent">裂解表原油腿 · 美元/桶</span></div>
+        <div class="kv"><span class="k" data-i18n="k-brent">布伦特</span><span class="v num" id="c-brent">—</span><span class="sub" id="sub-brent" data-i18n="sub-brent">裂解价差的原油端 · 美元/桶</span></div>
       </div>
       <div class="stage">
         <div class="stage-h"><span class="idx">02</span><span class="name" data-i18n="st-2">炼厂／液化</span></div>
@@ -612,7 +612,7 @@ try {
     </section>
 
     <footer>
-      <p data-i18n="foot">口径与局限：库存情景、航运曲线、开工率和馏分油库存是标明的示意，不是机构公布值。套利计算器用本节恒等式，不用另一套交付成本堆叠。EURUSD 参考价来自欧洲央行，经 Frankfurter 读取，只作旁注，不改写计算器，除非你改输入。裂解的原油腿是布伦特。</p>
+      <p data-i18n="foot">口径与局限：库存情景、航运曲线、开工率和馏分油库存是标明的示意，不是机构公布值。套利计算器用本节恒等式，不用另一套交付成本堆叠。EURUSD 参考价来自欧洲央行，经 Frankfurter 读取，只作旁注，不改写计算器，除非你改输入。裂解价差的原油端是布伦特。</p>
       <ul class="sources">
         <li><a href="https://www.eia.gov/dnav/ng/hist/rngwhhdD.htm">EIA Henry Hub</a></li>
         <li><a href="https://www.eia.gov/dnav/pet/hist/rwtcD.htm">EIA WTI</a></li>
@@ -647,7 +647,7 @@ try {
     "k-frt": ["海运", "Freight"],
     "k-dist": ["全美馏分油", "US distillate"],
     "sub-hh": ["计算器输入 · 美元/百万英热", "Calculator input · $/MMBtu"],
-    "sub-brent": ["裂解表原油腿 · 美元/桶", "Crack crude leg · $/bbl"],
+    "sub-brent": ["裂解价差的原油端 · 美元/桶", "Crude leg of the crack · $/bbl"],
     "sub-illust": ["示意序列", "Illustrative series"],
     "sub-liq": ["全成本公式固定项", "Fixed term in the full-cost identity"],
     "sub-spark": ["计算器输入 · 美元/日", "Calculator input · $/day"],
@@ -700,7 +700,7 @@ try {
     "note-crack": ["LGO 美元/桶 = 美元/吨 ÷ 7.45。HO 美元/桶 = 美元/加仑 × 42。报价改完，右边热值条一起变。", "LGO $/bbl = $/t ÷ 7.45. HO $/bbl = $/gal × 42. Editing a quote updates the heat-value bars."],
     "p-heat": ["燃料热值比价", "Fuel heat parity"],
     "note-heat": ["柴油美元/百万英热 = 美元/桶 ÷ 5.8。Henry Hub 与 TTF 用气蓝，LGO 与 HO 用油橙。纵轴最大 40。", "Diesel $/MMBtu = $/bbl ÷ 5.8. Henry Hub and TTF are gas blue. LGO and HO are oil orange. Axis max 40."],
-    foot: ["口径：欧洲气库是转载的 AGSI 气日，不是 agsi.gie.eu 直连。EIA 价格与周报、Frankfurter 欧元美元按各自观测日。取暖度日图是西北欧 1–12 月气候态，不是逐月实况。TTF、Spark25、BLNG2、欧洲瓦斯油没有免密钥自动源，只保留手工快照，不补点。套利恒等式不变。裂解的原油腿是布伦特。", "Scope: European storage is a republished AGSI gas day, not a direct agsi.gie.eu call. EIA prices and weekly reports and the Frankfurter euro-dollar rate each keep their own observation date. The heating-degree chart is a Northwest Europe January–December climatology, not a live monthly series. TTF, Spark25, BLNG2, and European gasoil have no keyless feed. They stay on a manual snapshot and are not backfilled. The arbitrage identity is unchanged. The crack crude leg is Brent."]
+    foot: ["口径：欧洲气库是转载的 AGSI 气日，不是 agsi.gie.eu 直连。EIA 价格与周报、Frankfurter 欧元美元按各自观测日。取暖度日图是西北欧 1–12 月气候态，不是逐月实况。TTF、Spark25、BLNG2、欧洲瓦斯油没有免密钥自动源，只保留手工快照，不补点。套利恒等式不变。裂解价差的原油端是布伦特。", "Scope: European storage is a republished AGSI gas day, not a direct agsi.gie.eu call. EIA prices and weekly reports and the Frankfurter euro-dollar rate each keep their own observation date. The heating-degree chart is a Northwest Europe January–December climatology, not a live monthly series. TTF, Spark25, BLNG2, and European gasoil have no keyless feed. They stay on a manual snapshot and are not backfilled. The arbitrage identity is unchanged. Brent is the crude leg of the crack."]
   };
   var TONE = {
     good: ["宽裕", "Comfortable"],
@@ -1195,7 +1195,7 @@ try {
     document.getElementById("padd-big").innerHTML = (paddPt ? fmt(paddPt.v, 0) : "—") + "<small>" + pair(STR["u-kb"]) + "</small>";
     setText("sub-hh", hhPt ? tr("EIA · " + hhPt.d + " · 输入可改", "EIA · " + hhPt.d + " · input can be edited") : tr("EIA 读取中", "Reading EIA"));
     setText("sub-wti", wti ? "EIA · " + wti.asOf + " · $/bbl" : tr("EIA 读取中", "Reading EIA"));
-    setText("sub-brent", brentPt ? tr("EIA · " + brentPt.d + " · 裂解原油腿", "EIA · " + brentPt.d + " · crack crude leg") : tr("EIA 读取中", "Reading EIA"));
+    setText("sub-brent", brentPt ? tr("EIA · " + brentPt.d + " · 裂解价差的原油端", "EIA · " + brentPt.d + " · Crude leg of the crack") : tr("EIA 读取中", "Reading EIA"));
     setText("sub-util", utilPt ? "EIA · " + utilPt.d : tr("EIA 读取中", "Reading EIA"));
     setText("sub-spark", sparkManual ? tr("快照 " + sparkManual.asOf + " · 非自动源", "Snapshot " + sparkManual.asOf + " · not an automatic feed") : tr("非自动源", "Not an automatic feed"));
     setText("sub-blng", tr("无日期快照 · 非自动源", "No dated print · not an automatic feed"));
