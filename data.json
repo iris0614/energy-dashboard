@@ -1,6 +1,6 @@
 {
   "schema": "energy-dashboard.data.v2",
-  "asOf": "2026-10-19T21:10:40.125Z",
+  "asOf": "2026-10-20T20:03:11.315Z",
   "kind": "mixed",
   "description": "Public series are rewritten by scripts/refresh-data.mjs. manual series are not on an automatic feed and are not backfilled.",
   "historyFrom": "2025-10-01",
@@ -8,8 +8,8 @@
     "automatic": true,
     "source": "ECB via Frankfurter",
     "sourceUrl": "https://api.frankfurter.dev/v1/latest?from=EUR&to=USD",
-    "date": "2026-10-19",
-    "rate": 1.1225
+    "date": "2026-10-20",
+    "rate": 1.1215
   },
   "storage": {
     "automatic": true,
@@ -20,15 +20,15 @@
     "asOf": "2026-10-18",
     "eu": {
       "fillPct": 74.58,
-      "twh": 844.857,
+      "twh": 844.867,
       "workingTwh": 1132.892,
       "status": "measured"
     },
     "countries": [
       {
         "code": "DE",
-        "fillPct": 61.16,
-        "twh": 151.289,
+        "fillPct": 61.15,
+        "twh": 151.269,
         "status": "measured"
       },
       {
@@ -51,8 +51,8 @@
       },
       {
         "code": "AT",
-        "fillPct": 69.16,
-        "twh": 69.352,
+        "fillPct": 69.19,
+        "twh": 69.382,
         "status": "measured"
       }
     ]
@@ -65,7 +65,7 @@
     "place": "Near Rotterdam, 51.92N 4.48E",
     "note": "Northwest Europe temperature and HDD proxy from Open-Meteo historical weather. Base 18°C. Not an ECMWF operational forecast.",
     "baseC": 18,
-    "asOf": "2026-10-18",
+    "asOf": "2026-10-19",
     "months": [
       {
         "d": "2025-10",
@@ -165,11 +165,11 @@
       },
       {
         "d": "2026-10",
-        "meanC": 14.2,
-        "hdd": 70,
-        "days": 18,
+        "meanC": 14,
+        "hdd": 76,
+        "days": 19,
         "partial": true,
-        "through": "2026-10-18"
+        "through": "2026-10-19"
       }
     ]
   },
@@ -7234,7 +7234,7 @@
   "seed": {
     "ttf": 71.2,
     "hh": 3.22,
-    "eurusd": 1.1225,
+    "eurusd": 1.1215,
     "freight": 25500,
     "storagePct": 74.58,
     "hddDevPct": 0,
