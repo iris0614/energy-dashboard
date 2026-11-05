@@ -1,6 +1,6 @@
 {
   "schema": "energy-dashboard.data.v2",
-  "asOf": "2026-11-04T22:00:29.161Z",
+  "asOf": "2026-11-05T22:09:04.454Z",
   "kind": "mixed",
   "description": "Public series are rewritten by scripts/refresh-data.mjs. manual series are not on an automatic feed and are not backfilled.",
   "historyFrom": "2025-10-01",
@@ -8,8 +8,8 @@
     "automatic": true,
     "source": "ECB via Frankfurter",
     "sourceUrl": "https://api.frankfurter.dev/v1/latest?from=EUR&to=USD",
-    "date": "2026-11-04",
-    "rate": 1.1267
+    "date": "2026-11-05",
+    "rate": 1.1224
   },
   "storage": {
     "automatic": true,
@@ -17,42 +17,42 @@
     "reasonDirect": "agsi.gie.eu returns access denied without an x-key. This block is the Voltstack public CSV, whose source column attributes GIE AGSI+. The script does not call AGSI and does not invent earlier gas days.",
     "source": "GIE AGSI+ via Voltstack EU Gas Storage Map",
     "sourceUrl": "https://voltstack.energy/gas-storage-map/countries.csv",
-    "asOf": "2026-11-02",
+    "asOf": "2026-11-04",
     "eu": {
-      "fillPct": 74.33,
-      "twh": 841.63,
+      "fillPct": 73.75,
+      "twh": 835.112,
       "workingTwh": 1132.362,
       "status": "measured"
     },
     "countries": [
       {
         "code": "DE",
-        "fillPct": 60.81,
-        "twh": 150.413,
+        "fillPct": 60.25,
+        "twh": 149.035,
         "status": "measured"
       },
       {
         "code": "FR",
-        "fillPct": 85.68,
-        "twh": 106.133,
+        "fillPct": 84.04,
+        "twh": 104.107,
         "status": "measured"
       },
       {
         "code": "IT",
-        "fillPct": 90.73,
-        "twh": 184.559,
+        "fillPct": 90.08,
+        "twh": 183.246,
         "status": "measured"
       },
       {
         "code": "NL",
-        "fillPct": 65.47,
-        "twh": 94.306,
+        "fillPct": 64.94,
+        "twh": 93.537,
         "status": "measured"
       },
       {
         "code": "AT",
-        "fillPct": 65.81,
-        "twh": 65.99,
+        "fillPct": 65.58,
+        "twh": 65.767,
         "status": "measured"
       }
     ]
@@ -7614,9 +7614,9 @@
   "seed": {
     "ttf": 71.2,
     "hh": 2.63,
-    "eurusd": 1.1267,
+    "eurusd": 1.1224,
     "freight": 25500,
-    "storagePct": 74.33,
+    "storagePct": 73.75,
     "hddDevPct": 0,
     "utilPct": 94.5,
     "padd1": 22551,
