@@ -1,6 +1,6 @@
 {
   "schema": "energy-dashboard.data.v2",
-  "asOf": "2026-11-12T22:20:48.490Z",
+  "asOf": "2026-11-13T22:03:33.570Z",
   "kind": "mixed",
   "description": "Public series are rewritten by scripts/refresh-data.mjs. manual series are not on an automatic feed and are not backfilled.",
   "historyFrom": "2025-10-01",
@@ -8,8 +8,8 @@
     "automatic": true,
     "source": "ECB via Frankfurter",
     "sourceUrl": "https://api.frankfurter.dev/v1/latest?from=EUR&to=USD",
-    "date": "2026-11-12",
-    "rate": 1.1081
+    "date": "2026-11-13",
+    "rate": 1.1052
   },
   "storage": {
     "automatic": true,
@@ -65,7 +65,7 @@
     "place": "Near Rotterdam, 51.92N 4.48E",
     "note": "Northwest Europe temperature and HDD proxy from Open-Meteo historical weather. Base 18°C. Not an ECMWF operational forecast.",
     "baseC": 18,
-    "asOf": "2026-11-11",
+    "asOf": "2026-11-12",
     "months": [
       {
         "d": "2025-10",
@@ -173,11 +173,11 @@
       },
       {
         "d": "2026-11",
-        "meanC": 6.7,
-        "hdd": 124,
-        "days": 11,
+        "meanC": 6.6,
+        "hdd": 136,
+        "days": 12,
         "partial": true,
-        "through": "2026-11-11"
+        "through": "2026-11-12"
       }
     ]
   },
@@ -7770,7 +7770,7 @@
   "seed": {
     "ttf": 71.2,
     "hh": 3,
-    "eurusd": 1.1081,
+    "eurusd": 1.1052,
     "freight": 25500,
     "storagePct": 71.25,
     "hddDevPct": 0,
