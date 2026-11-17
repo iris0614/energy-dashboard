@@ -1,6 +1,6 @@
 {
   "schema": "energy-dashboard.data.v2",
-  "asOf": "2026-11-13T22:03:33.570Z",
+  "asOf": "2026-11-17T00:20:59.069Z",
   "kind": "mixed",
   "description": "Public series are rewritten by scripts/refresh-data.mjs. manual series are not on an automatic feed and are not backfilled.",
   "historyFrom": "2025-10-01",
@@ -8,8 +8,8 @@
     "automatic": true,
     "source": "ECB via Frankfurter",
     "sourceUrl": "https://api.frankfurter.dev/v1/latest?from=EUR&to=USD",
-    "date": "2026-11-13",
-    "rate": 1.1052
+    "date": "2026-11-16",
+    "rate": 1.1014
   },
   "storage": {
     "automatic": true,
@@ -17,42 +17,42 @@
     "reasonDirect": "agsi.gie.eu returns access denied without an x-key. This block is the Voltstack public CSV, whose source column attributes GIE AGSI+. The script does not call AGSI and does not invent earlier gas days.",
     "source": "GIE AGSI+ via Voltstack EU Gas Storage Map",
     "sourceUrl": "https://voltstack.energy/gas-storage-map/countries.csv",
-    "asOf": "2026-11-11",
+    "asOf": "2026-11-15",
     "eu": {
-      "fillPct": 71.25,
-      "twh": 806.859,
+      "fillPct": 70.39,
+      "twh": 797.054,
       "workingTwh": 1132.362,
       "status": "measured"
     },
     "countries": [
       {
         "code": "DE",
-        "fillPct": 57.68,
-        "twh": 142.668,
+        "fillPct": 57.28,
+        "twh": 141.687,
         "status": "measured"
       },
       {
         "code": "FR",
-        "fillPct": 79.06,
-        "twh": 97.941,
+        "fillPct": 76.45,
+        "twh": 94.704,
         "status": "measured"
       },
       {
         "code": "IT",
-        "fillPct": 87.9,
-        "twh": 178.804,
+        "fillPct": 87.16,
+        "twh": 177.297,
         "status": "measured"
       },
       {
         "code": "NL",
-        "fillPct": 62.23,
-        "twh": 89.635,
+        "fillPct": 61.13,
+        "twh": 88.048,
         "status": "measured"
       },
       {
         "code": "AT",
-        "fillPct": 63.45,
-        "twh": 63.625,
+        "fillPct": 63.02,
+        "twh": 63.194,
         "status": "measured"
       }
     ]
@@ -65,7 +65,7 @@
     "place": "Near Rotterdam, 51.92N 4.48E",
     "note": "Northwest Europe temperature and HDD proxy from Open-Meteo historical weather. Base 18°C. Not an ECMWF operational forecast.",
     "baseC": 18,
-    "asOf": "2026-11-12",
+    "asOf": "2026-11-16",
     "months": [
       {
         "d": "2025-10",
@@ -173,11 +173,11 @@
       },
       {
         "d": "2026-11",
-        "meanC": 6.6,
-        "hdd": 136,
-        "days": 12,
+        "meanC": 6.5,
+        "hdd": 184,
+        "days": 16,
         "partial": true,
-        "through": "2026-11-12"
+        "through": "2026-11-16"
       }
     ]
   },
@@ -7770,9 +7770,9 @@
   "seed": {
     "ttf": 71.2,
     "hh": 3,
-    "eurusd": 1.1052,
+    "eurusd": 1.1014,
     "freight": 25500,
-    "storagePct": 71.25,
+    "storagePct": 70.39,
     "hddDevPct": 0,
     "utilPct": 95.2,
     "padd1": 23784,
