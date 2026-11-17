@@ -1,6 +1,6 @@
 {
   "schema": "energy-dashboard.data.v2",
-  "asOf": "2026-11-17T00:20:59.069Z",
+  "asOf": "2026-11-17T23:35:30.287Z",
   "kind": "mixed",
   "description": "Public series are rewritten by scripts/refresh-data.mjs. manual series are not on an automatic feed and are not backfilled.",
   "historyFrom": "2025-10-01",
@@ -8,8 +8,8 @@
     "automatic": true,
     "source": "ECB via Frankfurter",
     "sourceUrl": "https://api.frankfurter.dev/v1/latest?from=EUR&to=USD",
-    "date": "2026-11-16",
-    "rate": 1.1014
+    "date": "2026-11-17",
+    "rate": 1.0989
   },
   "storage": {
     "automatic": true,
@@ -7770,7 +7770,7 @@
   "seed": {
     "ttf": 71.2,
     "hh": 3,
-    "eurusd": 1.1014,
+    "eurusd": 1.0989,
     "freight": 25500,
     "storagePct": 70.39,
     "hddDevPct": 0,
