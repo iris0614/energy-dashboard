@@ -1,6 +1,6 @@
 {
   "schema": "energy-dashboard.data.v2",
-  "asOf": "2026-11-17T23:35:30.287Z",
+  "asOf": "2026-11-18T22:59:15.142Z",
   "kind": "mixed",
   "description": "Public series are rewritten by scripts/refresh-data.mjs. manual series are not on an automatic feed and are not backfilled.",
   "historyFrom": "2025-10-01",
@@ -8,8 +8,8 @@
     "automatic": true,
     "source": "ECB via Frankfurter",
     "sourceUrl": "https://api.frankfurter.dev/v1/latest?from=EUR&to=USD",
-    "date": "2026-11-17",
-    "rate": 1.0989
+    "date": "2026-11-18",
+    "rate": 1.0968
   },
   "storage": {
     "automatic": true,
@@ -17,42 +17,42 @@
     "reasonDirect": "agsi.gie.eu returns access denied without an x-key. This block is the Voltstack public CSV, whose source column attributes GIE AGSI+. The script does not call AGSI and does not invent earlier gas days.",
     "source": "GIE AGSI+ via Voltstack EU Gas Storage Map",
     "sourceUrl": "https://voltstack.energy/gas-storage-map/countries.csv",
-    "asOf": "2026-11-15",
+    "asOf": "2026-11-16",
     "eu": {
-      "fillPct": 70.39,
-      "twh": 797.054,
+      "fillPct": 70.15,
+      "twh": 794.336,
       "workingTwh": 1132.362,
       "status": "measured"
     },
     "countries": [
       {
         "code": "DE",
-        "fillPct": 57.28,
-        "twh": 141.687,
+        "fillPct": 57.19,
+        "twh": 141.468,
         "status": "measured"
       },
       {
         "code": "FR",
-        "fillPct": 76.45,
-        "twh": 94.704,
+        "fillPct": 75.88,
+        "twh": 94.003,
         "status": "measured"
       },
       {
         "code": "IT",
-        "fillPct": 87.16,
-        "twh": 177.297,
+        "fillPct": 86.81,
+        "twh": 176.588,
         "status": "measured"
       },
       {
         "code": "NL",
-        "fillPct": 61.13,
-        "twh": 88.048,
+        "fillPct": 60.89,
+        "twh": 87.702,
         "status": "measured"
       },
       {
         "code": "AT",
-        "fillPct": 63.02,
-        "twh": 63.194,
+        "fillPct": 62.89,
+        "twh": 63.066,
         "status": "measured"
       }
     ]
@@ -65,7 +65,7 @@
     "place": "Near Rotterdam, 51.92N 4.48E",
     "note": "Northwest Europe temperature and HDD proxy from Open-Meteo historical weather. Base 18°C. Not an ECMWF operational forecast.",
     "baseC": 18,
-    "asOf": "2026-11-16",
+    "asOf": "2026-11-17",
     "months": [
       {
         "d": "2025-10",
@@ -173,11 +173,11 @@
       },
       {
         "d": "2026-11",
-        "meanC": 6.5,
-        "hdd": 184,
-        "days": 16,
+        "meanC": 6.6,
+        "hdd": 195,
+        "days": 17,
         "partial": true,
-        "through": "2026-11-16"
+        "through": "2026-11-17"
       }
     ]
   },
@@ -188,8 +188,8 @@
       "source": "EIA",
       "sourceUrl": "https://www.eia.gov/dnav/ng/hist/rngwhhdD.htm",
       "unit": "USD/MMBtu",
-      "asOf": "2026-11-11",
-      "latest": 3,
+      "asOf": "2026-11-17",
+      "latest": 3.1,
       "points": [
         {
           "d": "2025-10-01",
@@ -1298,6 +1298,22 @@
         {
           "d": "2026-11-11",
           "v": 3
+        },
+        {
+          "d": "2026-11-12",
+          "v": 3
+        },
+        {
+          "d": "2026-11-13",
+          "v": 3.26
+        },
+        {
+          "d": "2026-11-16",
+          "v": 3.2
+        },
+        {
+          "d": "2026-11-17",
+          "v": 3.1
         }
       ]
     },
@@ -1307,8 +1323,8 @@
       "source": "EIA",
       "sourceUrl": "https://www.eia.gov/dnav/pet/hist/rwtcD.htm",
       "unit": "USD/bbl",
-      "asOf": "2026-11-11",
-      "latest": 89.62,
+      "asOf": "2026-11-17",
+      "latest": 89.53,
       "points": [
         {
           "d": "2025-10-01",
@@ -2425,6 +2441,22 @@
         {
           "d": "2026-11-11",
           "v": 89.62
+        },
+        {
+          "d": "2026-11-12",
+          "v": 92.3
+        },
+        {
+          "d": "2026-11-13",
+          "v": 91.96
+        },
+        {
+          "d": "2026-11-16",
+          "v": 89.24
+        },
+        {
+          "d": "2026-11-17",
+          "v": 89.53
         }
       ]
     },
@@ -2434,8 +2466,8 @@
       "source": "EIA",
       "sourceUrl": "https://www.eia.gov/dnav/pet/hist/rbrteD.htm",
       "unit": "USD/bbl",
-      "asOf": "2026-11-11",
-      "latest": 92.14,
+      "asOf": "2026-11-17",
+      "latest": 92.94,
       "points": [
         {
           "d": "2025-10-01",
@@ -3568,6 +3600,22 @@
         {
           "d": "2026-11-11",
           "v": 92.14
+        },
+        {
+          "d": "2026-11-12",
+          "v": 95.42
+        },
+        {
+          "d": "2026-11-13",
+          "v": 95.17
+        },
+        {
+          "d": "2026-11-16",
+          "v": 92.9
+        },
+        {
+          "d": "2026-11-17",
+          "v": 92.94
         }
       ]
     },
@@ -3577,8 +3625,8 @@
       "source": "EIA",
       "sourceUrl": "https://www.eia.gov/dnav/pet/hist/LeafHandler.ashx?n=PET&s=WPULEUS3&f=W",
       "unit": "percent",
-      "asOf": "2026-11-06",
-      "latest": 95.2,
+      "asOf": "2026-11-13",
+      "latest": 95.7,
       "points": [
         {
           "d": "2025-10-03",
@@ -3811,6 +3859,10 @@
         {
           "d": "2026-11-06",
           "v": 95.2
+        },
+        {
+          "d": "2026-11-13",
+          "v": 95.7
         }
       ]
     },
@@ -3820,8 +3872,8 @@
       "source": "EIA",
       "sourceUrl": "https://www.eia.gov/dnav/pet/hist/LeafHandler.ashx?n=PET&s=WDISTUS1&f=W",
       "unit": "thousand barrels",
-      "asOf": "2026-11-06",
-      "latest": 103330,
+      "asOf": "2026-11-13",
+      "latest": 104901,
       "points": [
         {
           "d": "2025-10-03",
@@ -4054,6 +4106,10 @@
         {
           "d": "2026-11-06",
           "v": 103330
+        },
+        {
+          "d": "2026-11-13",
+          "v": 104901
         }
       ]
     },
@@ -4063,8 +4119,8 @@
       "source": "EIA",
       "sourceUrl": "https://www.eia.gov/dnav/pet/hist/LeafHandler.ashx?n=PET&s=WDISTP11&f=W",
       "unit": "thousand barrels",
-      "asOf": "2026-11-06",
-      "latest": 23784,
+      "asOf": "2026-11-13",
+      "latest": 24419,
       "points": [
         {
           "d": "2025-10-03",
@@ -4297,6 +4353,10 @@
         {
           "d": "2026-11-06",
           "v": 23784
+        },
+        {
+          "d": "2026-11-13",
+          "v": 24419
         }
       ]
     },
@@ -4306,8 +4366,8 @@
       "source": "EIA",
       "sourceUrl": "https://www.eia.gov/dnav/pet/hist/eer_epd2dxl0_pf4_y35ny_dpgD.htm",
       "unit": "USD/gal",
-      "asOf": "2026-11-11",
-      "latest": 4.204,
+      "asOf": "2026-11-17",
+      "latest": 4.093,
       "points": [
         {
           "d": "2025-10-01",
@@ -5424,6 +5484,22 @@
         {
           "d": "2026-11-11",
           "v": 4.204
+        },
+        {
+          "d": "2026-11-12",
+          "v": 4.321
+        },
+        {
+          "d": "2026-11-13",
+          "v": 4.345
+        },
+        {
+          "d": "2026-11-16",
+          "v": 4.112
+        },
+        {
+          "d": "2026-11-17",
+          "v": 4.093
         }
       ]
     },
@@ -5433,8 +5509,8 @@
       "source": "EIA",
       "sourceUrl": "https://www.eia.gov/dnav/pet/hist/LeafHandler.ashx?n=PET&s=EER_EPD2DXL0_PF4_RGC_DPG&f=D",
       "unit": "USD/gal",
-      "asOf": "2026-11-11",
-      "latest": 4.106,
+      "asOf": "2026-11-17",
+      "latest": 3.943,
       "points": [
         {
           "d": "2025-10-01",
@@ -6551,6 +6627,22 @@
         {
           "d": "2026-11-11",
           "v": 4.106
+        },
+        {
+          "d": "2026-11-12",
+          "v": 4.223
+        },
+        {
+          "d": "2026-11-13",
+          "v": 4.233
+        },
+        {
+          "d": "2026-11-16",
+          "v": 3.957
+        },
+        {
+          "d": "2026-11-17",
+          "v": 3.943
         }
       ]
     },
@@ -6560,8 +6652,8 @@
       "source": "EIA",
       "sourceUrl": "https://www.eia.gov/dnav/pet/hist/LeafHandler.ashx?n=PET&s=EER_EPD2F_PF4_Y35NY_DPG&f=D",
       "unit": "USD/gal",
-      "asOf": "2026-11-11",
-      "latest": 4.066,
+      "asOf": "2026-11-17",
+      "latest": 3.96,
       "points": [
         {
           "d": "2025-10-01",
@@ -7678,6 +7770,22 @@
         {
           "d": "2026-11-11",
           "v": 4.066
+        },
+        {
+          "d": "2026-11-12",
+          "v": 4.201
+        },
+        {
+          "d": "2026-11-13",
+          "v": 4.213
+        },
+        {
+          "d": "2026-11-16",
+          "v": 3.975
+        },
+        {
+          "d": "2026-11-17",
+          "v": 3.96
         }
       ]
     }
@@ -7769,18 +7877,18 @@
   },
   "seed": {
     "ttf": 71.2,
-    "hh": 3,
-    "eurusd": 1.0989,
+    "hh": 3.1,
+    "eurusd": 1.0968,
     "freight": 25500,
-    "storagePct": 70.39,
+    "storagePct": 70.15,
     "hddDevPct": 0,
-    "utilPct": 95.2,
-    "padd1": 23784,
-    "brent": 92.14,
-    "wti": 89.62,
-    "nyh": 4.204,
-    "usgc": 4.106,
-    "ho": 4.066,
+    "utilPct": 95.7,
+    "padd1": 24419,
+    "brent": 92.94,
+    "wti": 89.53,
+    "nyh": 4.093,
+    "usgc": 3.943,
+    "ho": 3.96,
     "ara": 780,
     "roundTripDays": 24,
     "ladenDays": 13,
