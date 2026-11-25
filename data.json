@@ -1,6 +1,6 @@
 {
   "schema": "energy-dashboard.data.v2",
-  "asOf": "2026-11-24T02:58:31.638Z",
+  "asOf": "2026-11-25T00:56:43.561Z",
   "kind": "mixed",
   "description": "Public series are rewritten by scripts/refresh-data.mjs. manual series are not on an automatic feed and are not backfilled.",
   "historyFrom": "2025-10-01",
@@ -8,8 +8,8 @@
     "automatic": true,
     "source": "ECB via Frankfurter",
     "sourceUrl": "https://api.frankfurter.dev/v1/latest?from=EUR&to=USD",
-    "date": "2026-11-23",
-    "rate": 1.0939
+    "date": "2026-11-24",
+    "rate": 1.0963
   },
   "storage": {
     "automatic": true,
@@ -19,16 +19,16 @@
     "sourceUrl": "https://voltstack.energy/gas-storage-map/countries.csv",
     "asOf": "2026-11-22",
     "eu": {
-      "fillPct": 68.89,
-      "twh": 780.115,
+      "fillPct": 68.91,
+      "twh": 780.256,
       "workingTwh": 1132.362,
       "status": "measured"
     },
     "countries": [
       {
         "code": "DE",
-        "fillPct": 56.47,
-        "twh": 139.685,
+        "fillPct": 56.48,
+        "twh": 139.708,
         "status": "measured"
       },
       {
@@ -45,14 +45,14 @@
       },
       {
         "code": "NL",
-        "fillPct": 59.05,
-        "twh": 85.06,
+        "fillPct": 59.09,
+        "twh": 85.117,
         "status": "measured"
       },
       {
         "code": "AT",
-        "fillPct": 62.8,
-        "twh": 62.978,
+        "fillPct": 62.86,
+        "twh": 63.038,
         "status": "measured"
       }
     ]
@@ -65,7 +65,7 @@
     "place": "Near Rotterdam, 51.92N 4.48E",
     "note": "Northwest Europe temperature and HDD proxy from Open-Meteo historical weather. Base 18°C. Not an ECMWF operational forecast.",
     "baseC": 18,
-    "asOf": "2026-11-23",
+    "asOf": "2026-11-24",
     "months": [
       {
         "d": "2025-10",
@@ -173,11 +173,11 @@
       },
       {
         "d": "2026-11",
-        "meanC": 6.3,
-        "hdd": 269,
-        "days": 23,
+        "meanC": 6.1,
+        "hdd": 287,
+        "days": 24,
         "partial": true,
-        "through": "2026-11-23"
+        "through": "2026-11-24"
       }
     ]
   },
@@ -7878,9 +7878,9 @@
   "seed": {
     "ttf": 71.2,
     "hh": 3.1,
-    "eurusd": 1.0939,
+    "eurusd": 1.0963,
     "freight": 25500,
-    "storagePct": 68.89,
+    "storagePct": 68.91,
     "hddDevPct": 0,
     "utilPct": 95.7,
     "padd1": 24419,
